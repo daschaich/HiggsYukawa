@@ -1,14 +1,14 @@
 // -----------------------------------------------------------------
 // Main procedure for N=4 SYM evolution and measurements
 #define CONTROL
-#include "susy_includes.h"
+#include "so4_includes.h"
 // -----------------------------------------------------------------
 
 
 
 // -----------------------------------------------------------------
 int main(int argc, char *argv[]) {
-  int prompt, dir;
+  int prompt;
   int traj_done, s_iters, avs_iters = 0, avm_iters = 0, Nmeas = 0;
   Real f_eps, s_eps;
   double dtime, s_act;
@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
   dtime = -dclock();
 
   // Check: compute initial scalar action
-  s_act = d_gauge_action();
+  s_act = d_scalar_action();
   node0_printf("START %.8g\n", s_act / (double)volume);
 
   // Perform warmup trajectories
@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
   node0_printf("RUNNING COMPLETED\n");
 
   // Check: compute final scalar action
-  s_act = d_gauge_action();
+  s_act = d_scalar_action();
   node0_printf("STOP %.8g\n", s_act / (double)volume);
   node0_printf("Average CG iters for steps: %.4g\n",
                (double)avs_iters / trajecs);

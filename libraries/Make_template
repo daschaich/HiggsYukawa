@@ -49,23 +49,13 @@ complex.1.a: ${COMPLEXOBJS1}
 complex.2.a: ${COMPLEXOBJS2}
 	${AR} rcs $@ ${COMPLEXOBJS2}
 
-SO4OBJS1 = addmat.1o addvec.1o clear_mat.1o dumpmat.1o \
-	dumpvec.1o clearvec.1o m_vecmat.1o \
-	m_mat_an.1o m_mat_na.1o m_mat_nn.1o m_matvec.1o m_matvec_ns.1o \
-	m_matvec_s.1o s_m_a_mat.1o s_m_a_vec.1o s_m_s_mat.1o \
-	s_m_s_vec.1o s_m_sum_vec.1o s_m_vec.1o s_m_mat.1o dot.1o \
-	mat_copy.1o vec_copy.1o submat.1o subvec.1o \
-	msq_vec.1o gaussrand.1o byterevn.1o \
-	m_mat_an_f.1o m_mat_na_f.1o m_mat_nn_f.1o
+SO4OBJS1 = gaussrand.1o byterevn.1o clearvec.1o vec_copy.1o dumpvec.1o \
+	msq_vec.1o dot.1o s_m_vec.1o s_m_a_vec.1o \
+	clear_mat.1o mat_copy.1o dumpmat.1o addmat.1o s_m_mat.1o s_m_a_mat.1o
 
-SO4OBJS2 = addmat.2o addvec.2o clear_mat.2o dumpmat.2o \
-	dumpvec.2o clearvec.2o m_vecmat.2o \
-	m_mat_an.2o m_mat_na.2o m_mat_nn.2o m_matvec.2o m_matvec_ns.2o \
-	m_matvec_s.2o s_m_a_mat.2o s_m_a_vec.2o s_m_s_mat.2o \
-	s_m_s_vec.2o s_m_sum_vec.2o s_m_vec.2o s_m_mat.2o dot.2o \
-	mat_copy.2o vec_copy.2o submat.2o subvec.2o \
-	msq_vec.2o gaussrand.2o byterevn.2o \
-	m_mat_an_f.2o m_mat_na_f.2o m_mat_nn_f.2o
+SO4OBJS2 = gaussrand.2o byterevn.2o clearvec.2o vec_copy.2o dumpvec.2o \
+	msq_vec.2o dot.2o s_m_vec.2o s_m_a_vec.2o \
+	clear_mat.2o mat_copy.2o dumpmat.2o addmat.2o s_m_mat.2o s_m_a_mat.2o
 
 # Special header dependencies
 byterevn.o : ../include/int32type.h
@@ -75,14 +65,14 @@ gaussrand.2o : ../include/random.h
 ${SO4OBJS1} : ${HEADERS} ${ALLMAKES} ${LASTMAKE}
 ${SO4OBJS2} : ${HEADERS} ${ALLMAKES} ${LASTMAKE}
 
-su3.1.a::	 ${SO4OBJS1}
+so4.1.a::	 ${SO4OBJS1}
 	${AR} rcs $@ ${SO4OBJS1}
 
-su3.2.a::	 ${SO4OBJS2}
+so4.2.a::	 ${SO4OBJS2}
 	${AR} rcs $@ ${SO4OBJS2}
 
-LIBRARIES1 = complex.1.a su3.1.a
-LIBRARIES2 = complex.2.a su3.2.a
+LIBRARIES1 = complex.1.a so4.1.a
+LIBRARIES2 = complex.2.a so4.2.a
 
 ifeq ($(strip ${PRECISION}),1)
 

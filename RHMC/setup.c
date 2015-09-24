@@ -89,9 +89,99 @@ int initial_set() {
 
 
 // -----------------------------------------------------------------
+void cubic_neighbor(int x, int y, int t, int *arg, int forw_back,
+                    int *xpt, int *ypt, int *tpt) {
+
+  if (forw_back == FORWARDS) {
+    *xpt = (x + nx + arg[0]) % nx;
+    *ypt = (y + ny + arg[1]) % ny;
+    *tpt = (t + nt + arg[3]) % nt;
+  }
+  else {
+    *xpt = (x + nx - arg[0]) % nx;
+    *ypt = (y + ny - arg[1]) % ny;
+    *tpt = (t + nt - arg[3]) % nt;
+  }
+}
+// -----------------------------------------------------------------
+
+
+
+// -----------------------------------------------------------------
+void setup_offset() {
+  int i, k;
+
+  // Construct the link paths: one in each direction
+  for (i = 0; i < NDIMS; i++) {
+    for (k = 0; k < NDIMS; k++)
+      offset[i][k] = 0;
+    offset[i][i] = 1;
+  }
+
+#ifdef DEBUG_CHECK
+  node0_printf("There are %d distinct paths:\n", NDIMS);
+#endif
+  // goffset holds indices of gather_array in ../generic/com_mpi.c
+  // The first six elements of gather_array are
+  //   XUP, YUP, TUP, TDOWN, YDOWN, XDOWN
+  // in that order!
+  // In order to use XDOWN = XUP + 1, etc., we make the next six elements
+  //   XUP, XDOWN, YUP, YDOWN, TUP, TDOWN
+  // Then goffset[0]=6, goffset[1]=8 and goffset[2]=10
+  // But we can't use these in EVEN or ODD gathers!
+  for (i = 0; i < NDIMS; i++) {
+    goffset[i] = make_gather(cubic_neighbor, offset[i],
+                             WANT_INVERSE, NO_EVEN_ODD, SCRAMBLE_PARITY);
+
+#ifdef DEBUG_CHECK
+    int dir;
+    node0_printf("  %d ahead:", i);
+    for (dir = 0; dir < NDIMS; dir++)
+      node0_printf(" %d", offset[i][dir]);
+
+    node0_printf(" (offset %d)\n", goffset[i]);
+#endif
+  }
+}
+// -----------------------------------------------------------------
+
+
+
+// -----------------------------------------------------------------
+// Set up Kogut--Susskind phase factors, sum(nu < mu) {-1^i[nu]}
+// combined with boundary conditions
+void setup_phases() {
+  register int i;
+  register site *s;
+
+  FORALLSITES(i, s) {
+    s->phase[TUP] = 1.0;
+    if ((s->t) % 2 == 1)
+      s->phase[XUP] = -1.0;
+    else
+      s->phase[XUP] = 1.0;
+
+    if ((s->x) % 2 == 1)
+      s->phase[YUP] = -s->phase[XUP];
+    else
+      s->phase[YUP] = s->phase[XUP];
+
+    if (PBC < 0.0) {
+      // Antiperiodic boundary conditions in time
+      // All t phases for t = nt - 1 time slice get extra minus sign
+      if (s->t == nt - 1)
+        s->phase[TUP] = -s->phase[TUP];
+    }
+  }
+}
+// -----------------------------------------------------------------
+
+
+
+// -----------------------------------------------------------------
 // Allocate space for fields
 void make_fields() {
-  double size = (double)(2.0 * sizeof(vector);
+  double size = (double)(2.0 * sizeof(vector));
   FIELD_ALLOC(src, vector);
   FIELD_ALLOC(dest, vector);
 
@@ -100,7 +190,7 @@ void make_fields() {
   FIELD_ALLOC(fullforce, selfdual);
 
   // Temporary vector and matrix
-  size += (double)(sizeof(so4_vector) + sizeof(selfdual));
+  size += (double)(sizeof(vector) + sizeof(selfdual));
   FIELD_ALLOC(tempvec, vector);
   FIELD_ALLOC(tempsd, selfdual);
 
@@ -206,9 +296,6 @@ int readin(int prompt) {
     // Find out what kind of starting lattice to use
     IF_OK status += ask_starting_lattice(stdin,  prompt, &par_buf.startflag,
                                          par_buf.startfile);
-
-    // Find out whether or not to gauge fix to Coulomb gauge
-    IF_OK status += ask_gauge_fix(stdin, prompt, &par_buf.fixflag);
 
     // Find out what to do with lattice at end
     IF_OK status += ask_ending_lattice(stdin,  prompt, &(par_buf.saveflag),

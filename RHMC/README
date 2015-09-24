@@ -1,0 +1,123 @@
+# ------------------------------------------------------------------
+Three-dimensional four-fermion system with global SO(4) symmetry
+
+# Actively maintained targets:
+so4_hmc for evolution with accept/reject step
+so4_eig for eigenvalue measurements on saved configurations
+so4_phase for pfaffian phase measurements on saved configurations
+
+# Additional targets, not actively maintained or regularly tested
+so4_phi for evolution without accept/reject step
+
+# Dependences:
+Measurements involving polar-projected matrices (so4_meas and so4_hmc_meas) require LAPACK
+Eigenvalue measurements (so4_eig) require PRIMME and LAPACK -- PRIMME can be obtained from http://www.cs.wm.edu/~andreas/software/
+
+# Defines for compilation:
+-DPHI_ALGORITHM for the basic phi algorithm (REQUIRED)
+-DHMC_ALGORITHM switches on the accept/reject step
+-DEIG switches on the PRIMME eigenvalue calculation
+-DPUREGAUGE switches off the fermions (FOR TESTING)
+
+# Fermion and scalar rep:
+For now we fix to SO(4) fermions with four real components
+The scalar fields are self-dual SO(4) matrices with three real components
+
+# Boundary conditions for fermions:
+Only supports periodic spatial boundary conditions (BCs) for now
+Input parameter PBC = +/-1 chooses periodic or anti-periodic temporal BCs
+# ------------------------------------------------------------------
+
+
+
+# ------------------------------------------------------------------
+# Sample input file with explanations:
+prompt 0              # 0 (1) to read in parameters without (with) prompts
+nx 16                 # Lattice volume
+ny 16
+nt 16
+PBC -1                # Anti-periodic temporal boundary conditions for the fermions
+iseed 41              # Random number generator seed
+
+Nroot 1               # Number of quarter-roots to accelerate MD evolution
+Norder 15             # Order of rational approximation for each quarter-root
+
+warms 0               # Number of trajectories without measurements
+trajecs 10            # Number of trajectories with measurements
+traj_length 1         # Trajectory length
+nstep 10              # Fermion steps per trajectory; step_size = traj_length / nstep
+nstep_gauge 10        # Gauge steps per fermion step
+traj_between_meas 1   # How many trajectories to skip between less-frequent measurements
+
+G 0.1                 # Four-fermion coupling
+
+max_cg_iterations 500 # Maximum number of CG iterations
+error_per_site 1e-5   # Stopping condition for CG (will be squared)
+nsrc 5                # Number of stochastic sources -- only include with -DBILIN
+
+Nvec 100              # Number of eigenvalues to calculate -- only include with -DEIG
+eig_tol 1e-8          # Eigenvalue convergence criterion -- only include with -DEIG
+maxIter 5000          # Maximum number of eigenvalue iterations -- only include with -DEIG
+
+                      # Checkpointed pfaffian I/O currently hard-codes the file names to save and load,
+                      # based on the following two parameters
+ckpt_load -1          # If positive, load all subsequent columns of Q from dumped files -- only include with -DPHASE
+ckpt_save -1          # If positive, dump all subsequent columns of Q -- only include with -DPHASE
+
+fresh                 # What to do with lattice at start: only fresh, random, continue or reload_serial
+forget                # What to do with lattice at end: only forget or save_serial
+# ------------------------------------------------------------------
+
+
+
+# ------------------------------------------------------------------
+# 0) Header files in this directory:
+defines.h       -- Defines Omelyan parameters, RHMC degree, temporal boundary conditions, and numbers of links, generators, offsets and terms in the action
+lattice.h       -- Defines Twist_Fermions, the site struct, global variables and fields
+params.h        -- Defines a struct for reading input parameters
+primme.h        -- Defines for PRIMME eigenvalue calculations
+so4_includes.h  -- Defines lots of routines, some of which are discussed below
+
+# 1) Routines in this directory:
+# 1a) Files used by all executables
+setup.c               -- Reads in parameters, initializes variables and offsets
+setup_perm.c          -- Sets up epsilon symbol and lookup tables for matrices
+d_action.c            -- Computes action
+congrad_multi_field.c -- Multi-mass CG
+grsource.c            -- Gaussian random numbers for gauge momenta
+utilities.c           -- Many basic routines associated with parts of the action
+info.c                -- Puts information into configuration files
+
+# 1b) Evolution-specific files
+control.c     -- Main program for evolution and measurements
+setup_rhmc.c  -- Initializes RHMC shifts and amplitudes, values copied from ./remez output
+update_o.c    -- Omelyan HMC evolution, includes ranmom() routine
+update_h.c    -- Updates gauge momenta
+
+# 1c) Measurement-specific files
+control_eig.c         -- Main program for eigenvalues measurements only
+control_phase.c       -- Main program for pfaffian measurements only
+eig.c                 -- Eigenvalue measurements using PRIMME
+                         Must specify path to libzprimme.a as PLIB in makefile
+                         Also need LAPACK and BLAS in linkable location
+d_phase.c             -- Phase and (log of) magnitude of the pfaffian
+
+# 1d) Files not currently used, retained for potential future testing
+update_leapfrog.c -- Leapfrog HMC evolution, includes ranmom() routine
+
+# 2) Routines in the ../generic directory:
+# 2a) Files used by all executables
+com_vanilla.c           -- Serial communications, selected by Makefile
+com_mpi.c               -- Parallel communications, selected by Makefile
+io_lat.c                -- I/O modified to handle five-link lattice
+io_lat_utils.c          -- Lower-level utilities for lattice I/O
+io_helpers.c            -- More I/O, seems to include the interface
+make_lattice.c          -- Set up lattice, neighbors, etc.
+nersc_cksum.c           -- Compute link trace sum for lattice I/O (cksum itself set to zero)
+ranstuff.c              -- Random number stuff, both for serial and parallel running
+remap_stdio_from_args.c -- For reading input parameters
+layout_hyper_prime.c    -- Layout lattice on processors
+
+# 2b) Measurement-specific files
+io_phase.c          -- Primitive (for now) dump and load routines for checkpointing pfaffian computations
+# ------------------------------------------------------------------

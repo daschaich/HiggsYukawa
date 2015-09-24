@@ -1,6 +1,5 @@
 // -----------------------------------------------------------------
 // Routines for susy gauge configuration input/output
-// Loop over mu = 0 to NUMLINK
 // Works for most machines
 // Wrappers for I/O are in io_ansi.c
 
@@ -65,16 +64,22 @@
 // -----------------------------------------------------------------
 // Copy scalars from single precision to generic precision
 void f2d_scalar(fselfdual *a, selfdual *b) {
-  int index;
-  for (index = 0; index < NSD; index++)
-    b->e[index] = a->e[index];
+#if (DIMF != 4)
+  #error "Assuming DIMF=4!"
+#endif
+  b->e[0] = a->e[0];
+  b->e[1] = a->e[1];
+  b->e[2] = a->e[2];
 }
 
 // Copy scalars from generic precision to single precision
 void d2f_scalar(selfdual *a, fselfdual *b) {
-  int index;
-  for (index = 0; index < NSD; index++)
-    b->e[index] = a->e[index];
+#if (DIMF != 4)
+  #error "Assuming DIMF=4!"
+#endif
+  b->e[0] = a->e[0];
+  b->e[1] = a->e[1];
+  b->e[2] = a->e[2];
 }
 // -----------------------------------------------------------------
 
@@ -295,9 +300,9 @@ void w_serial(gauge_file *gf) {
           // node0 sends a few bytes to newnode as a clear to send signal
           if (newnode != currentnode) {
             if (this_node == 0 && newnode != 0)
-              send_field((char *)tbuf, NUMLINK, newnode);
+              send_field((char *)tbuf, 1, newnode);
             if (this_node == newnode && newnode != 0)
-              get_field((char *)tbuf, NUMLINK, 0);
+              get_field((char *)tbuf, 1, 0);
             currentnode = newnode;
           }
         }
@@ -305,13 +310,12 @@ void w_serial(gauge_file *gf) {
         // The node with the data just appends to its tbuf
         if (this_node == currentnode) {
           i = node_index(x, y, t);
-          d2f_scalar(&lattice[i].sigma[0], &tbuf[NSD * tbuf_length]);
+          d2f_scalar(&lattice[i].sigma, &tbuf[NSD * tbuf_length]);
         }
 
         if (this_node == currentnode || this_node == 0)
           tbuf_length++;
       }
-    }
     }
   }
 
@@ -372,7 +376,7 @@ void r_serial(gauge_file *gf) {
   u_int32type *val;
   int rank29, rank31;
   fselfdual *lbuf = NULL;   // Only allocate on node0
-  fselfdual tmpsd;
+  fselfdual *tmpsd = malloc(sizeof(*tmpsd));
   int idest = 0;
   fp = gf->fp;
   gh = gf->header;
@@ -441,7 +445,7 @@ void r_serial(gauge_file *gf) {
     t = rcv_coords % nt;
 
     // The node that gets the next set of gauge links
-    destnode = node_number(x, y, z, t);
+    destnode = node_number(x, y, t);
 
     if (this_node == 0) {
       /* node0 fills its buffer, if necessary */
@@ -455,7 +459,7 @@ void r_serial(gauge_file *gf) {
 
         stat = (int)fread(lbuf, sizeof(fselfdual), buf_length, fp);
         if (stat != buf_length) {
-          printf("r_serial: node %d gauge configuration read error %d file %s\n",
+          printf("r_serial: node%d configuration read error %d file %s\n",
                  this_node, errno, filename);
           fflush(stdout);
           terminate(1);
@@ -503,7 +507,7 @@ void r_serial(gauge_file *gf) {
           rank31 = 0;
       }
       // Copy scalars to generic-precision lattice[idest]
-      f2d_scalar(tmpsd, &lattice[idest].sigma[0]);
+      f2d_scalar(tmpsd, &lattice[idest].sigma);
     }
     else {
       rank29 += sizeof(fselfdual) / sizeof(int32type);

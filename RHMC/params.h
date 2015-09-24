@@ -3,6 +3,7 @@
 #ifndef _PARAMS_H
 #define _PARAMS_H
 #include "../include/macros.h"  // For MAXFILENAME
+#include "../include/precision.h"
 
 typedef struct {
   int stopflag;           // 1 if it is time to stop

@@ -39,20 +39,18 @@ HEADERS = ${GLOBAL_HEADERS} ${MY_HEADERS} ${INLINE_HEADERS}
 # Basic set from current directory
 MY_OBJECTS = setup.o        \
              setup_perm.o   \
-             setup_offset.o \
              d_action.o     \
              info.o         \
              utilities.o    \
              grsource.o     \
              hdelta0.o      \
-             congrad_multi_field.o
+             congrad_multi.o
 
 # Basic set from generic directory
 G_OBJECTS = io_helpers.o   \
             io_lat.o       \
             io_lat_utils.o \
             make_lattice.o \
-            nersc_cksum.o  \
             ranstuff.o     \
             remap_stdio_from_args.o
 
@@ -64,8 +62,8 @@ ADD_OBJECTS = ${MACHINE_DEP_IO} ${COMMPKG}
 OBJECTS = ${MY_OBJECTS} ${G_OBJECTS} \
           ${LAYOUT} ${ADD_OBJECTS} ${EXTRA_OBJECTS}
 
-#Libraries for complex numbers and su3 functions
-QCDLIB = ${LIBDIR}/su3.${PRECISION}.a ${LIBDIR}/complex.${PRECISION}.a
+#Libraries for complex numbers and so4 functions
+QCDLIB = ${LIBDIR}/so4.${PRECISION}.a ${LIBDIR}/complex.${PRECISION}.a
 LIBRARIES = ${QCDLIB}
 
 # Default rule for C compilation

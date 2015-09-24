@@ -5,9 +5,7 @@
 #include "../include/complex.h"
 #include "../include/so4.h"
 
-void scalar_mult_add_su3_vector(su3_vector *a, su3_vector *b,
-                                Real s, su3_vector *c) {
-
+void scalar_mult_add_vec(vector *a, vector *b, Real s, vector *c) {
 #if (DIMF == 4)
   // May be marginally faster than loop
   c->c[0] = a->c[0] + s * b->c[0];

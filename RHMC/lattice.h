@@ -55,13 +55,15 @@ EXTERN int iseed;       // Random number seed
 EXTERN int warms, trajecs, niter, propinterval;
 EXTERN Real traj_length;
 
-// Translate (mu, nu) to linear index of anti-symmetric or self-dual matrix
+// Epsilon tensor and matrices to translate (mu, nu) to linear index
+// (either anti-symmetric or self-dual)
+EXTERN Real perm[DIMF][DIMF][DIMF][DIMF];
 EXTERN int as_index[DIMF][DIMF];
 EXTERN int sd_index[DIMF][DIMF];
 
+// More global parameters
 EXTERN Real rsqmin, rsqprop;
 EXTERN Real G;
-EXTERN double g_ssplaq, g_stplaq;
 EXTERN double sigmasum;
 EXTERN char startfile[MAXFILENAME], savefile[MAXFILENAME];
 EXTERN int startflag; // Beginning lattice: CONTINUE, RELOAD, FRESH
@@ -84,6 +86,10 @@ EXTERN Real ampdeg4, *amp4, *shift4;
 EXTERN Real ampdeg8, *amp8, *shift8;
 EXTERN int Nroot, Norder;
 EXTERN Real snorm, *fnorm, max_sf, *max_ff;
+
+// Stuff for gathers -- both forwards and backwards
+EXTERN int goffset[2 * NDIMS];
+EXTERN int offset[NDIMS][NDIMS];    // Path along each link
 
 // Momenta and forces for the scalars
 selfdual *mom, *fullforce;

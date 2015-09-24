@@ -7,17 +7,18 @@
 
 
 // -----------------------------------------------------------------
-void d_linktrsum(double *sum) {
-  int i, index;
-  site *s;
+void d_sigmasum(double *sum) {
+#if (DIMF != 4)
+  #error "Assuming DIMF=4!"
+#endif
+  register int i;
+  register site *s;
 
-  sum = 0.0;
-  FORALLSITES(i, s) {
-    for (index = 0; index < NSD; index++)
-      sum += s->sigma[index];
-  }
-  g_dcomplexsum(sum);
-  sum /= (double)volume;
+  *sum = 0.0;
+  FORALLSITES(i, s)
+    *sum += s->sigma.e[0] + s->sigma.e[1] + s->sigma.e[2];
+  g_doublesum(sum);
+  *sum /= (double)volume;
 }
 // -----------------------------------------------------------------
 
@@ -59,12 +60,16 @@ gauge_file *save_lattice(int flag, char *filename) {
 // -----------------------------------------------------------------
 // Set sigma to unity
 void coldlat() {
-  register int i, index;
+#if (DIMF != 4)
+  #error "Assuming DIMF=4!"
+#endif
+  register int i;
   register site *s;
 
   FORALLSITES(i, s) {
-    for (index = 0; index < NSD; index++)
-      s->sigma[index] = 1.0;
+    s->sigma.e[0] = 1.0;
+    s->sigma.e[1] = 1.0;
+    s->sigma.e[2] = 1.0;
   }
   node0_printf("unit scalar configuration loaded\n");
 }
@@ -75,15 +80,22 @@ void coldlat() {
 // -----------------------------------------------------------------
 // Set sigma to random gaussian numbers
 void randomlat() {
+#if (DIMF != 4)
+  #error "Assuming DIMF=4!"
+#endif
   register int i, index;
   register site *s;
 
   FORALLSITES(i, s) {
     for (index = 0; index < NSD; index++) {
 #ifdef SITERAND
-      s->sigma[index] = gaussian_rand_no(&(s->site_prn));
+      s->sigma.e[0] = gaussian_rand_no(&(s->site_prn));
+      s->sigma.e[1] = gaussian_rand_no(&(s->site_prn));
+      s->sigma.e[2] = gaussian_rand_no(&(s->site_prn));
 #else
-      s->sigma[index] = gaussian_rand_no(&(s->node_prn));
+      s->sigma.e[0] = gaussian_rand_no(&(s->node_prn));
+      s->sigma.e[1] = gaussian_rand_no(&(s->node_prn));
+      s->sigma.e[2] = gaussian_rand_no(&(s->node_prn));
 #endif
     }
   }
@@ -96,13 +108,17 @@ void randomlat() {
 // -----------------------------------------------------------------
 // Set sigma to funny numbers for debugging
 void funnylat() {
-  register int i, index;
+#if (DIMF != 4)
+  #error "Assuming DIMF=4!"
+#endif
+  register int i;
   register site *s;
 
   FORALLSITES(i, s) {
-    s->sigma[0] = s->x;
-    s->sigma[1] = 10 * s->y;
-    s->sigma[2] = 100 * s->t;
+    s->sigma.e[0] = s->x;
+    s->sigma.e[1] = 10 * s->y;
+    s->sigma.e[2] = 100 * s->t;
+  }
 }
 // -----------------------------------------------------------------
 

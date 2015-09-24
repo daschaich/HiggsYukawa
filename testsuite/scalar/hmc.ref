@@ -1,0 +1,68 @@
+Three-dimensional four-fermion system, SO(4)
+Microcanonical simulation with refreshing
+Machine = Scalar processor, with 1 nodes
+Hybrid Monte Carlo algorithm
+Phi algorithm
+start: Thu Sep 24 15:01:24 2015
+
+type 0 for no prompts or 1 for prompts
+nx 16
+ny 16
+nt 16
+PBC -1
+iseed 41
+Nroot 1
+Norder 15
+LAYOUT = Hypercubes, options = hyper_prime,
+ON EACH NODE 16 x 16 x 16
+Mallocing 0.7 MBytes per core for lattice
+Antiperiodic temporal boundary conditions
+Mallocing 0.5 MBytes per core for fields
+Using Nroot = 1
+RHMC Norder 15 for spectral range [1e-7, 1000]
+
+
+warms 0
+trajecs 3
+traj_length 1
+nstep 5
+nstep_gauge 4
+traj_between_meas 3
+G 0.1
+max_cg_iterations 5000
+error_per_site 1e-05
+fresh
+forget
+unit scalar configuration loaded
+CHECK SIGMA SUM: 3.0000000000000000e+00
+START 3
+f_eps 0.2 s_eps 0.025
+WARMUPS COMPLETED
+action: scalar 12288 fermion0 8087.2883 mom 0 sum 20375.288
+action: scalar 12288 fermion0 8087.2883 mom 0 sum 20375.288
+ACCEPT: delta S = 0 start S = 20375.288297 end S = 20375.288297
+IT_PER_TRAJ 12
+MONITOR_FORCE_SCALAR   0 0
+MONITOR_FORCE_FERMION0 0 0
+GMES 12 3
+action: scalar 12288 fermion0 8327.3843 mom 0 sum 20615.384
+action: scalar 12288 fermion0 8327.3843 mom 0 sum 20615.384
+ACCEPT: delta S = 0 start S = 20615.3842811 end S = 20615.3842811
+IT_PER_TRAJ 12
+MONITOR_FORCE_SCALAR   0 0
+MONITOR_FORCE_FERMION0 0 0
+GMES 12 3
+action: scalar 12288 fermion0 8127.0731 mom 0 sum 20415.073
+action: scalar 12288 fermion0 8127.0731 mom 0 sum 20415.073
+ACCEPT: delta S = 0 start S = 20415.0731163 end S = 20415.0731163
+IT_PER_TRAJ 12
+MONITOR_FORCE_SCALAR   0 0
+MONITOR_FORCE_FERMION0 0 0
+GMES 12 3
+RUNNING COMPLETED
+STOP 3
+Average CG iters for steps: 12
+
+Time = 0.2902 seconds
+total_iters = 36
+
