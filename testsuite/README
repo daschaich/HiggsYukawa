@@ -1,0 +1,20 @@
+This directory provides a suite of tests for the parallel code to simulate a three-dimensional four-fermion system with global SO(4) symmetry.
+
+Reference input and output files are provided for the following compilation targets (which are described in ../RHMC/README):
+so4_hmc
+so4_eig
+so4_phase
+
+The scalar configurations loaded by each test are also provided.  The so4_phase target is tested with and without checkpointing.
+
+The scripts scalar/run_tests and mpi/run_tests automate the process of compiling, running and checking the given target.  Each script must be run from its respective directory.  Given the argument
+$ ./run_tests <tag>
+the script will compile the target so4_$tag, run the so4_$tag executable using the appropriate input file in this directory, save the output to $tag.out and check for differences between this output and the reference file $tag.ref.
+
+Currently the MPI tests are customized for the HEP-TH cluster at the University of Colorado.  Adjusting the $makefile and $run variables at the start of mpi/run_tests may suffice to adjust the tests for other systems.
+
+Alternately, if run_tests is run with no arguments it will test every target.
+
+Current limitations:
+Only anti-periodic temporal boundary conditions for the fermions are tested.
+Only the most conservative (15-pole) rational approximation is tested.

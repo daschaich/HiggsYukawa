@@ -6,7 +6,7 @@
 #include "defines.h"
 #include "../include/macros.h"    // For MAXFILENAME
 #include "../include/io_lat.h"    // For gauge_file
-#include "../include/su3.h"
+#include "../include/so4.h"
 #include "../include/random.h"    // For double_prn
 #include "../include/dirs.h"      // For NDIMS
 // -----------------------------------------------------------------
@@ -27,17 +27,13 @@ typedef struct {
 
   // Staggered phases, which have been absorbed into the matrices
   // Also includes the antiperiodic temporal boundary conditions
-  Real phase[3];
+  Real phase[NDIMS];
 
-  so4_selfdual sigma[3];      // Self-dual Hubbard--Stratonovich scalar field
-
+  // Self-dual Hubbard--Stratonovich scalar field
+  selfdual sigma;
 #ifdef HMC_ALGORITHM
-  so4_selfdual old_sigma[3];  // For accept/reject
+  selfdual old_sigma;  // For accept/reject
 #endif
-
-  // Momentum matrices in each direction
-  so4_selfdual mom[3];
-  so4_selfdual f_U[3];        // Force matrices
 } site;
 // -----------------------------------------------------------------
 
@@ -59,15 +55,14 @@ EXTERN int iseed;       // Random number seed
 EXTERN int warms, trajecs, niter, propinterval;
 EXTERN Real traj_length;
 
-// Translate (mu, nu) to linear index of anti-symmetric matrix
-EXTERN int as_index[4][4];
-EXTERN int sd_index[4][4];
+// Translate (mu, nu) to linear index of anti-symmetric or self-dual matrix
+EXTERN int as_index[DIMF][DIMF];
+EXTERN int sd_index[DIMF][DIMF];
 
 EXTERN Real rsqmin, rsqprop;
 EXTERN Real G;
 EXTERN double g_ssplaq, g_stplaq;
-EXTERN double_complex linktrsum;
-EXTERN u_int32type nersc_checksum;
+EXTERN double sigmasum;
 EXTERN char startfile[MAXFILENAME], savefile[MAXFILENAME];
 EXTERN int startflag; // Beginning lattice: CONTINUE, RELOAD, FRESH
 EXTERN int fixflag;   // Gauge fixing: COULOMB_GAUGE_FIX, NO_GAUGE_FIX
@@ -90,18 +85,21 @@ EXTERN Real ampdeg8, *amp8, *shift8;
 EXTERN int Nroot, Norder;
 EXTERN Real snorm, *fnorm, max_sf, *max_ff;
 
+// Momenta and forces for the scalars
+selfdual *mom, *fullforce;
+
 // Each node maintains a structure with the pseudorandom number
 // generator state
 EXTERN double_prn node_prn;
 
 // Persistent fermions for matrix--vector operation
 // Used in fermion_op and assemble_fermion_force
-EXTERN so4_vector *src;
-EXTERN so4_vector *dest;
+EXTERN vector *src;
+EXTERN vector *dest;
 
 // Temporary vectors, matrices and Twist_Fermion
-EXTERN so4_vector *tempvec;
-EXTERN so4_antisym *tempmat;
+EXTERN vector *tempvec;
+EXTERN selfdual *tempsd;
 
 EXTERN gauge_file *startlat_p;
 EXTERN gauge_file *savelat_p;
@@ -120,7 +118,7 @@ EXTERN char **gen_pt[N_POINTERS];
 // Eigenvalue stuff
 EXTERN int Nvec;
 EXTERN double *eigVal;
-EXTERN so4_vector **eigVec;
+EXTERN vector **eigVec;
 EXTERN Real eig_tol;          // Tolerance for the eigenvalue computation
 EXTERN int maxIter;           // Maximum iterations
 #endif

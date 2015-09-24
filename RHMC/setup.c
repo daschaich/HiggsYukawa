@@ -1,11 +1,10 @@
 // -----------------------------------------------------------------
-// Supersymmetric setup
-#include "susy_includes.h"
-
+// Three-dimensional four-fermion system setup
+#include "params.h"
+#include "so4_includes.h"
 #define IF_OK if(status==0)
 
 // Each node has a params structure for passing simulation parameters
-#include "params.h"
 params par_buf;
 // -----------------------------------------------------------------
 
@@ -22,8 +21,7 @@ int initial_set() {
 #define XSTR(s) STR(s)
 #define STR(s) #s
     // end kludge
-    printf("N=4 SYM, Nc = %d, DIMF = %d, fermion rep = adjoint\n",
-           NCOL, DIMF);
+    printf("Three-dimensional four-fermion system, SO(%d)\n", DIMF);
     printf("Microcanonical simulation with refreshing\n");
     printf("Machine = %s, with %d nodes\n", machine_type(), numnodes());
 #ifdef HMC_ALGORITHM
@@ -93,24 +91,27 @@ int initial_set() {
 // -----------------------------------------------------------------
 // Allocate space for fields
 void make_fields() {
-  double size = (double)(2.0 * sizeof(so4_vector);
-  FIELD_ALLOC(src, so4_vector);
-  FIELD_ALLOC(dest, so4_vector);
+  double size = (double)(2.0 * sizeof(vector);
+  FIELD_ALLOC(src, vector);
+  FIELD_ALLOC(dest, vector);
+
+  // Momenta and forces for the scalars
+  FIELD_ALLOC(mom, selfdual);
+  FIELD_ALLOC(fullforce, selfdual);
 
   // Temporary vector and matrix
-  size += (double)(sizeof(so4_vector) + sizeof(so4_selfdual));
-  FIELD_ALLOC(tempvec, so4_vector, NUMLINK);
-  FIELD_ALLOC(tempmat, so4_selfdual);
+  size += (double)(sizeof(so4_vector) + sizeof(selfdual));
+  FIELD_ALLOC(tempvec, vector);
+  FIELD_ALLOC(tempsd, selfdual);
 
   size *= sites_on_node;
   node0_printf("Mallocing %.1f MBytes per core for fields\n", size / 1e6);
 #ifdef PHASE
-  // Total number of matvecs is (volume * 4)^2 / 4
-  Nmatvecs = volume * volume * 4;
+  // Total number of matvecs is (volume * DIMF)^2 / 4
+  Nmatvecs = volume * volume * DIMF * DIMF / 4;
 
-  // Total size of matrix is (volume * 16 * DIMF) x (sites_on_node * 16 * DIMF)
-  size = (double)(volume * 16.0 * DIMF * 16.0 * DIMF * sizeof(complex));
-  size *= sites_on_node;
+  // Total size of matrix is (volume * DIMF) x (sites_on_node * DIMF)
+  size = (double)(volume * DIMF * sites_on_node * DIMF * sizeof(complex));
   node0_printf("Q has %d columns --> %d matvecs and %.1f MBytes per core...",
                volume * 16 * DIMF, Nmatvecs, size / 1e6);
 #endif
@@ -158,9 +159,6 @@ int readin(int prompt) {
   // prompt=1 indicates prompts are to be given for input
   int status;
   Real x;
-#ifdef CORR
-  int j;
-#endif
 
   // On node zero, read parameters and send to all other nodes
   if (this_node == 0) {
