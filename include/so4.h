@@ -34,7 +34,7 @@ typedef struct { double e[NSD]; } dselfdual;
 #define selfdual    dselfdual
 #endif
 
-#define PLUS 1          // Flags for selecting M or M_adjoint
+#define PLUS 1          // Flags for selecting D or D_adjoint
 #define MINUS -1
 // -----------------------------------------------------------------
 
@@ -51,6 +51,12 @@ void vec_copy(vector *a, vector *b);
 
 // In file dumpvec.c
 void dumpvec(vector *v);
+
+// In file addvec.c
+void add_vec(vector *a, vector *b, vector *c);
+
+// In file subvec.c
+void sub_vec(vector *a, vector *b, vector *c);
 
 // In file msq_vec.c
 Real magsq_vec(vector *v);
@@ -92,6 +98,10 @@ void scalar_mult_sd(selfdual *src, Real scalar, selfdual *dest);
 // In file s_m_a_mat.c
 void scalar_mult_add_as(antisym *a, antisym *b, Real scalar, antisym *c);
 void scalar_mult_add_sd(selfdual *a, selfdual *b, Real scalar, selfdual *c);
+
+// In file m_mat_vec.c
+void mult_as_vec(antisym *a, vector *b, vector *c);
+void mult_sd_vec(selfdual *a, vector *b, vector *c);
 // -----------------------------------------------------------------
 
 

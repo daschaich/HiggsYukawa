@@ -3,7 +3,7 @@ Microcanonical simulation with refreshing
 Machine = Scalar processor, with 1 nodes
 Hybrid Monte Carlo algorithm
 Phi algorithm
-start: Thu Sep 24 15:01:24 2015
+start: Wed Sep 30 12:46:06 2015
 
 type 0 for no prompts or 1 for prompts
 nx 16
@@ -38,31 +38,31 @@ CHECK SIGMA SUM: 3.0000000000000000e+00
 START 3
 f_eps 0.2 s_eps 0.025
 WARMUPS COMPLETED
-action: scalar 12288 fermion0 8087.2883 mom 0 sum 20375.288
-action: scalar 12288 fermion0 8087.2883 mom 0 sum 20375.288
-ACCEPT: delta S = 0 start S = 20375.288297 end S = 20375.288297
-IT_PER_TRAJ 12
+action: scalar 12288 fermion0 8087.3066 mom 0 sum 20375.307
+action: scalar 12288 fermion0 8087.3066 mom 0 sum 20375.307
+ACCEPT: delta S = 0 start S = 20375.3065836 end S = 20375.3065836
+IT_PER_TRAJ 756
 MONITOR_FORCE_SCALAR   0 0
 MONITOR_FORCE_FERMION0 0 0
-GMES 12 3
-action: scalar 12288 fermion0 8327.3843 mom 0 sum 20615.384
-action: scalar 12288 fermion0 8327.3843 mom 0 sum 20615.384
-ACCEPT: delta S = 0 start S = 20615.3842811 end S = 20615.3842811
-IT_PER_TRAJ 12
+GMES 756 3
+action: scalar 12288 fermion0 8327.4028 mom 0 sum 20615.403
+action: scalar 12288 fermion0 8327.4028 mom 0 sum 20615.403
+ACCEPT: delta S = 0 start S = 20615.4027814 end S = 20615.4027814
+IT_PER_TRAJ 756
 MONITOR_FORCE_SCALAR   0 0
 MONITOR_FORCE_FERMION0 0 0
-GMES 12 3
-action: scalar 12288 fermion0 8127.0731 mom 0 sum 20415.073
-action: scalar 12288 fermion0 8127.0731 mom 0 sum 20415.073
-ACCEPT: delta S = 0 start S = 20415.0731163 end S = 20415.0731163
-IT_PER_TRAJ 12
+GMES 756 3
+action: scalar 12288 fermion0 8127.0916 mom 0 sum 20415.092
+action: scalar 12288 fermion0 8127.0916 mom 0 sum 20415.092
+ACCEPT: delta S = 0 start S = 20415.0915831 end S = 20415.0915831
+IT_PER_TRAJ 756
 MONITOR_FORCE_SCALAR   0 0
 MONITOR_FORCE_FERMION0 0 0
-GMES 12 3
+GMES 756 3
 RUNNING COMPLETED
 STOP 3
-Average CG iters for steps: 12
+Average CG iters for steps: 756
 
-Time = 0.2902 seconds
-total_iters = 36
+Time = 6.266 seconds
+total_iters = 2268
 

@@ -165,13 +165,6 @@ void setup_phases() {
       s->phase[YUP] = -s->phase[XUP];
     else
       s->phase[YUP] = s->phase[XUP];
-
-    if (PBC < 0.0) {
-      // Antiperiodic boundary conditions in time
-      // All t phases for t = nt - 1 time slice get extra minus sign
-      if (s->t == nt - 1)
-        s->phase[TUP] = -s->phase[TUP];
-    }
   }
 }
 // -----------------------------------------------------------------
@@ -228,9 +221,9 @@ int setup() {
   setup_offset();
 
   // Set up phases, including boundary conditions
-  if (PBC > 0.0)
+  if (PBC >= 0)
     node0_printf("Periodic temporal boundary conditions\n");
-  if (PBC < 0.0)
+  if (PBC < 0)
     node0_printf("Antiperiodic temporal boundary conditions\n");
   setup_phases();
 

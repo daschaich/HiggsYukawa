@@ -10,13 +10,17 @@
 // -----------------------------------------------------------------
 // Scalar momenta contribution to the action
 double d_mom_action() {
-  register int i, index;
+#if (DIMF != 4)
+  #error "Assuming DIMF=4!"
+#endif
+  register int i;
   register site *s;
   double sum = 0.0;
 
   FORALLSITES(i, s) {
-    for (index = 0; index < NSD; index++)
-      sum += (double)(mom[i].e[index] * mom[i].e[index]);
+    sum += (double)(mom[i].e[0] * mom[i].e[0]);
+    sum += (double)(mom[i].e[1] * mom[i].e[1]);
+    sum += (double)(mom[i].e[2] * mom[i].e[2]);
   }
   g_doublesum(&sum);
   return sum;
@@ -29,14 +33,17 @@ double d_mom_action() {
 // Scalar contribution to the action
 // Identical terms in self-dual matrix cancel factor of 1/2
 double d_scalar_action() {
+#if (DIMF != 4)
+  #error "Assuming DIMF=4!"
+#endif
   register int i;
   register site *s;
-  int index;
   double s_action = 0.0;
 
   FORALLSITES(i, s) {
-    for (index = 0; index < NSD; index++)
-      s_action += (double)(s->sigma.e[index]) * (s->sigma.e[index]);
+    s_action += (double)(s->sigma.e[0]) * (s->sigma.e[0]);
+    s_action += (double)(s->sigma.e[1]) * (s->sigma.e[1]);
+    s_action += (double)(s->sigma.e[2]) * (s->sigma.e[2]);
   }
   g_doublesum(&s_action);
   return s_action;

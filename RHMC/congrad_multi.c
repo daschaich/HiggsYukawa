@@ -88,9 +88,8 @@ int congrad_multi(vector *src, vector **psim,
 
     // beta_i[0] = -(r, r) / (pm, Mpm)
     cd = 0;
-    FORALLSITES(i, s) {
+    FORALLSITES(i, s)
       cd += dot(&(pm0[i]), &(mpm[i]));
-    }
     g_doublesum(&cd);
 
     beta_i[0] = -rsq / cd;
@@ -123,14 +122,14 @@ int congrad_multi(vector *src, vector **psim,
       for (j = 1; j < Norder; j++) {
         if (converged[j] == 0)
           scalar_mult_add_vec(&(psim[j][i]), &(pm[j][i]), floatvarj[j],
-                             &(psim[j][i]));
+                              &(psim[j][i]));
       }
     }
 
     // r = r + beta[0] * mp
     floatvar = (Real)beta_i[0];
     FORALLSITES(i, s)
-      scalar_mult_add_vec(&(rm[i]), &(mpm[i]),floatvar, &(rm[i]));
+      scalar_mult_add_vec(&(rm[i]), &(mpm[i]), floatvar, &(rm[i]));
 
     // alpha_ip1[j]
     rsqnew = 0;
