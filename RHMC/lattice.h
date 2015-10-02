@@ -29,10 +29,10 @@ typedef struct {
   // Also includes the antiperiodic temporal boundary conditions
   Real phase[NDIMS];
 
-  // Self-dual Hubbard--Stratonovich scalar field
-  selfdual sigma;
+  // Hubbard--Stratonovich scalar field
+  antisym sigma;
 #ifdef HMC_ALGORITHM
-  selfdual old_sigma;  // For accept/reject
+  antisym old_sigma;  // For accept/reject
 #endif
 } site;
 // -----------------------------------------------------------------
@@ -92,7 +92,7 @@ EXTERN int goffset[2 * NDIMS];
 EXTERN int offset[NDIMS][NDIMS];    // Path along each link
 
 // Momenta and forces for the scalars
-selfdual *mom, *fullforce;
+antisym *mom, *force;
 
 // Each node maintains a structure with the pseudorandom number
 // generator state
@@ -105,7 +105,7 @@ EXTERN vector *dest;
 
 // Temporary vectors, matrices and Twist_Fermion
 EXTERN vector *tempvec;
-EXTERN selfdual *tempsd;
+EXTERN antisym *tempas;
 
 EXTERN gauge_file *startlat_p;
 EXTERN gauge_file *savelat_p;

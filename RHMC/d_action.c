@@ -21,6 +21,9 @@ double d_mom_action() {
     sum += (double)(mom[i].e[0] * mom[i].e[0]);
     sum += (double)(mom[i].e[1] * mom[i].e[1]);
     sum += (double)(mom[i].e[2] * mom[i].e[2]);
+    sum += (double)(mom[i].e[3] * mom[i].e[3]);
+    sum += (double)(mom[i].e[4] * mom[i].e[4]);
+    sum += (double)(mom[i].e[5] * mom[i].e[5]);
   }
   g_doublesum(&sum);
   return sum;
@@ -41,9 +44,12 @@ double d_scalar_action() {
   double s_action = 0.0;
 
   FORALLSITES(i, s) {
-    s_action += (double)(s->sigma.e[0]) * (s->sigma.e[0]);
-    s_action += (double)(s->sigma.e[1]) * (s->sigma.e[1]);
-    s_action += (double)(s->sigma.e[2]) * (s->sigma.e[2]);
+    s_action += (double)(s->sigma.e[0] * s->sigma.e[0]);
+    s_action += (double)(s->sigma.e[1] * s->sigma.e[1]);
+    s_action += (double)(s->sigma.e[2] * s->sigma.e[2]);
+    s_action += (double)(s->sigma.e[3] * s->sigma.e[3]);
+    s_action += (double)(s->sigma.e[4] * s->sigma.e[4]);
+    s_action += (double)(s->sigma.e[5] * s->sigma.e[5]);
   }
   g_doublesum(&s_action);
   return s_action;

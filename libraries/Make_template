@@ -51,11 +51,13 @@ complex.2.a: ${COMPLEXOBJS2}
 
 SO4OBJS1 = gaussrand.1o byterevn.1o clearvec.1o vec_copy.1o dumpvec.1o \
 	addvec.1o subvec.1o msq_vec.1o dot.1o s_m_vec.1o s_m_a_vec.1o m_mat_vec.1o \
-	clear_mat.1o mat_copy.1o dumpmat.1o addmat.1o s_m_mat.1o s_m_a_mat.1o
+	clear_mat.1o mat_copy.1o dumpmat.1o \
+	msq_mat.1o addmat.1o submat.2o s_m_mat.1o s_m_a_mat.1o m_vec_vec.1o
 
 SO4OBJS2 = gaussrand.2o byterevn.2o clearvec.2o vec_copy.2o dumpvec.2o \
 	addvec.2o subvec.2o msq_vec.2o dot.2o s_m_vec.2o s_m_a_vec.2o m_mat_vec.2o \
-	clear_mat.2o mat_copy.2o dumpmat.2o addmat.2o s_m_mat.2o s_m_a_mat.2o
+	clear_mat.2o mat_copy.2o dumpmat.2o \
+	msq_mat.2o addmat.2o submat.2o s_m_mat.2o s_m_a_mat.2o m_vec_vec.2o
 
 # Special header dependencies
 byterevn.o : ../include/int32type.h

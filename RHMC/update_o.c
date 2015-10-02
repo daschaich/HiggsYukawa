@@ -30,15 +30,24 @@ void ranmom() {
     mom[i].e[0] = gaussian_rand_no(&(s->site_prn));
     mom[i].e[1] = gaussian_rand_no(&(s->site_prn));
     mom[i].e[2] = gaussian_rand_no(&(s->site_prn));
+    mom[i].e[3] = gaussian_rand_no(&(s->site_prn));
+    mom[i].e[4] = gaussian_rand_no(&(s->site_prn));
+    mom[i].e[5] = gaussian_rand_no(&(s->site_prn));
 #else
     mom[i].e[0] = gaussian_rand_no(&(s->node_prn));
     mom[i].e[1] = gaussian_rand_no(&(s->node_prn));
     mom[i].e[2] = gaussian_rand_no(&(s->node_prn));
+    mom[i].e[3] = gaussian_rand_no(&(s->node_prn));
+    mom[i].e[4] = gaussian_rand_no(&(s->node_prn));
+    mom[i].e[5] = gaussian_rand_no(&(s->node_prn));
 #endif
 // !!!TODO
     mom[i].e[0] = 0.0;
     mom[i].e[1] = 0.0;
     mom[i].e[2] = 0.0;
+    mom[i].e[3] = 0.0;
+    mom[i].e[4] = 0.0;
+    mom[i].e[5] = 0.0;
   }
 }
 // -----------------------------------------------------------------
@@ -57,6 +66,9 @@ void update_scalar(Real eps) {
     s->sigma.e[0] += eps * mom[i].e[0];
     s->sigma.e[1] += eps * mom[i].e[1];
     s->sigma.e[2] += eps * mom[i].e[2];
+    s->sigma.e[3] += eps * mom[i].e[3];
+    s->sigma.e[4] += eps * mom[i].e[4];
+    s->sigma.e[5] += eps * mom[i].e[5];
   }
 }
 // -----------------------------------------------------------------

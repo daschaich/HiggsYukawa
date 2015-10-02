@@ -23,13 +23,19 @@ void ranmom() {
 
   FORALLSITES(i, s) {
 #ifdef SITERAND
-      mom[i].e[0] = gaussian_rand_no(&(s->site_prn));
-      mom[i].e[1] = gaussian_rand_no(&(s->site_prn));
-      mom[i].e[2] = gaussian_rand_no(&(s->site_prn));
+    mom[i].e[0] = gaussian_rand_no(&(s->site_prn));
+    mom[i].e[1] = gaussian_rand_no(&(s->site_prn));
+    mom[i].e[2] = gaussian_rand_no(&(s->site_prn));
+    mom[i].e[3] = gaussian_rand_no(&(s->site_prn));
+    mom[i].e[4] = gaussian_rand_no(&(s->site_prn));
+    mom[i].e[5] = gaussian_rand_no(&(s->site_prn));
 #else
-      mom[i].e[0] = gaussian_rand_no(&(s->node_prn));
-      mom[i].e[1] = gaussian_rand_no(&(s->node_prn));
-      mom[i].e[2] = gaussian_rand_no(&(s->node_prn));
+    mom[i].e[0] = gaussian_rand_no(&(s->node_prn));
+    mom[i].e[1] = gaussian_rand_no(&(s->node_prn));
+    mom[i].e[2] = gaussian_rand_no(&(s->node_prn));
+    mom[i].e[3] = gaussian_rand_no(&(s->node_prn));
+    mom[i].e[4] = gaussian_rand_no(&(s->node_prn));
+    mom[i].e[5] = gaussian_rand_no(&(s->node_prn));
 #endif
   }
 }

@@ -12,7 +12,7 @@ void scalar_field_copy(field_offset src, field_offset dest) {
   register site *s;
 
   FORALLSITES(i, s)
-    sd_copy((selfdual *)F_PT(s, src), (selfdual *)F_PT(s, dest));
+    as_copy((selfdual *)F_PT(s, src), (selfdual *)F_PT(s, dest));
 }
 // -----------------------------------------------------------------
 

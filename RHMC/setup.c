@@ -179,13 +179,13 @@ void make_fields() {
   FIELD_ALLOC(dest, vector);
 
   // Momenta and forces for the scalars
-  FIELD_ALLOC(mom, selfdual);
-  FIELD_ALLOC(fullforce, selfdual);
+  FIELD_ALLOC(mom, antisym);
+  FIELD_ALLOC(force, antisym);
 
   // Temporary vector and matrix
-  size += (double)(sizeof(vector) + sizeof(selfdual));
+  size += (double)(sizeof(vector) + sizeof(antisym));
   FIELD_ALLOC(tempvec, vector);
-  FIELD_ALLOC(tempsd, selfdual);
+  FIELD_ALLOC(tempas, antisym);
 
   size *= sites_on_node;
   node0_printf("Mallocing %.1f MBytes per core for fields\n", size / 1e6);

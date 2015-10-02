@@ -91,6 +91,14 @@ void dumpsd(selfdual *m);
 void add_as(antisym *a, antisym *b, antisym *c);
 void add_sd(selfdual *a, selfdual *b, selfdual *c);
 
+// In file submat.c
+void sub_as(antisym *a, antisym *b, antisym *c);
+void sub_sd(selfdual *a, selfdual *b, selfdual *c);
+
+// In file msq_mat.c
+Real magsq_as(antisym *m);
+Real magsq_sd(selfdual *m);
+
 // In file s_m_mat.c
 void scalar_mult_as(antisym *src, Real scalar, antisym *dest);
 void scalar_mult_sd(selfdual *src, Real scalar, selfdual *dest);
@@ -101,7 +109,10 @@ void scalar_mult_add_sd(selfdual *a, selfdual *b, Real scalar, selfdual *c);
 
 // In file m_mat_vec.c
 void mult_as_vec(antisym *a, vector *b, vector *c);
-void mult_sd_vec(selfdual *a, vector *b, vector *c);
+void mult_sd_vec(antisym *a, vector *b, vector *c);
+
+// In file m_vec_vec.c
+void mult_vec_vec(vector *a, vector *b, antisym *c);
 // -----------------------------------------------------------------
 
 

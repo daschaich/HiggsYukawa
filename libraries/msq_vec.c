@@ -14,7 +14,7 @@ Real magsq_vec(vector *a) {
 #else // DIMF != 4
   register int i;
   for (i = 1; i < DIMF; i++)
-    sum += a->c[i] * b->c[i]
+    sum += a->c[i] * a->c[i]
 #endif
   return sum;
 }

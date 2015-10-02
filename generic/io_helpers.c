@@ -15,8 +15,10 @@ void d_sigmasum(double *sum) {
   register site *s;
 
   *sum = 0.0;
-  FORALLSITES(i, s)
+  FORALLSITES(i, s) {
     *sum += s->sigma.e[0] + s->sigma.e[1] + s->sigma.e[2];
+    *sum += s->sigma.e[3] + s->sigma.e[4] + s->sigma.e[5];
+  }
   g_doublesum(sum);
   *sum /= (double)volume;
 }
@@ -70,6 +72,9 @@ void coldlat() {
     s->sigma.e[0] = 1.0;
     s->sigma.e[1] = 1.0;
     s->sigma.e[2] = 1.0;
+    s->sigma.e[3] = 1.0;
+    s->sigma.e[4] = 1.0;
+    s->sigma.e[5] = 1.0;
   }
   node0_printf("unit scalar configuration loaded\n");
 }
@@ -87,17 +92,21 @@ void randomlat() {
   register site *s;
 
   FORALLSITES(i, s) {
-    for (index = 0; index < NSD; index++) {
 #ifdef SITERAND
-      s->sigma.e[0] = gaussian_rand_no(&(s->site_prn));
-      s->sigma.e[1] = gaussian_rand_no(&(s->site_prn));
-      s->sigma.e[2] = gaussian_rand_no(&(s->site_prn));
+    s->sigma.e[0] = gaussian_rand_no(&(s->site_prn));
+    s->sigma.e[1] = gaussian_rand_no(&(s->site_prn));
+    s->sigma.e[2] = gaussian_rand_no(&(s->site_prn));
+    s->sigma.e[3] = gaussian_rand_no(&(s->site_prn));
+    s->sigma.e[4] = gaussian_rand_no(&(s->site_prn));
+    s->sigma.e[5] = gaussian_rand_no(&(s->site_prn));
 #else
-      s->sigma.e[0] = gaussian_rand_no(&(s->node_prn));
-      s->sigma.e[1] = gaussian_rand_no(&(s->node_prn));
-      s->sigma.e[2] = gaussian_rand_no(&(s->node_prn));
+    s->sigma.e[0] = gaussian_rand_no(&(s->node_prn));
+    s->sigma.e[1] = gaussian_rand_no(&(s->node_prn));
+    s->sigma.e[2] = gaussian_rand_no(&(s->node_prn));
+    s->sigma.e[3] = gaussian_rand_no(&(s->node_prn));
+    s->sigma.e[4] = gaussian_rand_no(&(s->node_prn));
+    s->sigma.e[5] = gaussian_rand_no(&(s->node_prn));
 #endif
-    }
   }
   node0_printf("random scalar configuration loaded\n");
 }
@@ -118,6 +127,9 @@ void funnylat() {
     s->sigma.e[0] = s->x;
     s->sigma.e[1] = 10 * s->y;
     s->sigma.e[2] = 100 * s->t;
+    s->sigma.e[3] = 100 * s->x;
+    s->sigma.e[4] = 10 * s->y;
+    s->sigma.e[5] = s->t;
   }
 }
 // -----------------------------------------------------------------

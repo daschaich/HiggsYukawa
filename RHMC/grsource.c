@@ -5,6 +5,9 @@
 
 // Return the number of iterations from the inversion
 int grsource(vector *src) {
+#if (DIMF != 4)
+  #error "Assuming DIMF=4!"
+#endif
   register int i, j;
   register site *s;
   int avs_iters;
@@ -18,13 +21,17 @@ int grsource(vector *src) {
   // Begin with pure gaussian random numbers
   FORALLSITES(i, s) {
     clearvec(&(src[i]));
-    for (j = 0; j < DIMF; j++) {
 #ifdef SITERAND
-      src[i].c[j] = gaussian_rand_no(&(s->site_prn));
+    src[i].c[0] = gaussian_rand_no(&(s->site_prn));
+    src[i].c[1] = gaussian_rand_no(&(s->site_prn));
+    src[i].c[2] = gaussian_rand_no(&(s->site_prn));
+    src[i].c[3] = gaussian_rand_no(&(s->site_prn));
 #else
-      src[i].c[j] = gaussian_rand_no(&node_prn);
+    src[i].c[0] = gaussian_rand_no(&node_prn);
+    src[i].c[1] = gaussian_rand_no(&node_prn);
+    src[i].c[2] = gaussian_rand_no(&node_prn);
+    src[i].c[3] = gaussian_rand_no(&node_prn);
 #endif
-    }
   }
 
 #ifdef DEBUG_CHECK
@@ -46,7 +53,7 @@ int grsource(vector *src) {
 //    source_norm = (double)magsq_vec(&(psim[1][i]));
 //    if (source_norm * source_norm > 0) {
 //      printf("%d %d %d %.4g\n", s->x, s->y, s->t, source_norm);
-//      dumpsd(&(s->sigma));
+//      dumpas(&(s->sigma));
 //    }
 //  }
 
@@ -56,7 +63,7 @@ int grsource(vector *src) {
 //    source_norm = (double)magsq_vec(&(psim[0][i]));
 //    if (source_norm * source_norm > 0) {
 //      printf("%d %d %d %.4g\n", s->x, s->y, s->t, source_norm);
-//      dumpsd(&(s->sigma));
+//      dumpas(&(s->sigma));
 //    }
 //  }
 #endif

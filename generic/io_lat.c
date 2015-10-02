@@ -310,7 +310,7 @@ void w_serial(gauge_file *gf) {
         // The node with the data just appends to its tbuf
         if (this_node == currentnode) {
           i = node_index(x, y, t);
-          d2f_scalar(&lattice[i].sigma, &tbuf[NSD * tbuf_length]);
+          d2f_scalar(&lattice[i].sigma, &tbuf[NAS * tbuf_length]);
         }
 
         if (this_node == currentnode || this_node == 0)

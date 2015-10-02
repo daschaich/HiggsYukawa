@@ -92,9 +92,9 @@ void epsilon() {
             continue;
           perm[i][j][k][l] = order(i, j, k, l);
 #ifdef DEBUG_CHECK
-            if (perm[i][j][k][l] * perm[i][j][k][l] > 1.0e-4)
-              node0_printf("PERM(%d, %d, %d, %d, %d) = %.4g\n",
-                           i, j, k, l, perm[i][j][k][l]);
+          if (perm[i][j][k][l] * perm[i][j][k][l] > 1.0e-4)
+            node0_printf("PERM %d%d%d%d = %.4g\n",
+                         i, j, k, l, perm[i][j][k][l]);
 #endif
         }
       }
