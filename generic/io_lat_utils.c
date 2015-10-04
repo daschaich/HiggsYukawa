@@ -145,17 +145,17 @@ int write_gauge_info_item(FILE *fpout,    /* ascii file pointer */
 
   // Check for valid keyword
   for (i = 0; strlen(gauge_info_keyword[i]) > 0 &&
-      strcmp(gauge_info_keyword[i],keyword) != 0; i++);
+      strcmp(gauge_info_keyword[i], keyword) != 0; i++);
   if (strlen(gauge_info_keyword[i]) == 0)
     printf("write_gauge_info_item: WARNING: keyword %s not in table\n",
-      keyword);
+        keyword);
 
   // Write keyword
-  fprintf(fpout,"%s =",keyword);
+  fprintf(fpout, "%s =", keyword);
 
   // Write count if more than one item
   if (count > 1)
-    fprintf(fpout,"[%d]",count);
+    fprintf(fpout, "[%d]", count);
 
   n = count;
   if (n == 0)
@@ -163,24 +163,24 @@ int write_gauge_info_item(FILE *fpout,    /* ascii file pointer */
 
   // Write data
   for (k = 0, data = (char *)src; k < n; k++, data += stride) {
-      fprintf(fpout," ");
-      if (strstr(fmt,"s") != NULL)
-  fprintf(fpout,fmt,data);
-      else if (strstr(fmt,"d") != NULL)
-  fprintf(fpout,fmt,*(int *)data);
-      else if (strstr(fmt,"lu") != NULL)
-  fprintf(fpout,fmt,*(unsigned long *)data);
-      else if (strstr(fmt,"e") != NULL ||
+    fprintf(fpout," ");
+    if (strstr(fmt,"s") != NULL)
+      fprintf(fpout,fmt,data);
+    else if (strstr(fmt,"d") != NULL)
+      fprintf(fpout,fmt,*(int *)data);
+    else if (strstr(fmt,"lu") != NULL)
+      fprintf(fpout,fmt,*(unsigned long *)data);
+    else if (strstr(fmt,"e") != NULL ||
         strstr(fmt,"f") != NULL ||
         strstr(fmt,"g") != NULL) {
-    tt = *(Real *)data;
-    fprintf(fpout,fmt,tt);
-  }
-      else {
-    printf("write_gauge_info_item: Unrecognized data type %s\n",fmt);
-    return 1;
-  }
+      tt = *(Real *)data;
+      fprintf(fpout,fmt,tt);
     }
+    else {
+      printf("write_gauge_info_item: Unrecognized data type %s\n",fmt);
+      return 1;
+    }
+  }
   fprintf(fpout,"\n");
   return 0;
 }
@@ -208,12 +208,11 @@ int sprint_gauge_info_item(
   float tt;
 
   /* Check for valid keyword */
-
-  for (i=0;strlen(gauge_info_keyword[i])>0 &&
-      strcmp(gauge_info_keyword[i],keyword) != 0; i++);
+  for (i = 0; strlen(gauge_info_keyword[i]) > 0 &&
+      strcmp(gauge_info_keyword[i], keyword) != 0; i++);
   if (strlen(gauge_info_keyword[i]) == 0)
     printf("write_gauge_info_item: WARNING: keyword %s not in table\n",
-      keyword);
+        keyword);
 
   /* Write keyword */
   bytes = 0;
@@ -232,43 +231,40 @@ int sprint_gauge_info_item(
   n = count; if (n == 0)n = 1;
 
   /* Write data */
-  for (k = 0, data = (char *)src; k < n; k++, data += stride)
-    {
-      snprintf(string+bytes, nstring-bytes," ");
-      bytes = strlen(string);
-      if (bytes >= nstring)return 1;
-
-      if (strstr(fmt,"s") != NULL) {
-  snprintf(string+bytes,nstring-bytes, fmt,data);
-  bytes = strlen(string);
-  if (bytes >= nstring)return 1;
-      }
-      else if (strstr(fmt,"d") != NULL) {
-  snprintf(string+bytes,nstring-bytes,fmt,*(int *)data);
-  bytes = strlen(string);
-  if (bytes >= nstring)return 1;
-      }
-      else if (strstr(fmt,"lu") != NULL) {
-  snprintf(string+bytes,nstring-bytes,fmt,*(unsigned long *)data);
-  bytes = strlen(string);
-  if (bytes >= nstring)return 1;
-      }
-      else if (strstr(fmt,"e") != NULL ||
-        strstr(fmt,"f") != NULL ||
-        strstr(fmt,"g") != NULL)
-  {
-    tt = *(Real *)data;
-    snprintf(string+bytes,nstring-bytes,fmt,tt);
+  for (k = 0, data = (char *)src; k < n; k++, data += stride) {
+    snprintf(string+bytes, nstring-bytes," ");
     bytes = strlen(string);
     if (bytes >= nstring)return 1;
-  }
-      else
-  {
-    printf("write_gauge_info_item: Unrecognized data type %s\n",fmt);
-    return 1;
-  }
+
+    if (strstr(fmt,"s") != NULL) {
+      snprintf(string+bytes,nstring-bytes, fmt,data);
+      bytes = strlen(string);
+      if (bytes >= nstring)return 1;
     }
-  snprintf(string+bytes,nstring-bytes,"\n");
+    else if (strstr(fmt,"d") != NULL) {
+      snprintf(string+bytes,nstring-bytes,fmt,*(int *)data);
+      bytes = strlen(string);
+      if (bytes >= nstring)return 1;
+    }
+    else if (strstr(fmt,"lu") != NULL) {
+      snprintf(string + bytes, nstring - bytes, fmt, *(unsigned long *)data);
+      bytes = strlen(string);
+      if (bytes >= nstring)return 1;
+    }
+    else if (strstr(fmt, "e") != NULL ||
+        strstr(fmt, "f") != NULL ||
+        strstr(fmt, "g") != NULL) {
+      tt = *(Real *)data;
+      snprintf(string+bytes,nstring-bytes,fmt,tt);
+      bytes = strlen(string);
+      if (bytes >= nstring)return 1;
+    }
+    else {
+      printf("write_gauge_info_item: Unrecognized data type %s\n",fmt);
+      return 1;
+    }
+  }
+  snprintf(string + bytes, nstring - bytes, "\n");
   bytes = strlen(string);
   if (bytes >= nstring)return 1;
 
@@ -295,10 +291,10 @@ void write_gauge_info_file(gauge_file *gf) {
 
   // Open header file
   if ((info_fp = fopen(info_filename,"w")) == NULL) {
-      printf("write_gauge_info_file: Can't open ascii info file %s\n",
-             info_filename);
-      return;
-    }
+    printf("write_gauge_info_file: Can't open ascii info file %s\n",
+           info_filename);
+    return;
+  }
 
   // Write required information
   write_gauge_info_item(info_fp, "magic_number", "%d", (char *)&gh->magic_number, 0, 0);

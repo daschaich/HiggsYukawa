@@ -84,7 +84,7 @@ double_complex dce_itheta(double theta);
 
 
 // -----------------------------------------------------------------
-// Macros for Complex Numbers
+// Macros for complex numbers
 // *b <-- *a
 #define set_complex_equal(a, b) { (*b).real = (*a).real; \
                                   (*b).imag = (*a).imag; }

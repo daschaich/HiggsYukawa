@@ -88,7 +88,7 @@ void randomlat() {
 #if (DIMF != 4)
   #error "Assuming DIMF=4!"
 #endif
-  register int i, index;
+  register int i;
   register site *s;
 
   FORALLSITES(i, s) {
@@ -167,15 +167,12 @@ gauge_file *reload_lattice(int flag, char *filename) {
     node0_printf("Time to reload gauge configuration = %e\n",dtime);
 
   d_sigmasum(&sigmasum);
-  if (this_node == 0) {
 #if PRECISION == 1
-    node0_printf("CHECK SIGMA SUM: %e\n", sigmasum);
-    fflush(stdout);
+  node0_printf("CHECK SIGMA SUM: %e\n", sigmasum);
 #else             // Double precision
-    node0_printf("CHECK SIGMA SUM: %.16e\n", sigmasum);
-    fflush(stdout);
+  node0_printf("CHECK SIGMA SUM: %.16e\n", sigmasum);
 #endif
-  }
+  fflush(stdout);
   dtime = -dclock();
   return gf;
 }

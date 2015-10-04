@@ -62,24 +62,30 @@
 
 
 // -----------------------------------------------------------------
-// Copy scalars from single precision to generic precision
-void f2d_scalar(fselfdual *a, selfdual *b) {
+// Copy scalar from single precision to generic precision
+void f2d_scalar(fantisym *a, antisym *b) {
 #if (DIMF != 4)
   #error "Assuming DIMF=4!"
 #endif
   b->e[0] = a->e[0];
   b->e[1] = a->e[1];
   b->e[2] = a->e[2];
+  b->e[3] = a->e[3];
+  b->e[4] = a->e[4];
+  b->e[5] = a->e[5];
 }
 
-// Copy scalars from generic precision to single precision
-void d2f_scalar(selfdual *a, fselfdual *b) {
+// Copy scalar from generic precision to single precision
+void d2f_scalar(antisym *a, fantisym *b) {
 #if (DIMF != 4)
   #error "Assuming DIMF=4!"
 #endif
   b->e[0] = a->e[0];
   b->e[1] = a->e[1];
   b->e[2] = a->e[2];
+  b->e[3] = a->e[3];
+  b->e[4] = a->e[4];
+  b->e[5] = a->e[5];
 }
 // -----------------------------------------------------------------
 
@@ -129,7 +135,7 @@ gauge_file *w_serial_i(char *filename) {
 
 // -----------------------------------------------------------------
 // Flush lbuf to output, resetting buf_length is reset
-static void flush_lbuf_to_file(gauge_file *gf, fselfdual *lbuf,
+static void flush_lbuf_to_file(gauge_file *gf, fantisym *lbuf,
                                int *buf_length) {
 
   FILE *fp = gf->fp;
@@ -138,7 +144,7 @@ static void flush_lbuf_to_file(gauge_file *gf, fselfdual *lbuf,
   if (*buf_length <= 0)
     return;
 
-  stat = (int)fwrite(lbuf, sizeof(fselfdual), *buf_length, fp);
+  stat = (int)fwrite(lbuf, sizeof(fantisym), *buf_length, fp);
   if (stat != *buf_length) {
     printf("w_serial: node%d gauge configuration write error %d file %s\n",
            this_node, errno, gf->filename);
@@ -177,17 +183,17 @@ static void accum_cksums(gauge_file *gf, int *rank29, int *rank31,
 // -----------------------------------------------------------------
 // Flush tbuf to lbuf and accumulate checksums without resetting tbuf_length
 static void flush_tbuf_to_lbuf(gauge_file *gf, int *rank29, int *rank31,
-             fselfdual *lbuf, int *buf_length,
-             fselfdual *tbuf, int tbuf_length) {
+             fantisym *lbuf, int *buf_length,
+             fantisym *tbuf, int tbuf_length) {
 
   int nword;
   u_int32type *buf;
 
   if (tbuf_length > 0) {
     memcpy((void *)&lbuf[*buf_length],
-           (void *)tbuf, tbuf_length * sizeof(fselfdual));
+           (void *)tbuf, tbuf_length * sizeof(fantisym));
 
-    nword = (int)sizeof(fselfdual) / (int)sizeof(int32type) * tbuf_length;
+    nword = (int)sizeof(fantisym) / (int)sizeof(int32type) * tbuf_length;
     buf = (u_int32type *)&lbuf[*buf_length];
     accum_cksums(gf, rank29, rank31, buf, nword);
 
@@ -195,14 +201,14 @@ static void flush_tbuf_to_lbuf(gauge_file *gf, int *rank29, int *rank31,
   }
 }
 
-static void send_buf_to_node0(fselfdual *tbuf, int tbuf_length,
+static void send_buf_to_node0(fantisym *tbuf, int tbuf_length,
                               int currentnode) {
 
   if (this_node == currentnode) {
-    send_field((char *)tbuf, tbuf_length * sizeof(fselfdual), 0);
+    send_field((char *)tbuf, tbuf_length * sizeof(fantisym), 0);
   }
   else if (this_node == 0) {
-    get_field((char *)tbuf, tbuf_length * sizeof(fselfdual), currentnode);
+    get_field((char *)tbuf, tbuf_length * sizeof(fantisym), currentnode);
   }
 }
 // -----------------------------------------------------------------
@@ -217,7 +223,8 @@ void w_serial(gauge_file *gf) {
   int x, y, t, currentnode, newnode;
   FILE *fp = NULL;
   gauge_header *gh = NULL;
-  fselfdual *lbuf = NULL, *tbuf = malloc(nx * sizeof(*tbuf));
+  fantisym *lbuf = NULL;
+  fantisym *tbuf = malloc(nx * sizeof(*tbuf));
   off_t offset;               // File stream pointer
   off_t coord_list_size;      // Size of coordinate list in bytes
   off_t head_size;            // Size of header plus coordinate list
@@ -226,12 +233,13 @@ void w_serial(gauge_file *gf) {
 
 
   // Allocate message buffer space for one x dimension of the local hypercube
-  // Only allocate lbuf on node0
+  // The largest possible space we need is nx
   if (tbuf == NULL) {
     printf("w_serial: node%d can't malloc tbuf\n", this_node);
     terminate(1);
   }
 
+  // Only allocate lbuf on node0
   if (this_node == 0) {
     lbuf = malloc(MAX_BUF_LENGTH * sizeof(*lbuf));
     if (lbuf == NULL) {
@@ -268,8 +276,8 @@ void w_serial(gauge_file *gf) {
   gf->check.sum29 = 0;
   // Count 32-bit words mod 29 and mod 31 in order of appearance on file
   // Here only node 0 uses these values -- both start at 0
-  rank29 = sizeof(fselfdual) / sizeof(int32type) * sites_on_node * this_node % 29;
-  rank31 = sizeof(fselfdual) / sizeof(int32type) * sites_on_node * this_node % 31;
+  rank29 = sizeof(fantisym) / sizeof(int32type) * sites_on_node * this_node % 29;
+  rank31 = sizeof(fantisym) / sizeof(int32type) * sites_on_node * this_node % 31;
 
   g_sync();
   currentnode = 0;  // The node delivering data
@@ -310,7 +318,7 @@ void w_serial(gauge_file *gf) {
         // The node with the data just appends to its tbuf
         if (this_node == currentnode) {
           i = node_index(x, y, t);
-          d2f_scalar(&lattice[i].sigma, &tbuf[NAS * tbuf_length]);
+          d2f_scalar(&lattice[i].sigma, &tbuf[tbuf_length]);
         }
 
         if (this_node == currentnode || this_node == 0)
@@ -363,7 +371,7 @@ void r_serial(gauge_file *gf) {
   char *filename;
   int byterevflag;
 
-  off_t offset = 0 ;          // File stream pointer
+  off_t offset = 0;           // File stream pointer
   off_t gauge_check_size;     // Size of gauge configuration checksum record
   off_t coord_list_size;      // Size of coordinate list in bytes
   off_t head_size;            // Size of header plus coordinate list
@@ -375,8 +383,8 @@ void r_serial(gauge_file *gf) {
   gauge_check test_gc;
   u_int32type *val;
   int rank29, rank31;
-  fselfdual *lbuf = NULL;   // Only allocate on node0
-  fselfdual *tmpsd = malloc(sizeof(*tmpsd));
+  fantisym *lbuf = NULL;   // Only allocate on node0
+  fantisym *tmpas = malloc(sizeof(*tmpas));
   int idest = 0;
   fp = gf->fp;
   gh = gf->header;
@@ -398,7 +406,7 @@ void r_serial(gauge_file *gf) {
     head_size = checksum_offset + gauge_check_size;
 
     // Allocate single precision read buffer
-    lbuf = malloc(MAX_BUF_LENGTH * sizeof(fselfdual));
+    lbuf = malloc(MAX_BUF_LENGTH * sizeof(fantisym));
     if (lbuf == NULL) {
       printf("r_serial: node%d can't malloc lbuf\n", this_node);
       fflush(stdout);
@@ -457,7 +465,7 @@ void r_serial(gauge_file *gf) {
           buf_length = MAX_BUF_LENGTH;
         /* then do read */
 
-        stat = (int)fread(lbuf, sizeof(fselfdual), buf_length, fp);
+        stat = (int)fread(lbuf, sizeof(fantisym), buf_length, fp);
         if (stat != buf_length) {
           printf("r_serial: node%d configuration read error %d file %s\n",
                  this_node, errno, filename);
@@ -469,11 +477,11 @@ void r_serial(gauge_file *gf) {
 
       if (destnode == 0) {  // Just copy links
         idest = node_index(x, y, t);
-        // Save scalars in tmpsd for further processing
-        memcpy(tmpsd, &lbuf[where_in_buf], sizeof(fselfdual));
+        // Save scalars in tmpas for further processing
+        memcpy(tmpas, &lbuf[where_in_buf], sizeof(fantisym));
       }
       else {                // Send to correct node
-        send_field((char *)&lbuf[where_in_buf], sizeof(fselfdual), destnode);
+        send_field((char *)&lbuf[where_in_buf], sizeof(fantisym), destnode);
       }
       where_in_buf++;
     }
@@ -483,22 +491,22 @@ void r_serial(gauge_file *gf) {
       if (this_node == destnode) {
         idest = node_index(x, y, t);
         // Receive scalars in temporary space for further processing
-        get_field((char *)tmpsd, sizeof(fselfdual), 0);
+        get_field((char *)tmpas, sizeof(fantisym), 0);
       }
     }
 
     /* The receiving node does the byte reversal and then checksum,
-       if needed.  At this point tmpsd contains the input matrices
+       if needed.  At this point tmpas contains the input matrices
        and idest points to the destination site structure. */
     if (this_node == destnode) {
       if (byterevflag == 1)
-        byterevn((int32type *)tmpsd, sizeof(fselfdual) / sizeof(int32type));
+        byterevn((int32type *)tmpas, sizeof(fantisym) / sizeof(int32type));
       // Accumulate checksums
-      for (k = 0, val = (u_int32type *)tmpsd;
-           k < (int)sizeof(fselfdual) / (int)sizeof(int32type);
+      for (k = 0, val = (u_int32type *)tmpas;
+           k < (int)sizeof(fantisym) / (int)sizeof(int32type);
            k++, val++) {
-        test_gc.sum29 ^= (*val)<<rank29 | (*val)>>(32-rank29);
-        test_gc.sum31 ^= (*val)<<rank31 | (*val)>>(32-rank31);
+        test_gc.sum29 ^= (*val)<<rank29 | (*val)>>(32 - rank29);
+        test_gc.sum31 ^= (*val)<<rank31 | (*val)>>(32 - rank31);
         rank29++;
         if (rank29 >= 29)
           rank29 = 0;
@@ -507,11 +515,11 @@ void r_serial(gauge_file *gf) {
           rank31 = 0;
       }
       // Copy scalars to generic-precision lattice[idest]
-      f2d_scalar(tmpsd, &lattice[idest].sigma);
+      f2d_scalar(tmpas, &lattice[idest].sigma);
     }
     else {
-      rank29 += sizeof(fselfdual) / sizeof(int32type);
-      rank31 += sizeof(fselfdual) / sizeof(int32type);
+      rank29 += sizeof(fantisym) / sizeof(int32type);
+      rank31 += sizeof(fantisym) / sizeof(int32type);
       rank29 %= 29;
       rank31 %= 31;
     }
