@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------
-// Main procedure for N=4 SYM pfaffian phase
+// Main procedure for three-dimensional four-fermion pfaffian
 #define CONTROL
 #include "susy_includes.h"
 // -----------------------------------------------------------------

@@ -12,7 +12,7 @@ void scalar_field_copy(field_offset src, field_offset dest) {
   register site *s;
 
   FORALLSITES(i, s)
-    as_copy((selfdual *)F_PT(s, src), (selfdual *)F_PT(s, dest));
+    as_copy((antisym *)F_PT(s, src), (antisym *)F_PT(s, dest));
 }
 // -----------------------------------------------------------------
 
@@ -25,7 +25,8 @@ void scalar_field_copy(field_offset src, field_offset dest) {
 void fermion_op(vector *src, vector *dest, int sign) {
   register int i;
   register site *s;
-  int dir;
+  int dir, a, b, c, d, p;
+  Real tr, halfG = 0.5 * G;
   vector tvec, tvec_dir, tvec_opp;
   msg_tag *tag[6];    // 6 = 2NDIMS
 
@@ -44,10 +45,25 @@ void fermion_op(vector *src, vector *dest, int sign) {
   }
 
   // Compute scalar term as gathers run
-  // Initialize dest = G * sigma * src
+  // Initialize dest = 0.5G * sigma * src
   FORALLSITES(i, s) {
-    mult_sd_vec(&(s->sigma), &(src[i]), &(dest[i]));    // Initialize dest
-    scalar_mult_vec(&(dest[i]), G, &(dest[i]));
+    clearvec(&(dest[i]));
+    for (a = 0; a < DIMF; a++) {
+      for (b = a + 1; b < DIMF; b++) {
+        p = as_index[a][b];
+        dest[i].c[a] += s->sigma.e[p] * src[i].c[b];
+        dest[i].c[b] -= s->sigma.e[p] * src[i].c[a];
+        for (c = 0; c < DIMF; c++) {
+          for (d = c + 1; d < DIMF; d++) {
+            p = as_index[c][d];
+            tr = 0.5 * perm[a][b][c][d];
+            dest[i].c[a] += tr * s->sigma.e[p] * src[i].c[b];
+            dest[i].c[b] -= tr * s->sigma.e[p] * src[i].c[a];
+          }
+        }
+      }
+    }
+    scalar_mult_vec(&(dest[i]), halfG, &(dest[i]));
   }
 
   // Accumulate kinetic term as gathers finish

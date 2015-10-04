@@ -41,34 +41,6 @@ void ranmom() {
     mom[i].e[4] = gaussian_rand_no(&(s->node_prn));
     mom[i].e[5] = gaussian_rand_no(&(s->node_prn));
 #endif
-// !!!TODO
-    mom[i].e[0] = 0.0;
-    mom[i].e[1] = 0.0;
-    mom[i].e[2] = 0.0;
-    mom[i].e[3] = 0.0;
-    mom[i].e[4] = 0.0;
-    mom[i].e[5] = 0.0;
-  }
-}
-// -----------------------------------------------------------------
-
-
-
-// -----------------------------------------------------------------
-void update_scalar(Real eps) {
-#if (DIMF != 4)
-  #error "Assuming DIMF=4!"
-#endif
-  register int i;
-  register site *s;
-
-  FORALLSITES(i, s) {
-    s->sigma.e[0] += eps * mom[i].e[0];
-    s->sigma.e[1] += eps * mom[i].e[1];
-    s->sigma.e[2] += eps * mom[i].e[2];
-    s->sigma.e[3] += eps * mom[i].e[3];
-    s->sigma.e[4] += eps * mom[i].e[4];
-    s->sigma.e[5] += eps * mom[i].e[5];
   }
 }
 // -----------------------------------------------------------------
@@ -77,8 +49,11 @@ void update_scalar(Real eps) {
 
 // -----------------------------------------------------------------
 // Omelyan version; ``dirty'' speeded-up version
-double update_scalar_step(Real eps) {
+double update_scalar(Real eps) {
+  register int i;
+  register site *s;
   int nsw = nsteps[1], isw;
+  Real halfstep = 0.5 * eps;
   double norm;
 
 #ifdef UPDATE_DEBUG
@@ -86,12 +61,15 @@ double update_scalar_step(Real eps) {
 #endif
   norm = scalar_force(eps * LAMBDA);
   for (isw = 1; isw <= nsw; isw++) {
-    update_scalar(0.5 * eps);
+    FORALLSITES(i, s)
+      scalar_mult_add_as(&(s->sigma), &(mom[i]), halfstep, &(s->sigma));
     norm += scalar_force(eps * LAMBDA_MID);
-    update_scalar(0.5 * eps);
+
+    FORALLSITES(i, s)
+      scalar_mult_add_as(&(s->sigma), &(mom[i]), halfstep, &(s->sigma));
+
     if (isw < nsw)
       norm += scalar_force(eps * TWO_LAMBDA);
-
     else
       norm += scalar_force(eps * LAMBDA);
   }
@@ -120,7 +98,7 @@ int update_step(double *fnorm, double *snorm, vector **src, vector ***psim) {
 
   for (i_multi0 = 1; i_multi0 <= nsteps[0]; i_multi0++) {
     // Scalar update
-    tr = update_scalar_step(s_eps);
+    tr = update_scalar(s_eps);
     *snorm += tr;
     if (tr > max_sf)
       max_sf = tr;
@@ -136,7 +114,7 @@ int update_step(double *fnorm, double *snorm, vector **src, vector ***psim) {
     }
 
     // Scalar update
-    tr = update_scalar_step(s_eps);
+    tr = update_scalar(s_eps);
     *snorm += tr;
     if (tr > max_sf)
       max_sf = tr;
@@ -260,7 +238,6 @@ int update() {
   free(psim);
 
   if (traj_length > 0) {
-    node0_printf("IT_PER_TRAJ %d\n", iters);
     node0_printf("MONITOR_FORCE_SCALAR   %.4g %.4g\n",
                  snorm / (double)(2 * nsteps[0]), max_sf);
     for (n = 0; n < Nroot; n++) {

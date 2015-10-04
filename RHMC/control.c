@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------
-// Main procedure for N=4 SYM evolution and measurements
+// Main procedure for three-dimensional four-fermion evolution and measurements
 #define CONTROL
 #include "so4_includes.h"
 // -----------------------------------------------------------------

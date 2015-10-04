@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------
-// Main procedure for N=4 SYM eigenvalues
+// Main procedure for three-dimensional four-fermion eigenvalues
 #define CONTROL
 #include "susy_includes.h"
 // -----------------------------------------------------------------

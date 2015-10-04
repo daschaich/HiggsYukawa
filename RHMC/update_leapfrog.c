@@ -196,7 +196,6 @@ int update() {
   free(psim);
 
   if (traj_length > 0) {
-    node0_printf("IT_PER_TRAJ %d\n", iters);
     node0_printf("MONITOR_FORCE_SCALAR   %.4g %.4g\n",
                  snorm / (double)(2 * nsteps[0]), max_sf);
     for (n = 0; n < Nroot; n++) {

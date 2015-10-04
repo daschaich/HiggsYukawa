@@ -21,7 +21,7 @@ int initial_set() {
 #define XSTR(s) STR(s)
 #define STR(s) #s
     // end kludge
-    printf("Three-dimensional four-fermion system, SO(%d)\n", DIMF);
+    printf("Three-dimensional four-fermion SO(%d) system\n", DIMF);
     printf("Microcanonical simulation with refreshing\n");
     printf("Machine = %s, with %d nodes\n", machine_type(), numnodes());
 #ifdef HMC_ALGORITHM
