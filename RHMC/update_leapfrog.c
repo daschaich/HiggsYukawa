@@ -55,6 +55,9 @@ void update_scalar(Real eps) {
     s->sigma.e[0] += eps * mom[i].e[0];
     s->sigma.e[1] += eps * mom[i].e[1];
     s->sigma.e[2] += eps * mom[i].e[2];
+    s->sigma.e[3] += eps * mom[i].e[3];
+    s->sigma.e[4] += eps * mom[i].e[4];
+    s->sigma.e[5] += eps * mom[i].e[5];
   }
 }
 // -----------------------------------------------------------------
@@ -94,7 +97,7 @@ int update_step(double *fnorm, double *snorm, vector **src, vector ***psim) {
 
 // -----------------------------------------------------------------
 int update() {
-  int i, n, iters = 0;
+  int j, n, iters = 0;
   Real final_rsq;
   double startaction, endaction, change;
   vector **src = malloc(Nroot * sizeof(**src));
@@ -103,8 +106,8 @@ int update() {
   for (n = 0; n < Nroot; n++) {
     src[n] = malloc(sites_on_node * sizeof(vector));
     psim[n] = malloc(Norder * sizeof(vector*));
-    for (i = 0; i < Norder; i++)
-      psim[n][i] = malloc(sites_on_node * sizeof(vector));
+    for (j = 0; j < Norder; j++)
+      psim[n][j] = malloc(sites_on_node * sizeof(vector));
   }
 
   // Refresh the momenta
@@ -117,8 +120,8 @@ int update() {
 
   // Do a CG to get psim,
   // rational approximation to (Mdag M)^(-1 / 4) src = (Mdag M)^(-1 / 8) g
-  for (i = 0; i < Norder; i++)
-    shift[i] = shift4[i];
+  for (j = 0; j < Norder; j++)
+    shift[j] = shift4[j];
 #ifdef UPDATE_DEBUG
   node0_printf("Calling CG in update_leapfrog -- original action\n");
 #endif
@@ -188,8 +191,8 @@ int update() {
 
   for (n = 0; n < Nroot; n++) {
     free(src[n]);
-    for (i = 0; i < Norder; i++)
-      free(psim[n][i]);
+    for (j = 0; j < Norder; j++)
+      free(psim[n][j]);
     free(psim[n]);
   }
   free(src);
