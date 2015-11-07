@@ -71,19 +71,13 @@ void fermion_op(vector *src, vector *dest, int sign) {
     wait_gather(tag[dir]);
     wait_gather(tag[OPP_DIR(dir)]);
     FORALLSITES(i, s) {
-      // Need to deal with BCs here since no gauge fields
-      if (dir == TUP && PBC < 0 && s->t == nt - 1) {
-        scalar_mult_vec((vector *)gen_pt[dir][i], -1.0, &tvec_dir);
-        vec_copy((vector *)gen_pt[OPP_DIR(dir)][i], &tvec_opp);
-      }
-      else if (dir == TUP && PBC < 0 && s->t == 0) {
-        vec_copy((vector *)gen_pt[dir][i], &tvec_dir);
-        scalar_mult_vec((vector *)gen_pt[OPP_DIR(dir)][i], -1.0, &tvec_opp);
-      }
-      else {
-        vec_copy((vector *)gen_pt[dir][i], &tvec_dir);
-        vec_copy((vector *)gen_pt[OPP_DIR(dir)][i], &tvec_opp);
-      }
+      // Deal with BCs here
+      vec_copy((vector *)gen_pt[dir][i], &tvec_dir);
+      vec_copy((vector *)gen_pt[OPP_DIR(dir)][i], &tvec_opp);
+      if (dir == TUP && PBC < 0 && s->t == nt - 1)
+        scalar_mult_vec(&tvec_dir, -1.0, &tvec_dir);
+      else if (dir == TUP && PBC < 0 && s->t == 0)
+        scalar_mult_vec(&tvec_opp, -1.0, &tvec_opp);
 
       // Add 0.5 * phase(x)[dir] * [psi(x + dir) - psi(x - dir)] to dest
       sub_vec(&tvec_dir, &tvec_opp, &tvec);

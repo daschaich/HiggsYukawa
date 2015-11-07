@@ -65,6 +65,11 @@ int initial_set() {
   PBC = par_buf.PBC;
   iseed = par_buf.iseed;
 
+  if (PBC >= 0)
+    node0_printf("Periodic temporal boundary conditions\n");
+  if (PBC < 0)
+    node0_printf("Antiperiodic temporal boundary conditions\n");
+
   // Set up stuff for RHMC and multi-mass CG
   Nroot = par_buf.Nroot;
   fnorm = malloc(Nroot * sizeof(fnorm));
@@ -89,67 +94,7 @@ int initial_set() {
 
 
 // -----------------------------------------------------------------
-void cubic_neighbor(int x, int y, int t, int *arg, int forw_back,
-                    int *xpt, int *ypt, int *tpt) {
-
-  if (forw_back == FORWARDS) {
-    *xpt = (x + nx + arg[0]) % nx;
-    *ypt = (y + ny + arg[1]) % ny;
-    *tpt = (t + nt + arg[3]) % nt;
-  }
-  else {
-    *xpt = (x + nx - arg[0]) % nx;
-    *ypt = (y + ny - arg[1]) % ny;
-    *tpt = (t + nt - arg[3]) % nt;
-  }
-}
-// -----------------------------------------------------------------
-
-
-
-// -----------------------------------------------------------------
-void setup_offset() {
-  int i, k;
-
-  // Construct the link paths: one in each direction
-  for (i = 0; i < NDIMS; i++) {
-    for (k = 0; k < NDIMS; k++)
-      offset[i][k] = 0;
-    offset[i][i] = 1;
-  }
-
-#ifdef DEBUG_CHECK
-  node0_printf("There are %d distinct paths:\n", NDIMS);
-#endif
-  // goffset holds indices of gather_array in ../generic/com_mpi.c
-  // The first six elements of gather_array are
-  //   XUP, YUP, TUP, TDOWN, YDOWN, XDOWN
-  // in that order!
-  // In order to use XDOWN = XUP + 1, etc., we make the next six elements
-  //   XUP, XDOWN, YUP, YDOWN, TUP, TDOWN
-  // Then goffset[0]=6, goffset[1]=8 and goffset[2]=10
-  // But we can't use these in EVEN or ODD gathers!
-  for (i = 0; i < NDIMS; i++) {
-    goffset[i] = make_gather(cubic_neighbor, offset[i],
-                             WANT_INVERSE, NO_EVEN_ODD, SCRAMBLE_PARITY);
-
-#ifdef DEBUG_CHECK
-    int dir;
-    node0_printf("  %d ahead:", i);
-    for (dir = 0; dir < NDIMS; dir++)
-      node0_printf(" %d", offset[i][dir]);
-
-    node0_printf(" (offset %d)\n", goffset[i]);
-#endif
-  }
-}
-// -----------------------------------------------------------------
-
-
-
-// -----------------------------------------------------------------
-// Set up Kogut--Susskind phase factors, sum(nu < mu) {-1^i[nu]}
-// combined with boundary conditions
+// Set up Kogut--Susskind phase factors, sum_{nu < mu} (-1)^{i[nu]}
 void setup_phases() {
   register int i;
   register site *s;
@@ -217,16 +162,8 @@ int setup() {
   make_lattice();
   // Set up neighbor pointers and comlink structures
   make_nn_gathers();
-  // Set up offset tables
-  setup_offset();
-
-  // Set up phases, including boundary conditions
-  if (PBC >= 0)
-    node0_printf("Periodic temporal boundary conditions\n");
-  if (PBC < 0)
-    node0_printf("Antiperiodic temporal boundary conditions\n");
+  // Set up phases
   setup_phases();
-
   // Allocate space for fields
   make_fields();
 
