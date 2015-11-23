@@ -61,7 +61,7 @@ double fermion_force(Real eps, vector *src, vector **sol) {
           tempas.e[p] -= tempvec[i].c[b] * sol[n][i].c[a];
           for (c = 0; c < DIMF; c++) {
             for (d = c + 1; d < DIMF; d++) {
-              tr = 0.5 * perm[a][b][c][d];
+              tr = perm[a][b][c][d];    // No half since not double-counting
               tempas.e[p] += tr * tempvec[i].c[c] * sol[n][i].c[d];
               tempas.e[p] -= tr * tempvec[i].c[d] * sol[n][i].c[c];
             }

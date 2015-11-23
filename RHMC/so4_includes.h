@@ -31,9 +31,9 @@ void update_u(Real eps);
 int grsource(vector *src);
 
 // Action routines
-double d_action(vector **src, vector ***sol);
-double d_scalar_action();
-double d_fermion_action();
+double action(vector **src, vector ***sol);
+double scalar_action();
+double fermion_action();
 
 // Force routines
 double scalar_force(Real eps);
@@ -85,6 +85,6 @@ void zgeev_(char *doL, char *doR, int *N1, double *store, int *N2, double *eigs,
 // -----------------------------------------------------------------
 // Pfaffian phase
 #ifdef PHASE
-void d_phase();
+void phase();
 #endif
 // -----------------------------------------------------------------

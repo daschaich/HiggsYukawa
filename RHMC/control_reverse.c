@@ -73,8 +73,8 @@ int main(int argc, char *argv[]){
     s_iters += congrad_multi(src[n], psim[n], niter, rsqmin, &final_rsq);
 
   // Observables at start of trajectory
-  s_act = d_scalar_action();
-  startAct = d_action(src, psim);
+  s_act = scalar_action();
+  startAct = action(src, psim);
   node0_printf("GMES %d %.8g\n", s_iters, s_act / (double)volume);
   node0_printf("ACT %.8g\n", startAct);
 
@@ -89,8 +89,8 @@ int main(int argc, char *argv[]){
 
   // Observables at end of trajectory
   // Scalar action and CG iterations at end of trajectory
-  s_act = d_scalar_action();
-  midAct = d_action(src, psim);
+  s_act = scalar_action();
+  midAct = action(src, psim);
   change = midAct - startAct;
   node0_printf("delta S = %.4g start S = %.12g end S = %.12g\n",
                change, startAct, midAct);
@@ -123,8 +123,8 @@ int main(int argc, char *argv[]){
   s_iters = update_step(fnorm, &snorm, src, psim);
 
   // Observables hopefully back at the start of the trajectory
-  s_act = d_scalar_action();
-  endAct = d_action(src, psim);
+  s_act = scalar_action();
+  endAct = action(src, psim);
   change = endAct - midAct;
   node0_printf("delta S = %.4g start S = %.12g end S = %.12g\n",
                change, midAct, endAct);

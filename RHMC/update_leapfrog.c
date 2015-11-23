@@ -130,7 +130,7 @@ int update() {
     iters += congrad_multi(src[n], psim[n], niter, rsqmin, &final_rsq);
 
   // Find initial action
-  startaction = d_action(src, psim);
+  startaction = action(src, psim);
   snorm = 0.0;
   max_sf = 0.0;
   for (n = 0; n < Nroot; n++) {
@@ -154,7 +154,7 @@ int update() {
 #endif
   for (n = 0; n < Nroot; n++)
     iters += congrad_multi(src[n], psim[n], niter, rsqmin, &final_rsq);
-  endaction = d_action(src, psim);
+  endaction = action(src, psim);
   change = endaction - startaction;
 #ifdef HMC_ALGORITHM
   // Reject configurations giving overflow

@@ -39,7 +39,7 @@ HEADERS = ${GLOBAL_HEADERS} ${MY_HEADERS} ${INLINE_HEADERS}
 # Basic set from current directory
 MY_OBJECTS = setup.o        \
              setup_perm.o   \
-             d_action.o     \
+             action.o     \
              info.o         \
              utilities.o    \
              grsource.o     \
@@ -95,7 +95,7 @@ so4_hmc::
 so4_phase::
 	${MAKE} -f ${MAKEFILE} target "MYTARGET= $@" \
 	"DEFINES = ${DEFINES} -DPHI_ALGORITHM -DSMEAR -DPHASE " \
-	"EXTRA_OBJECTS = control_phase.o d_phase.o io_phase.o "
+	"EXTRA_OBJECTS = control_phase.o phase.o io_phase.o "
 
 # The targets below have not been used/tested recently
 so4_phi::

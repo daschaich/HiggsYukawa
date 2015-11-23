@@ -9,7 +9,7 @@
 
 // -----------------------------------------------------------------
 // Scalar momenta contribution to the action
-double d_mom_action() {
+double mom_action() {
 #if (DIMF != 4)
   #error "Assuming DIMF=4!"
 #endif
@@ -35,7 +35,7 @@ double d_mom_action() {
 // -----------------------------------------------------------------
 // Scalar contribution to the action
 // Identical terms in self-dual matrix cancel factor of 1/2
-double d_scalar_action() {
+double scalar_action() {
 #if (DIMF != 4)
   #error "Assuming DIMF=4!"
 #endif
@@ -65,7 +65,7 @@ double d_scalar_action() {
 // Since the pseudofermion src is fixed throughout the trajectory,
 // ampdeg actually has no effect on Delta S (checked)
 // sol, however, depends on the gauge fields through the CG
-double d_fermion_action(vector *src, vector **sol) {
+double fermion_action(vector *src, vector **sol) {
   register int i, j;
   register site *s;
   double sum = 0.0;
@@ -90,20 +90,20 @@ double d_fermion_action(vector *src, vector **sol) {
 
 // -----------------------------------------------------------------
 // Print out total action and individual contributions
-double d_action(vector **src, vector ***sol) {
+double action(vector **src, vector ***sol) {
   int n;
   double h_act, f_act, total;
 
-  total = d_scalar_action();
+  total = scalar_action();
   node0_printf("action: scalar %.8g ", total);
 
   for (n = 0; n < Nroot; n++) {
-    f_act = d_fermion_action(src[n], sol[n]);
+    f_act = fermion_action(src[n], sol[n]);
     node0_printf("fermion%d %.8g ", n, f_act);
     total += f_act;
   }
 
-  h_act = d_mom_action();
+  h_act = mom_action();
   node0_printf("mom %.8g ", h_act);
   total += h_act;
   node0_printf("sum %.8g\n", total);

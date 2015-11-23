@@ -174,7 +174,7 @@ int update() {
     iters += congrad_multi(src[n], psim[n], niter, rsqmin, &final_rsq);
 
   // Find initial action
-  startaction = d_action(src, psim);
+  startaction = action(src, psim);
   snorm = 0.0;
   max_sf = 0.0;
   for (n = 0; n < Nroot; n++) {
@@ -193,7 +193,7 @@ int update() {
   // Find ending action
   // Reuse data from update_step, don't need CG to get (Mdag M)^(-1) chi
   // If the final step were a gauge update, CG would be necessary
-  endaction = d_action(src, psim);
+  endaction = action(src, psim);
   change = endaction - startaction;
 #ifdef HMC_ALGORITHM
   // Reject configurations giving overflow

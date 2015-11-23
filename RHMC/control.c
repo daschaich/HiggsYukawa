@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
   dtime = -dclock();
 
   // Check: compute initial scalar action
-  s_act = d_scalar_action();
+  s_act = scalar_action();
   node0_printf("START %.8g\n", s_act / (double)volume);
 
   // Perform warmup trajectories
@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
     // Do "local" measurements every trajectory!
     // Scalar action and CG iterations
     // Format: GMES cg_iters s_action
-    s_act = d_scalar_action();
+    s_act = scalar_action();
     node0_printf("GMES %d %.8g\n", s_iters, s_act / (double)volume);
 
     // Less frequent measurements every "propinterval" trajectories
@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
   node0_printf("RUNNING COMPLETED\n");
 
   // Check: compute final scalar action
-  s_act = d_scalar_action();
+  s_act = scalar_action();
   node0_printf("STOP %.8g\n", s_act / (double)volume);
   node0_printf("Average CG iters for steps: %.4g\n",
                (double)avs_iters / trajecs);

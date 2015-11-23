@@ -56,7 +56,7 @@ void fermion_op(vector *src, vector *dest, int sign) {
         for (c = 0; c < DIMF; c++) {
           for (d = c + 1; d < DIMF; d++) {
             p = as_index[c][d];
-            tr = 0.5 * perm[a][b][c][d];
+            tr = perm[a][b][c][d];    // No half since not double-counting
             dest[i].c[a] += tr * s->sigma.e[p] * src[i].c[b];
             dest[i].c[b] -= tr * s->sigma.e[p] * src[i].c[a];
           }
