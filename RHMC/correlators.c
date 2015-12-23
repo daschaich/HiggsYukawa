@@ -81,7 +81,7 @@ int correlators(int *pnt) {
     iters = congrad_multi(src, psim, niter, rsqmin, &size_r);
     dtime += dclock();
     tot_iters += iters;
-    node0_printf("Inversion %d of %d took %d iters and %.4g secs\n",
+    node0_printf("Inversion %d of %d took %d iters and %.4g seconds\n",
                  i + 1, DIMF, iters, dtime);
 
     // Now construct correlators
