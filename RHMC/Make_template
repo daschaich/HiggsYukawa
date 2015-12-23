@@ -1,4 +1,4 @@
-# three-dimensional four-fermion system with global SO(4) symmetry
+# Four-fermion system with global SO(4) symmetry
 #
 # Generic make-include file
 # This template file defines rules and macros common to all architectures
@@ -8,10 +8,11 @@
 # Targets:
 #   so4_phi uses phi algorithm
 #   so4_hmc uses hybrid Monte Carlo algorithm, i.e., phi + accept/reject
+#   so4_meas measures two- and four-fermion correlation functions
 #   so4_phase calculates the pfaffian phase
 #
 # Routines in this directory use RHMC, multiple time scale integration,
-#   and Omelyan.  See README.
+# and Omelyan integrators.  See README.
 
 MYINCLUDEDIR = .
 INCLUDEDIR = ../include
@@ -43,7 +44,7 @@ MY_OBJECTS = setup.o        \
              info.o         \
              utilities.o    \
              grsource.o     \
-             hdelta0.o      \
+             correlators.o  \
              congrad_multi.o
 
 # Basic set from generic directory
@@ -89,12 +90,22 @@ ${OBJECTS} : ${HEADERS} ${LASTMAKE} ${ALL_MAKES}
 ##### Targets:
 so4_hmc::
 	${MAKE} -f ${MAKEFILE} target "MYTARGET= $@" \
-	"DEFINES = ${DEFINES} -DPHI_ALGORITHM -DHMC_ALGORITHM -DSMEAR " \
+	"DEFINES = ${DEFINES} -DPHI_ALGORITHM -DHMC_ALGORITHM " \
+	"EXTRA_OBJECTS = control.o update_o.o update_h.o setup_rhmc.o "
+
+so4_meas::
+	${MAKE} -f ${MAKEFILE} target "MYTARGET= $@" \
+	"DEFINES = ${DEFINES} -DPHI_ALGORITHM -DCORR " \
+	"EXTRA_OBJECTS = control_meas.o "
+
+so4_hmc_meas::
+	${MAKE} -f ${MAKEFILE} target "MYTARGET= $@" \
+	"DEFINES = ${DEFINES} -DPHI_ALGORITHM -DHMC_ALGORITHM -DCORR " \
 	"EXTRA_OBJECTS = control.o update_o.o update_h.o setup_rhmc.o "
 
 so4_phase::
 	${MAKE} -f ${MAKEFILE} target "MYTARGET= $@" \
-	"DEFINES = ${DEFINES} -DPHI_ALGORITHM -DSMEAR -DPHASE " \
+	"DEFINES = ${DEFINES} -DPHI_ALGORITHM -DPHASE " \
 	"EXTRA_OBJECTS = control_phase.o phase.o io_phase.o "
 
 # The targets below have not been used/tested recently

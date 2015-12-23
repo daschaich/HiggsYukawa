@@ -39,7 +39,7 @@ fi
 # Otherwise consider all active targets
 # Compile
 cd ../../RHMC/
-for target in hmc eig phase ; do
+for target in hmc meas eig phase ; do
   echo "Compiling so4_$target..."
   if ! make -f $makefile so4_$target >& /dev/null ; then
     echo "ERROR: so4_$target compilation failed"
@@ -50,7 +50,7 @@ done
 
 # Run
 cd ../testsuite/
-for target in hmc eig phase ; do
+for target in hmc meas eig phase ; do
   rm -f mpi/$target.out
   echo "Running so4_$target..."
   $run ../RHMC/so4_$target < in.$target > mpi/$target.out
@@ -71,7 +71,7 @@ rm -f config.diag256 config.Q256
 
 # Check
 cd mpi/
-for target in hmc eig phase phase_part1 phase_part2 ; do
+for target in hmc meas eig phase phase_part1 phase_part2 ; do
   d="`diff -I'Time' -I'time' -I'seconds' -I'^start' $target.ref $target.out`"
   if [ -n "$d" ] ; then   # Non-zero string length
     echo "$target.ref and $target.out differ:"

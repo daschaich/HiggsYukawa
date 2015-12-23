@@ -8,4 +8,5 @@ localmake
 serial
 so4_eig*
 so4_hmc*
+so4_meas*
 so4_phase*

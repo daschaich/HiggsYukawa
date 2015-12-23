@@ -41,7 +41,7 @@ double fermion_force(Real eps, vector *source, vector **psim);
 
 // Fermion matrix--vector operators (D & D^2) and multi-mass CG
 void fermion_op(vector *src, vector *dest, int sign);
-void hdelta0(vector *src, vector *dest);
+void DSq(vector *src, vector *dest);
 int congrad_multi(vector *src, vector **psim,
                   int MaxCG, Real RsdCG, Real *size_r);
 
@@ -56,9 +56,18 @@ void scalar_field_copy(field_offset src, field_offset dest);
 
 
 // -----------------------------------------------------------------
+// More measurements
+#ifdef CORR
+// Two- and four-fermion correlator measurements
+int correlators(int *pnt);
+#endif
+// -----------------------------------------------------------------
+
+
+
+// -----------------------------------------------------------------
 // Eigenvalue routines
 #ifdef EIG
-#include "primme.h"
 int make_evs(int Nvec, vector **eigVec, double *eigVal, int flag);
 void check_Dmat(int Nvec, vector **eigVec);
 

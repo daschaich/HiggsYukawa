@@ -80,7 +80,7 @@ int congrad_multi(vector *src, vector **psim,
 
   for (N_iter = 0; N_iter < MaxCG && rsq > rsqstop; N_iter++) {
     // mp = (M(u) + shift[0]) pm
-    hdelta0(pm0, mpm);
+    DSq(pm0, mpm);
     iteration++;
     total_iters++;
     FORALLSITES(i,s)
@@ -209,11 +209,12 @@ int congrad_multi(vector *src, vector **psim,
       source_norm += (double)magsq_vec(&(psim[j][i]));
 
     g_doublesum(&source_norm);
-    node0_printf("Norm of psim %d shift %.4g is %.4g\n", j, shift[j], source_norm);
+    node0_printf("Norm of psim %d shift %.4g is %.4g\n",
+                 j, shift[j], source_norm);
 
-    hdelta0(psim[j], mpm);    // mpm = (D^2 + fmass^2).psim[j]
-    source_norm = 0;          // Re-using for convenience
-    FORALLSITES(i, s) {       // Add shift.psi and subtract src
+    DSq(psim[j], mpm);              // mpm = (D^2 + fmass^2).psim[j]
+    source_norm = 0;                // Re-using for convenience
+    FORALLSITES(i, s) {             // Add shift.psi and subtract src
       scalar_mult_add_vec(&(mpm[i]), &(psim[j][i]), shift[j],  &(mpm[i]));
       scalar_mult_add_vec(&(mpm[i]), &(src[i]), -1.0, &(mpm[i]));
       source_norm += (double)magsq_vec(&(mpm[i]));

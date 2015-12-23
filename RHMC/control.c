@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------
-// Main procedure for three-dimensional four-fermion evolution and measurements
+// Main procedure for four-fermion evolution and measurements
 #define CONTROL
 #include "so4_includes.h"
 // -----------------------------------------------------------------
@@ -12,6 +12,11 @@ int main(int argc, char *argv[]) {
   int traj_done, s_iters, avs_iters = 0, avm_iters = 0, Nmeas = 0;
   Real f_eps, s_eps;
   double dtime, s_act;
+
+#ifdef CORR
+  int step;
+  int *pnt = malloc(NDIMS * sizeof(*pnt));  // Measurement source point
+#endif
 
   // Setup
   setlinebuf(stdout); // DEBUG
@@ -45,7 +50,6 @@ int main(int argc, char *argv[]) {
   node0_printf("WARMUPS COMPLETED\n");
 
   // Perform trajectories with measurements
-  // But WITHOUT reunitarizing!
   for (traj_done = 0; traj_done < trajecs; traj_done++) {
     s_iters = update();
     avs_iters += s_iters;
@@ -58,7 +62,20 @@ int main(int argc, char *argv[]) {
 
     // Less frequent measurements every "propinterval" trajectories
     if ((traj_done % propinterval) == (propinterval - 1)) {
-      // To be added...
+#ifdef CORR
+      // Correlator measurements
+      // TODO: Read in and loop over source points
+      step = (int)(nt / 4);
+      if (step < 1)   // Make sure we don't hit an infinite loop
+        step = 1;
+      for (pnt[2] = 0; pnt[2] < nt; pnt[2] += step) {
+        pnt[0] = pnt[2] % nx;
+        pnt[1] = pnt[2] % ny;
+        node0_printf("Source point %d %d %d\n", pnt[0], pnt[1], pnt[2]);
+        avm_iters += correlators(pnt);
+      }
+      Nmeas++;
+#endif
     }
   }
   node0_printf("RUNNING COMPLETED\n");

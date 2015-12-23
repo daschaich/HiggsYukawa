@@ -3,6 +3,7 @@ Three-dimensional four-fermion system with global SO(4) symmetry
 
 # Actively maintained targets:
 so4_hmc for evolution with accept/reject step
+so4_meas for two- and four-fermion correlator measurements
 so4_eig for eigenvalue measurements on saved configurations
 so4_phase for pfaffian phase measurements on saved configurations
 
@@ -16,6 +17,7 @@ Eigenvalue measurements (so4_eig) require PRIMME and LAPACK -- PRIMME can be obt
 # Defines for compilation:
 -DPHI_ALGORITHM for the basic phi algorithm (REQUIRED)
 -DHMC_ALGORITHM switches on the accept/reject step
+-DCORR switches on the correlator measurements
 -DEIG switches on the PRIMME eigenvalue calculation
 -DPUREGAUGE switches off the fermions (FOR TESTING)
 

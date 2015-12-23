@@ -94,3 +94,15 @@ void fermion_op(vector *src, vector *dest, int sign) {
   }
 }
 // -----------------------------------------------------------------
+
+
+
+// -----------------------------------------------------------------
+// Squared four-fermion matrix--vector operation
+//   dest = D^2 src
+// Use tempvec for temporary storage
+void DSq(vector *src, vector *dest) {
+  fermion_op(src, tempvec, PLUS);
+  fermion_op(tempvec, dest, MINUS);
+}
+// -----------------------------------------------------------------

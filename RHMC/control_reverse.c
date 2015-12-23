@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------
-// Main procedure for three-dimensional four-fermion reversibility test
+// Main procedure for four-fermion reversibility test
 #define CONTROL
 #include "so4_includes.h"
 

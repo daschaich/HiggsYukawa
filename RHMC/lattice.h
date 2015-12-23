@@ -100,6 +100,7 @@ EXTERN double_prn node_prn;
 
 // Persistent fermions for matrix--vector operation
 // Used in fermion_op and assemble_fermion_force
+// Also used by correlator calculation
 EXTERN vector *src;
 EXTERN vector *dest;
 

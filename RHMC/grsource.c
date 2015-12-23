@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------
-// Construct a gaussian random vector R, return src = (Mdag M)^{1 / 8} R
+// Construct a gaussian random vector R, return src = (Ddag.D)^{1 / 8} R
 // Need to invert despite the positive power, since it is fractional
 #include "so4_includes.h"
 
@@ -20,7 +20,6 @@ int grsource(vector *src) {
 
   // Begin with pure gaussian random numbers
   FORALLSITES(i, s) {
-    clearvec(&(src[i]));
 #ifdef SITERAND
     src[i].c[0] = gaussian_rand_no(&(s->site_prn));
     src[i].c[1] = gaussian_rand_no(&(s->site_prn));

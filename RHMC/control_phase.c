@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------
-// Main procedure for three-dimensional four-fermion pfaffian
+// Main procedure for four-fermion pfaffian
 #define CONTROL
 #include "susy_includes.h"
 // -----------------------------------------------------------------

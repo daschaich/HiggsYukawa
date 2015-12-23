@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------
-// Main procedure for three-dimensional four-fermion eigenvalues
+// Main procedure for four-fermion eigenvalues
 #define CONTROL
 #include "susy_includes.h"
 // -----------------------------------------------------------------
