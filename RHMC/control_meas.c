@@ -47,11 +47,13 @@ int main(int argc, char *argv[]) {
   step = (int)(nt / 4);
   if (step < 1)   // Make sure we don't hit an infinite loop
     step = 1;
-  for (pnt[2] = 0; pnt[2] < nt; pnt[2] += step) {
-    pnt[0] = pnt[2] % nx;
-    pnt[1] = pnt[2] % ny;
-    node0_printf("Source point %d %d %d\n", pnt[0], pnt[1], pnt[2]);
-    avm_iters += correlators(pnt);
+  for (pnt[0] = 0; pnt[0] < nt; pnt[0] += step) {
+    for (pnt[1] = 0; pnt[1] < nt; pnt[1] += step) {
+      for (pnt[2] = 0; pnt[2] < nt; pnt[2] += step) {
+        node0_printf("Source point %d %d %d\n", pnt[0], pnt[1], pnt[2]);
+        avm_iters += correlators(pnt);
+      }
+    }
   }
 #endif
 

@@ -2,7 +2,7 @@ Three-dimensional four-fermion SO(4) system
 Microcanonical simulation with refreshing
 Machine = Scalar processor, with 1 nodes
 Phi algorithm
-start: Mon Jan  4 13:39:08 2016
+start: Wed Jan  6 15:23:03 2016
 
 type 0 for no prompts or 1 for prompts
 nx 16
@@ -33,35 +33,395 @@ forget
 Restored binary gauge configuration serially from file config.16
 Time stamp Sat Oct  3 23:38:26 2015
 Checksums a2e43207 660393d3 OK
-Time to reload gauge configuration = 3.068447e-04
+Time to reload gauge configuration = 3.656983e-02
 CHECK SIGMA SUM: -3.0437050910894214e-03
 START 2.997221
 Source point 0 0 0
-Inversion 1 of 4 took 64 iters and 0.1636 seconds
-Inversion 2 of 4 took 64 iters and 0.1516 seconds
-Inversion 3 of 4 took 64 iters and 0.1519 seconds
-Inversion 4 of 4 took 64 iters and 0.1524 seconds
-FOUR 0 0 0 0.130111 256
-Source point 4 4 4
+Inversion 1 of 4 took 64 iters and 0.2229 seconds
+Inversion 2 of 4 took 64 iters and 0.1514 seconds
+Inversion 3 of 4 took 64 iters and 0.1513 seconds
+Inversion 4 of 4 took 64 iters and 0.1521 seconds
+FOUR 0 0 0 0.130111 13.2737 256
+Source point 0 0 4
+Inversion 1 of 4 took 69 iters and 0.1636 seconds
+Inversion 2 of 4 took 69 iters and 0.1632 seconds
+Inversion 3 of 4 took 69 iters and 0.1635 seconds
+Inversion 4 of 4 took 69 iters and 0.163 seconds
+FOUR 0 0 4 0.0885045 12.8168 276
+Source point 0 0 8
+Inversion 1 of 4 took 63 iters and 0.1501 seconds
+Inversion 2 of 4 took 63 iters and 0.1498 seconds
+Inversion 3 of 4 took 63 iters and 0.1491 seconds
+Inversion 4 of 4 took 63 iters and 0.1496 seconds
+FOUR 0 0 8 0.33244 10.5797 252
+Source point 0 0 12
+Inversion 1 of 4 took 64 iters and 0.1544 seconds
+Inversion 2 of 4 took 64 iters and 0.1513 seconds
+Inversion 3 of 4 took 64 iters and 0.1511 seconds
+Inversion 4 of 4 took 64 iters and 0.1517 seconds
+FOUR 0 0 12 0.0985133 12.8137 256
+Source point 0 4 0
+Inversion 1 of 4 took 64 iters and 0.1521 seconds
+Inversion 2 of 4 took 64 iters and 0.1513 seconds
+Inversion 3 of 4 took 64 iters and 0.1513 seconds
+Inversion 4 of 4 took 64 iters and 0.1513 seconds
+FOUR 0 4 0 0.0918638 12.6463 256
+Source point 0 4 4
 Inversion 1 of 4 took 68 iters and 0.1614 seconds
-Inversion 2 of 4 took 68 iters and 0.1612 seconds
-Inversion 3 of 4 took 68 iters and 0.1611 seconds
-Inversion 4 of 4 took 68 iters and 0.1613 seconds
-FOUR 4 4 4 0.0279722 272
-Source point 8 8 8
-Inversion 1 of 4 took 68 iters and 0.1616 seconds
-Inversion 2 of 4 took 68 iters and 0.1612 seconds
-Inversion 3 of 4 took 68 iters and 0.1613 seconds
-Inversion 4 of 4 took 68 iters and 0.1612 seconds
-FOUR 8 8 8 0.167136 272
-Source point 12 12 12
-Inversion 1 of 4 took 63 iters and 0.1497 seconds
-Inversion 2 of 4 took 63 iters and 0.1492 seconds
+Inversion 2 of 4 took 68 iters and 0.1641 seconds
+Inversion 3 of 4 took 68 iters and 0.1614 seconds
+Inversion 4 of 4 took 68 iters and 0.1611 seconds
+FOUR 0 4 4 0.0233531 12.6159 272
+Source point 0 4 8
+Inversion 1 of 4 took 63 iters and 0.149 seconds
+Inversion 2 of 4 took 63 iters and 0.1502 seconds
 Inversion 3 of 4 took 63 iters and 0.1494 seconds
-Inversion 4 of 4 took 63 iters and 0.1506 seconds
-FOUR 12 12 12 0.0439384 252
+Inversion 4 of 4 took 63 iters and 0.1494 seconds
+FOUR 0 4 8 0.207801 11.5366 252
+Source point 0 4 12
+Inversion 1 of 4 took 65 iters and 0.1541 seconds
+Inversion 2 of 4 took 65 iters and 0.1544 seconds
+Inversion 3 of 4 took 65 iters and 0.1539 seconds
+Inversion 4 of 4 took 65 iters and 0.1536 seconds
+FOUR 0 4 12 0.00546856 12.1311 260
+Source point 0 8 0
+Inversion 1 of 4 took 65 iters and 0.1537 seconds
+Inversion 2 of 4 took 65 iters and 0.1539 seconds
+Inversion 3 of 4 took 65 iters and 0.1602 seconds
+Inversion 4 of 4 took 65 iters and 0.1758 seconds
+FOUR 0 8 0 0.117858 12.3654 260
+Source point 0 8 4
+Inversion 1 of 4 took 67 iters and 0.1615 seconds
+Inversion 2 of 4 took 67 iters and 0.1673 seconds
+Inversion 3 of 4 took 67 iters and 0.1581 seconds
+Inversion 4 of 4 took 67 iters and 0.1636 seconds
+FOUR 0 8 4 0.216775 12.2248 268
+Source point 0 8 8
+Inversion 1 of 4 took 63 iters and 0.151 seconds
+Inversion 2 of 4 took 63 iters and 0.1512 seconds
+Inversion 3 of 4 took 63 iters and 0.1531 seconds
+Inversion 4 of 4 took 63 iters and 0.1512 seconds
+FOUR 0 8 8 0.0271064 12.7265 252
+Source point 0 8 12
+Inversion 1 of 4 took 63 iters and 0.1533 seconds
+Inversion 2 of 4 took 63 iters and 0.1522 seconds
+Inversion 3 of 4 took 63 iters and 0.1506 seconds
+Inversion 4 of 4 took 63 iters and 0.1522 seconds
+FOUR 0 8 12 0.120142 12.9259 252
+Source point 0 12 0
+Inversion 1 of 4 took 63 iters and 0.1519 seconds
+Inversion 2 of 4 took 63 iters and 0.1506 seconds
+Inversion 3 of 4 took 63 iters and 0.1501 seconds
+Inversion 4 of 4 took 63 iters and 0.1486 seconds
+FOUR 0 12 0 0.126614 10.629 252
+Source point 0 12 4
+Inversion 1 of 4 took 68 iters and 0.1608 seconds
+Inversion 2 of 4 took 68 iters and 0.1623 seconds
+Inversion 3 of 4 took 68 iters and 0.1611 seconds
+Inversion 4 of 4 took 68 iters and 0.1622 seconds
+FOUR 0 12 4 0.00827475 12.7981 272
+Source point 0 12 8
+Inversion 1 of 4 took 64 iters and 0.1527 seconds
+Inversion 2 of 4 took 64 iters and 0.1531 seconds
+Inversion 3 of 4 took 64 iters and 0.152 seconds
+Inversion 4 of 4 took 64 iters and 0.1514 seconds
+FOUR 0 12 8 0.305437 13.5317 256
+Source point 0 12 12
+Inversion 1 of 4 took 67 iters and 0.1592 seconds
+Inversion 2 of 4 took 67 iters and 0.1597 seconds
+Inversion 3 of 4 took 67 iters and 0.1596 seconds
+Inversion 4 of 4 took 67 iters and 0.1606 seconds
+FOUR 0 12 12 0.0325939 12.8583 268
+Source point 4 0 0
+Inversion 1 of 4 took 65 iters and 0.1568 seconds
+Inversion 2 of 4 took 65 iters and 0.1551 seconds
+Inversion 3 of 4 took 65 iters and 0.156 seconds
+Inversion 4 of 4 took 65 iters and 0.1561 seconds
+FOUR 4 0 0 0.230031 14.0272 260
+Source point 4 0 4
+Inversion 1 of 4 took 66 iters and 0.1562 seconds
+Inversion 2 of 4 took 66 iters and 0.1563 seconds
+Inversion 3 of 4 took 66 iters and 0.1556 seconds
+Inversion 4 of 4 took 66 iters and 0.1596 seconds
+FOUR 4 0 4 0.0496356 12.1347 264
+Source point 4 0 8
+Inversion 1 of 4 took 66 iters and 0.1563 seconds
+Inversion 2 of 4 took 66 iters and 0.1565 seconds
+Inversion 3 of 4 took 66 iters and 0.1576 seconds
+Inversion 4 of 4 took 66 iters and 0.1603 seconds
+FOUR 4 0 8 0.118114 12.2493 264
+Source point 4 0 12
+Inversion 1 of 4 took 63 iters and 0.1508 seconds
+Inversion 2 of 4 took 63 iters and 0.1495 seconds
+Inversion 3 of 4 took 63 iters and 0.1499 seconds
+Inversion 4 of 4 took 63 iters and 0.1548 seconds
+FOUR 4 0 12 0.258599 12.1805 252
+Source point 4 4 0
+Inversion 1 of 4 took 67 iters and 0.1677 seconds
+Inversion 2 of 4 took 67 iters and 0.1592 seconds
+Inversion 3 of 4 took 67 iters and 0.1597 seconds
+Inversion 4 of 4 took 67 iters and 0.1608 seconds
+FOUR 4 4 0 0.029003 13.1741 268
+Source point 4 4 4
+Inversion 1 of 4 took 68 iters and 0.1617 seconds
+Inversion 2 of 4 took 68 iters and 0.166 seconds
+Inversion 3 of 4 took 68 iters and 0.1646 seconds
+Inversion 4 of 4 took 68 iters and 0.1687 seconds
+FOUR 4 4 4 0.0279722 13.1939 272
+Source point 4 4 8
+Inversion 1 of 4 took 64 iters and 0.154 seconds
+Inversion 2 of 4 took 64 iters and 0.1579 seconds
+Inversion 3 of 4 took 64 iters and 0.151 seconds
+Inversion 4 of 4 took 64 iters and 0.1577 seconds
+FOUR 4 4 8 0.596466 12.8782 256
+Source point 4 4 12
+Inversion 1 of 4 took 67 iters and 0.1586 seconds
+Inversion 2 of 4 took 67 iters and 0.1944 seconds
+Inversion 3 of 4 took 67 iters and 0.1631 seconds
+Inversion 4 of 4 took 67 iters and 0.1617 seconds
+FOUR 4 4 12 0.317476 13.4985 268
+Source point 4 8 0
+Inversion 1 of 4 took 67 iters and 0.1619 seconds
+Inversion 2 of 4 took 67 iters and 0.166 seconds
+Inversion 3 of 4 took 67 iters and 0.1594 seconds
+Inversion 4 of 4 took 67 iters and 0.1586 seconds
+FOUR 4 8 0 0.198646 11.0298 268
+Source point 4 8 4
+Inversion 1 of 4 took 67 iters and 0.1587 seconds
+Inversion 2 of 4 took 67 iters and 0.1582 seconds
+Inversion 3 of 4 took 67 iters and 0.1583 seconds
+Inversion 4 of 4 took 67 iters and 0.1583 seconds
+FOUR 4 8 4 0.0128386 13.1472 268
+Source point 4 8 8
+Inversion 1 of 4 took 63 iters and 0.1493 seconds
+Inversion 2 of 4 took 63 iters and 0.1486 seconds
+Inversion 3 of 4 took 63 iters and 0.1485 seconds
+Inversion 4 of 4 took 63 iters and 0.1486 seconds
+FOUR 4 8 8 0.13408 12.0475 252
+Source point 4 8 12
+Inversion 1 of 4 took 66 iters and 0.1557 seconds
+Inversion 2 of 4 took 66 iters and 0.1565 seconds
+Inversion 3 of 4 took 66 iters and 0.1575 seconds
+Inversion 4 of 4 took 66 iters and 0.158 seconds
+FOUR 4 8 12 0.0334389 12.6015 264
+Source point 4 12 0
+Inversion 1 of 4 took 65 iters and 0.1536 seconds
+Inversion 2 of 4 took 65 iters and 0.1535 seconds
+Inversion 3 of 4 took 65 iters and 0.1536 seconds
+Inversion 4 of 4 took 65 iters and 0.1533 seconds
+FOUR 4 12 0 0.166333 12.1602 260
+Source point 4 12 4
+Inversion 1 of 4 took 66 iters and 0.1571 seconds
+Inversion 2 of 4 took 66 iters and 0.156 seconds
+Inversion 3 of 4 took 66 iters and 0.156 seconds
+Inversion 4 of 4 took 66 iters and 0.1559 seconds
+FOUR 4 12 4 0.0283854 12.4417 264
+Source point 4 12 8
+Inversion 1 of 4 took 63 iters and 0.1489 seconds
+Inversion 2 of 4 took 63 iters and 0.1491 seconds
+Inversion 3 of 4 took 63 iters and 0.1485 seconds
+Inversion 4 of 4 took 63 iters and 0.1501 seconds
+FOUR 4 12 8 0.273333 13.3835 252
+Source point 4 12 12
+Inversion 1 of 4 took 63 iters and 0.1506 seconds
+Inversion 2 of 4 took 63 iters and 0.149 seconds
+Inversion 3 of 4 took 63 iters and 0.1489 seconds
+Inversion 4 of 4 took 63 iters and 0.1486 seconds
+FOUR 4 12 12 0.0849203 11.8818 252
+Source point 8 0 0
+Inversion 1 of 4 took 63 iters and 0.1495 seconds
+Inversion 2 of 4 took 63 iters and 0.1489 seconds
+Inversion 3 of 4 took 63 iters and 0.1495 seconds
+Inversion 4 of 4 took 63 iters and 0.1496 seconds
+FOUR 8 0 0 0.210466 10.8782 252
+Source point 8 0 4
+Inversion 1 of 4 took 68 iters and 0.1607 seconds
+Inversion 2 of 4 took 68 iters and 0.1604 seconds
+Inversion 3 of 4 took 68 iters and 0.1626 seconds
+Inversion 4 of 4 took 68 iters and 0.1665 seconds
+FOUR 8 0 4 0.114255 13.3838 272
+Source point 8 0 8
+Inversion 1 of 4 took 68 iters and 0.1624 seconds
+Inversion 2 of 4 took 68 iters and 0.1649 seconds
+Inversion 3 of 4 took 68 iters and 0.1617 seconds
+Inversion 4 of 4 took 68 iters and 0.1646 seconds
+FOUR 8 0 8 0.0968881 15.3702 272
+Source point 8 0 12
+Inversion 1 of 4 took 68 iters and 0.1639 seconds
+Inversion 2 of 4 took 68 iters and 0.1632 seconds
+Inversion 3 of 4 took 68 iters and 0.1624 seconds
+Inversion 4 of 4 took 68 iters and 0.1635 seconds
+FOUR 8 0 12 0.0642181 12.8934 272
+Source point 8 4 0
+Inversion 1 of 4 took 63 iters and 0.1512 seconds
+Inversion 2 of 4 took 63 iters and 0.1505 seconds
+Inversion 3 of 4 took 63 iters and 0.15 seconds
+Inversion 4 of 4 took 63 iters and 0.151 seconds
+FOUR 8 4 0 0.0476159 12.6728 252
+Source point 8 4 4
+Inversion 1 of 4 took 64 iters and 0.1537 seconds
+Inversion 2 of 4 took 64 iters and 0.154 seconds
+Inversion 3 of 4 took 64 iters and 0.1539 seconds
+Inversion 4 of 4 took 64 iters and 0.1518 seconds
+FOUR 8 4 4 0.0886756 12.1825 256
+Source point 8 4 8
+Inversion 1 of 4 took 64 iters and 0.1516 seconds
+Inversion 2 of 4 took 64 iters and 0.1514 seconds
+Inversion 3 of 4 took 64 iters and 0.1516 seconds
+Inversion 4 of 4 took 64 iters and 0.1515 seconds
+FOUR 8 4 8 0.145951 12.6889 256
+Source point 8 4 12
+Inversion 1 of 4 took 65 iters and 0.154 seconds
+Inversion 2 of 4 took 65 iters and 0.1546 seconds
+Inversion 3 of 4 took 65 iters and 0.1534 seconds
+Inversion 4 of 4 took 65 iters and 0.1538 seconds
+FOUR 8 4 12 0.248909 12.626 260
+Source point 8 8 0
+Inversion 1 of 4 took 65 iters and 0.154 seconds
+Inversion 2 of 4 took 65 iters and 0.1537 seconds
+Inversion 3 of 4 took 65 iters and 0.1565 seconds
+Inversion 4 of 4 took 65 iters and 0.1537 seconds
+FOUR 8 8 0 0.103775 11.5954 260
+Source point 8 8 4
+Inversion 1 of 4 took 69 iters and 0.1631 seconds
+Inversion 2 of 4 took 69 iters and 0.1629 seconds
+Inversion 3 of 4 took 69 iters and 0.1635 seconds
+Inversion 4 of 4 took 69 iters and 0.1634 seconds
+FOUR 8 8 4 0.123574 13.337 276
+Source point 8 8 8
+Inversion 1 of 4 took 68 iters and 0.1611 seconds
+Inversion 2 of 4 took 68 iters and 0.1652 seconds
+Inversion 3 of 4 took 68 iters and 0.1626 seconds
+Inversion 4 of 4 took 68 iters and 0.1623 seconds
+FOUR 8 8 8 0.167136 13.3652 272
+Source point 8 8 12
+Inversion 1 of 4 took 67 iters and 0.1618 seconds
+Inversion 2 of 4 took 67 iters and 0.1592 seconds
+Inversion 3 of 4 took 67 iters and 0.1601 seconds
+Inversion 4 of 4 took 67 iters and 0.1616 seconds
+FOUR 8 8 12 0.331781 13.5246 268
+Source point 8 12 0
+Inversion 1 of 4 took 67 iters and 0.1585 seconds
+Inversion 2 of 4 took 67 iters and 0.1591 seconds
+Inversion 3 of 4 took 67 iters and 0.1585 seconds
+Inversion 4 of 4 took 67 iters and 0.1584 seconds
+FOUR 8 12 0 0.0849875 12.715 268
+Source point 8 12 4
+Inversion 1 of 4 took 67 iters and 0.1594 seconds
+Inversion 2 of 4 took 67 iters and 0.1587 seconds
+Inversion 3 of 4 took 67 iters and 0.1585 seconds
+Inversion 4 of 4 took 67 iters and 0.1581 seconds
+FOUR 8 12 4 0.0421265 12.8792 268
+Source point 8 12 8
+Inversion 1 of 4 took 69 iters and 0.1635 seconds
+Inversion 2 of 4 took 69 iters and 0.1654 seconds
+Inversion 3 of 4 took 69 iters and 0.1652 seconds
+Inversion 4 of 4 took 69 iters and 0.1659 seconds
+FOUR 8 12 8 0.0244557 13.3809 276
+Source point 8 12 12
+Inversion 1 of 4 took 65 iters and 0.1561 seconds
+Inversion 2 of 4 took 65 iters and 0.1544 seconds
+Inversion 3 of 4 took 65 iters and 0.1584 seconds
+Inversion 4 of 4 took 65 iters and 0.1563 seconds
+FOUR 8 12 12 0.119803 13.5187 260
+Source point 12 0 0
+Inversion 1 of 4 took 66 iters and 0.1571 seconds
+Inversion 2 of 4 took 66 iters and 0.1578 seconds
+Inversion 3 of 4 took 66 iters and 0.1574 seconds
+Inversion 4 of 4 took 66 iters and 0.1576 seconds
+FOUR 12 0 0 0.0217251 12.8225 264
+Source point 12 0 4
+Inversion 1 of 4 took 68 iters and 0.1627 seconds
+Inversion 2 of 4 took 68 iters and 0.1628 seconds
+Inversion 3 of 4 took 68 iters and 0.1618 seconds
+Inversion 4 of 4 took 68 iters and 0.1621 seconds
+FOUR 12 0 4 0.0815072 14.304 272
+Source point 12 0 8
+Inversion 1 of 4 took 67 iters and 0.1602 seconds
+Inversion 2 of 4 took 67 iters and 0.1596 seconds
+Inversion 3 of 4 took 67 iters and 0.1605 seconds
+Inversion 4 of 4 took 67 iters and 0.1595 seconds
+FOUR 12 0 8 0.205116 14.0974 268
+Source point 12 0 12
+Inversion 1 of 4 took 62 iters and 0.1475 seconds
+Inversion 2 of 4 took 62 iters and 0.1497 seconds
+Inversion 3 of 4 took 62 iters and 0.1468 seconds
+Inversion 4 of 4 took 62 iters and 0.1465 seconds
+FOUR 12 0 12 0.0764878 12.3548 248
+Source point 12 4 0
+Inversion 1 of 4 took 67 iters and 0.158 seconds
+Inversion 2 of 4 took 67 iters and 0.1581 seconds
+Inversion 3 of 4 took 67 iters and 0.1582 seconds
+Inversion 4 of 4 took 67 iters and 0.1601 seconds
+FOUR 12 4 0 0.140337 13.5601 268
+Source point 12 4 4
+Inversion 1 of 4 took 66 iters and 0.157 seconds
+Inversion 2 of 4 took 66 iters and 0.1564 seconds
+Inversion 3 of 4 took 66 iters and 0.1557 seconds
+Inversion 4 of 4 took 66 iters and 0.1561 seconds
+FOUR 12 4 4 0.0998897 12.4316 264
+Source point 12 4 8
+Inversion 1 of 4 took 68 iters and 0.1605 seconds
+Inversion 2 of 4 took 68 iters and 0.1608 seconds
+Inversion 3 of 4 took 68 iters and 0.1608 seconds
+Inversion 4 of 4 took 68 iters and 0.161 seconds
+FOUR 12 4 8 0.17735 12.7629 272
+Source point 12 4 12
+Inversion 1 of 4 took 64 iters and 0.1514 seconds
+Inversion 2 of 4 took 64 iters and 0.1513 seconds
+Inversion 3 of 4 took 64 iters and 0.1518 seconds
+Inversion 4 of 4 took 64 iters and 0.1517 seconds
+FOUR 12 4 12 0.275855 11.7883 256
+Source point 12 8 0
+Inversion 1 of 4 took 66 iters and 0.1561 seconds
+Inversion 2 of 4 took 66 iters and 0.1573 seconds
+Inversion 3 of 4 took 66 iters and 0.1596 seconds
+Inversion 4 of 4 took 66 iters and 0.1576 seconds
+FOUR 12 8 0 0.0196483 12.3531 264
+Source point 12 8 4
+Inversion 1 of 4 took 66 iters and 0.1578 seconds
+Inversion 2 of 4 took 66 iters and 0.1572 seconds
+Inversion 3 of 4 took 66 iters and 0.1572 seconds
+Inversion 4 of 4 took 66 iters and 0.1686 seconds
+FOUR 12 8 4 0.0367044 12.0322 264
+Source point 12 8 8
+Inversion 1 of 4 took 68 iters and 0.1811 seconds
+Inversion 2 of 4 took 68 iters and 0.1639 seconds
+Inversion 3 of 4 took 68 iters and 0.1629 seconds
+Inversion 4 of 4 took 68 iters and 0.1669 seconds
+FOUR 12 8 8 0.0286525 12.3517 272
+Source point 12 8 12
+Inversion 1 of 4 took 69 iters and 0.1642 seconds
+Inversion 2 of 4 took 69 iters and 0.1636 seconds
+Inversion 3 of 4 took 69 iters and 0.1723 seconds
+Inversion 4 of 4 took 69 iters and 0.164 seconds
+FOUR 12 8 12 0.00534337 13.3586 276
+Source point 12 12 0
+Inversion 1 of 4 took 67 iters and 0.1611 seconds
+Inversion 2 of 4 took 67 iters and 0.1605 seconds
+Inversion 3 of 4 took 67 iters and 0.1611 seconds
+Inversion 4 of 4 took 67 iters and 0.1594 seconds
+FOUR 12 12 0 0.155944 13.3604 268
+Source point 12 12 4
+Inversion 1 of 4 took 64 iters and 0.1515 seconds
+Inversion 2 of 4 took 64 iters and 0.1515 seconds
+Inversion 3 of 4 took 64 iters and 0.152 seconds
+Inversion 4 of 4 took 64 iters and 0.1511 seconds
+FOUR 12 12 4 0.0538952 12.9074 256
+Source point 12 12 8
+Inversion 1 of 4 took 67 iters and 0.1584 seconds
+Inversion 2 of 4 took 67 iters and 0.1586 seconds
+Inversion 3 of 4 took 67 iters and 0.1589 seconds
+Inversion 4 of 4 took 67 iters and 0.1585 seconds
+FOUR 12 12 8 0.171167 14.2082 268
+Source point 12 12 12
+Inversion 1 of 4 took 63 iters and 0.1488 seconds
+Inversion 2 of 4 took 63 iters and 0.1491 seconds
+Inversion 3 of 4 took 63 iters and 0.1489 seconds
+Inversion 4 of 4 took 63 iters and 0.1493 seconds
+FOUR 12 12 12 0.0439384 11.6427 252
 RUNNING COMPLETED
-CG iters for measurements: 1052
-total_iters = 1052
+CG iters for measurements: 16816
+total_iters = 16816
 
-Time = 2.51 seconds
+Time = 40.44 seconds
