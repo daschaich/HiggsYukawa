@@ -67,7 +67,6 @@ EXTERN Real G;
 EXTERN double sigmasum;
 EXTERN char startfile[MAXFILENAME], savefile[MAXFILENAME];
 EXTERN int startflag; // Beginning lattice: CONTINUE, RELOAD, FRESH
-EXTERN int fixflag;   // Gauge fixing: COULOMB_GAUGE_FIX, NO_GAUGE_FIX
 EXTERN int saveflag;  // 1 if we will save the lattice;
 EXTERN int total_iters;   // To be incremented by the multi-mass CG
 
@@ -80,7 +79,7 @@ EXTERN int number_of_nodes;     // Number of nodes in use
 EXTERN int this_node;           // Node number of this node
 
 // Stuff for multi-mass CG and RHMC
-EXTERN int nsteps[2];           // Fermion and gauge steps
+EXTERN int nsteps[2];           // Fermion and scalar steps
 EXTERN Real ampdeg, *amp, *shift;
 EXTERN Real ampdeg4, *amp4, *shift4;
 EXTERN Real ampdeg8, *amp8, *shift8;

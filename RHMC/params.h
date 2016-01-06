@@ -20,10 +20,9 @@ typedef struct {
   int warms;              // The number of warmup trajectories
   int trajecs;            // The number of real trajectories
   Real traj_length;       // The length of each trajectory
-  int nsteps[2];          // Fermion and gauge steps
+  int nsteps[2];          // Fermion and scalar steps
   int propinterval;       // Number of trajectories between measurements
   int startflag;          // What to do for beginning lattice
-  int fixflag;            // Whether to gauge fix to Coulomb gauge
   int saveflag;           // What to do with lattice at end
   Real G;                 // Four-fermion coupling
 

@@ -192,9 +192,9 @@ int readin(int prompt) {
     IF_OK status += get_i(stdin, prompt, "trajecs", &par_buf.trajecs);
     IF_OK status += get_f(stdin, prompt, "traj_length", &par_buf.traj_length);
 
-    // Number of fermion and gauge steps
+    // Number of fermion and scalar steps
     IF_OK status += get_i(stdin, prompt, "nstep", &par_buf.nsteps[0]);
-    IF_OK status += get_i(stdin, prompt, "nstep_gauge", &par_buf.nsteps[1]);
+    IF_OK status += get_i(stdin, prompt, "nstep_scalar", &par_buf.nsteps[1]);
 
     // Trajectories between propagator measurements
     IF_OK status += get_i(stdin, prompt, "traj_between_meas",
@@ -251,7 +251,6 @@ int readin(int prompt) {
   nsteps[1] = par_buf.nsteps[1];
 
   propinterval = par_buf.propinterval;
-  fixflag = par_buf.fixflag;
   niter = par_buf.niter;
   rsqmin = par_buf.rsqmin;
 
