@@ -52,6 +52,11 @@ int initial_set() {
       par_buf.stopflag = 1;
     else
       par_buf.stopflag = 0;
+
+    if (par_buf.PBC >= 0)
+      printf("Periodic temporal boundary conditions\n");
+    if (par_buf.PBC < 0)
+      printf("Antiperiodic temporal boundary conditions\n");
   }
 
   // Broadcast parameter buffer from node 0 to all other nodes
@@ -65,10 +70,7 @@ int initial_set() {
   PBC = par_buf.PBC;
   iseed = par_buf.iseed;
 
-  if (PBC >= 0)
-    node0_printf("Periodic temporal boundary conditions\n");
-  if (PBC < 0)
-    node0_printf("Antiperiodic temporal boundary conditions\n");
+
 
   // Set up stuff for RHMC and multi-mass CG
   Nroot = par_buf.Nroot;
