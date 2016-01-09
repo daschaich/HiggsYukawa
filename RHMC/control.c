@@ -9,16 +9,9 @@
 // -----------------------------------------------------------------
 int main(int argc, char *argv[]) {
   int prompt;
-  int traj_done, s_iters, avs_iters = 0, avm_iters = 0, Nmeas = 0;
+  int traj_done, s_iters, avs_iters = 0, avm_iters = 0, Nmeas = 0, j;
   Real f_eps, s_eps;
   double dtime, s_act;
-
-#ifdef CORR
-  int *pnt = malloc(NDIMS * sizeof(*pnt));  // Measurement source point
-  int step = (int)(nt / 4);
-  if (step < 1)   // Make sure we don't hit an infinite loop
-    step = 1;
-#endif
 
   // Setup
   setlinebuf(stdout); // DEBUG
@@ -66,16 +59,12 @@ int main(int argc, char *argv[]) {
     if ((traj_done % propinterval) == (propinterval - 1)) {
 #ifdef CORR
       // Correlator measurements
-      // TODO: Read in and loop over source points
-      for (pnt[0] = 0; pnt[0] < nt; pnt[0] += step) {
-        for (pnt[1] = 0; pnt[1] < nt; pnt[1] += step) {
-          for (pnt[2] = 0; pnt[2] < nt; pnt[2] += step) {
-            node0_printf("Source point %d %d %d\n", pnt[0], pnt[1], pnt[2]);
-            avm_iters += correlators(pnt);
-          }
-          Nmeas++;
-        }
+      for (j = 0; j < Nsrc; j++) {
+        node0_printf("Source point %d %d %d\n",
+                     pnts[j][0], pnts[j][1], pnts[j][2]);
+        avm_iters += correlators(pnts[j]);
       }
+      Nmeas++;
 #endif
     }
   }

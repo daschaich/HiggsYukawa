@@ -182,6 +182,10 @@ int readin(int prompt) {
   int status;
   Real x;
 
+#ifdef CORR
+  int i, j;
+#endif
+
   // On node zero, read parameters and send to all other nodes
   if (this_node == 0) {
     printf("\n\n");
@@ -211,6 +215,16 @@ int readin(int prompt) {
       status += get_f(stdin, prompt, "error_per_site", &x);
       par_buf.rsqmin = x;
     }
+
+#ifdef CORR
+    // Number of point sources
+    IF_OK status += get_i(stdin, prompt, "Nsrc", &par_buf.Nsrc);
+    par_buf.pnts = malloc(par_buf.Nsrc * sizeof(int*));
+    for (i = 0; i < par_buf.Nsrc; i++) {
+      par_buf.pnts[i] = malloc(NDIMS * sizeof(int));
+      IF_OK status += get_vi(stdin, prompt, "pnt", par_buf.pnts[i], NDIMS);
+    }
+#endif
 
 #ifdef EIG
     // Number of eigenvalues to calculate
@@ -255,6 +269,16 @@ int readin(int prompt) {
   rsqmin = par_buf.rsqmin;
 
   G = par_buf.G;
+
+#ifdef CORR
+  Nsrc = par_buf.Nsrc;
+  pnts = malloc(Nsrc * sizeof(int*));
+  for (i = 0; i < Nsrc; i++) {
+    pnts[i] = malloc(NDIMS * sizeof(int));
+    for (j = 0; j < NDIMS; j++)
+      pnts[i][j] = par_buf.pnts[i][j];
+  }
+#endif
 
 #ifdef EIG
   Nvec = par_buf.Nvec;

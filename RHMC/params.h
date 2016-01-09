@@ -31,6 +31,11 @@ typedef struct {
   Real rsqmin;                  // For deciding on convergence
   char startfile[MAXFILENAME], savefile[MAXFILENAME];
 
+#ifdef CORR
+  int Nsrc;                     // Number of point sources
+  int **pnts;                   // Point sources
+#endif
+
 #ifdef EIG
   // Eigenvalue parameters
   int Nvec, maxIter;

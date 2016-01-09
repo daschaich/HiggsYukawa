@@ -279,6 +279,8 @@ int ask_ending_lattice(FILE *fp, int prompt, int *flag, char *filename) {
 }
 // -----------------------------------------------------------------
 
+
+
 // -----------------------------------------------------------------
 // Read and echo the next tag.  Echo any intervening comments
 // Comments begin with # and apply to the rest of the line
@@ -340,11 +342,10 @@ static int check_read(int s, char *myname, char *tag) {
 
 
 // -----------------------------------------------------------------
-/* get_f is used to get a floating point number.  If prompt is non-zero,
-it will prompt for the input value with the variable_name_string.  If
-prompt is zero, it will require that variable_name_string precede the
-input value.  get_i gets an integer.
-get_i and get_f return the values, and exit on error */
+// Get a floating point number
+// If prompt is non-zero, ask for the input value with tag
+// If prompt is zero, require that tag precede the input value
+// Return the value and exit on error
 int get_f(FILE *fp, int prompt, char *tag, Real *value) {
   int s;
   char checkvalue[80];
@@ -383,7 +384,12 @@ int get_f(FILE *fp, int prompt, char *tag, Real *value) {
   }
   return 0;
 }
+// -----------------------------------------------------------------
 
+
+
+// -----------------------------------------------------------------
+// Get an integer with same behavior as get_f
 int get_i(FILE *fp, int prompt, char *tag, int *value) {
   int s;
   char checkvalue[80];
@@ -416,7 +422,7 @@ int get_i(FILE *fp, int prompt, char *tag, int *value) {
 
 
 // -----------------------------------------------------------------
-// Read a single word as a string
+// Read a single word as a string with same behavior as get_f
 int get_s(FILE *fp, int prompt, char *tag, char *value) {
   int s;
   char myname[] = "get_s";
@@ -445,7 +451,7 @@ int get_s(FILE *fp, int prompt, char *tag, char *value) {
 
 
 // -----------------------------------------------------------------
-// Read a vector of integers
+// Read a vector of integers with same behavior as get_f
 int get_vi(FILE* fp, int prompt, char *tag, int *value, int nvalues) {
   int s, i;
   char myname[] = "get_vi";
@@ -456,7 +462,7 @@ int get_vi(FILE* fp, int prompt, char *tag, int *value, int nvalues) {
     for (i = 0; i < nvalues; i++) {
       while (s != 1) {
         printf("\n[%d] ", i);
-        s=fscanf(fp, "%d", value+i);
+        s = fscanf(fp, "%d", value + i);
         if (s == EOF) return 1;
         if (s == 0) printf("Data format error\n");
         printf("%s %d\n", tag, value[i]);
@@ -466,12 +472,14 @@ int get_vi(FILE* fp, int prompt, char *tag, int *value, int nvalues) {
   else {
     if (get_tag(fp, tag, myname) == 1) return 1;
 
-    for (i = 0; i < nvalues; i++) {
+    for (i = 0; i < nvalues - 1; i++) {
       s = fscanf(fp, "%d", value + i);
       if (check_read(s, myname, tag) == 1) return 1;
       printf("%d ", value[i]);
     }
-    printf("\n");
+    s = fscanf(fp, "%d", value + nvalues - 1);
+    if (check_read(s, myname, tag) == 1) return 1;
+    printf("%d\n", value[nvalues - 1]);
   }
   return 0;
 }
@@ -480,7 +488,7 @@ int get_vi(FILE* fp, int prompt, char *tag, int *value, int nvalues) {
 
 
 // -----------------------------------------------------------------
-// Read a vector of reals
+// Read a vector of reals with same behavior as get_f
 int get_vf(FILE* fp, int prompt, char *tag, Real *value, int nvalues) {
   int s, i;
   char myname[] = "get_vf";

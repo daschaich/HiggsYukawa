@@ -120,6 +120,11 @@ EXTERN site *lattice;
 #define N_POINTERS 6
 EXTERN char **gen_pt[N_POINTERS];
 
+#ifdef CORR
+EXTERN int Nsrc;
+EXTERN int **pnts;
+#endif
+
 #ifdef EIG
 // Eigenvalue stuff
 EXTERN int Nvec;

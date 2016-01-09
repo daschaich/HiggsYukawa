@@ -35,7 +35,7 @@ fi
 # Otherwise consider all active targets
 # Compile
 cd ../../RHMC/
-for target in hmc meas eig phase ; do
+for target in hmc meas hmc_meas ; do
   echo "Compiling so4_$target..."
   if ! make -f Make_scalar so4_$target >& /dev/null ; then
     echo "ERROR: so4_$target compilation failed"
@@ -46,28 +46,15 @@ done
 
 # Run
 cd ../testsuite/
-for target in hmc meas eig phase ; do
+for target in hmc meas hmc_meas ; do
   rm -f scalar/$target.out
   echo "Running so4_$target..."
   ../RHMC/so4_$target < in.$target > scalar/$target.out
 done
 
-# Checkpointed pfaffian computation
-rm -f scalar/phase_part1.out scalar/phase_part2.out
-cp in.phase SAV
-awk -v"X=ckpt_save 256" '{sub(/ckpt_save 0/,X);print}' in.phase > TEMP && mv TEMP in.phase
-echo "Running checkpointed so4_phase part 1 of 2..."
-../RHMC/so4_phase < in.phase > scalar/phase_part1.out
-cp SAV in.phase
-awk -v"X=ckpt_load 256" '{sub(/ckpt_load 0/,X);print}' in.phase > TEMP && mv TEMP in.phase
-echo "Running checkpointed so4_phase part 2 of 2..."
-../RHMC/so4_phase < in.phase > scalar/phase_part2.out
-mv SAV in.phase
-rm -f config.diag256 config.Q256
-
 # Check
 cd scalar/
-for target in hmc meas eig phase phase_part1 phase_part2 ; do
+for target in hmc meas hmc_meas ; do
   d="`diff -I'Time' -I'time' -I'seconds' -I'^start' $target.ref $target.out`"
   if [ -n "$d" ] ; then   # Non-zero string length
     echo "$target.ref and $target.out differ:"
@@ -76,21 +63,4 @@ for target in hmc meas eig phase phase_part1 phase_part2 ; do
   else
     echo "PASS: so4_$target reproduces reference output"
   fi
-done
-
-# This can be useful to check whether intermediate steps of the pfaffian computation have changed
-exit 0  # For now it is not included in the standard checks
-for target in phase phase_part1 phase_part2 ; do
-  grep Column $target.out | awk '{print $10}' > TEMP.out
-  grep Column $target.ref | awk '{print $10}' > TEMP.ref
-  paste TEMP.out TEMP.ref > TEMP
-  d="`awk '{if(($1-$2)^2>1e-12)print $1, $2}' TEMP`"
-  if [ -n "$d" ] ; then   # Non-zero string length
-    echo "$target.ref and $target.out differ:"
-    echo "$d"
-    echo
-  else
-    echo "PASS: so4_$target reproduces reference output"
-  fi
-  rm -f TEMP TEMP.out TEMP.ref
 done
