@@ -74,7 +74,7 @@ forget                # What to do with lattice at end: only forget or save_seri
 
 # ------------------------------------------------------------------
 # 0) Header files in this directory:
-defines.h       -- Defines Omelyan parameters, RHMC degree, temporal boundary conditions, and numbers of links, generators, offsets and terms in the action
+defines.h       -- Defines Omelyan parameters and maximum number of point sources
 lattice.h       -- Defines Twist_Fermions, the site struct, global variables and fields
 params.h        -- Defines a struct for reading input parameters
 primme.h        -- Defines for PRIMME eigenvalue calculations
@@ -82,13 +82,13 @@ so4_includes.h  -- Defines lots of routines, some of which are discussed below
 
 # 1) Routines in this directory:
 # 1a) Files used by all executables
-setup.c               -- Reads in parameters, initializes variables and offsets
-setup_perm.c          -- Sets up epsilon symbol and lookup tables for matrices
-d_action.c            -- Computes action
-congrad_multi_field.c -- Multi-mass CG
-grsource.c            -- Gaussian random numbers for gauge momenta
-utilities.c           -- Many basic routines associated with parts of the action
-info.c                -- Puts information into configuration files
+setup.c         -- Reads in parameters, initializes variables and offsets
+setup_perm.c    -- Sets up epsilon symbol and lookup tables for matrices
+action.c        -- Computes action
+congrad_multi.c -- Multi-mass CG
+grsource.c      -- Gaussian random numbers for gauge momenta
+utilities.c     -- Many basic routines associated with parts of the action
+info.c          -- Puts information into configuration files
 
 # 1b) Evolution-specific files
 control.c     -- Main program for evolution and measurements
@@ -97,12 +97,14 @@ update_o.c    -- Omelyan HMC evolution, includes ranmom() routine
 update_h.c    -- Updates gauge momenta
 
 # 1c) Measurement-specific files
-control_eig.c         -- Main program for eigenvalues measurements only
-control_phase.c       -- Main program for pfaffian measurements only
-eig.c                 -- Eigenvalue measurements using PRIMME
-                         Must specify path to libzprimme.a as PLIB in makefile
-                         Also need LAPACK and BLAS in linkable location
-d_phase.c             -- Phase and (log of) magnitude of the pfaffian
+control_meas.c    -- Main program for correlator and condensate measurements only
+control_eig.c     -- Main program for eigenvalues measurements only
+control_phase.c   -- Main program for pfaffian measurements only
+correlators.c     -- Measure correlators and condensates
+eig.c             -- Eigenvalue measurements using PRIMME
+                     Must specify path to libzprimme.a as PLIB in makefile
+                     Also need LAPACK and BLAS in linkable location
+phase.c           -- Phase and (log of) magnitude of the pfaffian
 
 # 1d) Files not currently used, retained for potential future testing
 update_leapfrog.c -- Leapfrog HMC evolution, includes ranmom() routine
@@ -121,5 +123,5 @@ remap_stdio_from_args.c -- For reading input parameters
 layout_hyper_prime.c    -- Layout lattice on processors
 
 # 2b) Measurement-specific files
-io_phase.c          -- Primitive (for now) dump and load routines for checkpointing pfaffian computations
+io_phase.c        -- Primitive (for now) dump and load routines for checkpointing pfaffian computations
 # ------------------------------------------------------------------

@@ -25,5 +25,8 @@
 // of quantities expected to be real
 #define IMAG_TOL 1.0e-8
 #define SQ_TOL 1.0e-16
+
+// Need this maximum number of sources so they can be read in
+#define MAX_SRC 1024
 #endif
 // -----------------------------------------------------------------

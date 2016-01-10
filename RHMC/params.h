@@ -4,6 +4,8 @@
 #define _PARAMS_H
 #include "../include/macros.h"  // For MAXFILENAME
 #include "../include/precision.h"
+#include "../include/dirs.h"    // For NDIMS
+#include "defines.h"            // For MAX_SRC
 
 typedef struct {
   int stopflag;           // 1 if it is time to stop
@@ -33,7 +35,7 @@ typedef struct {
 
 #ifdef CORR
   int Nsrc;                     // Number of point sources
-  int **pnts;                   // Point sources
+  int pnts[MAX_SRC][NDIMS];     // Point sources
 #endif
 
 #ifdef EIG

@@ -219,9 +219,12 @@ int readin(int prompt) {
 #ifdef CORR
     // Number of point sources
     IF_OK status += get_i(stdin, prompt, "Nsrc", &par_buf.Nsrc);
-    par_buf.pnts = malloc(par_buf.Nsrc * sizeof(int*));
+    if (par_buf.Nsrc > MAX_SRC) {
+      node0_printf("Error: Can only handle up to %d sources\n", MAX_SRC);
+      node0_printf("       Recompile with different MAX_SRC for more\n");
+      status++;
+    }
     for (i = 0; i < par_buf.Nsrc; i++) {
-      par_buf.pnts[i] = malloc(NDIMS * sizeof(int));
       IF_OK status += get_vi(stdin, prompt, "pnt", par_buf.pnts[i], NDIMS);
     }
 #endif
@@ -272,9 +275,7 @@ int readin(int prompt) {
 
 #ifdef CORR
   Nsrc = par_buf.Nsrc;
-  pnts = malloc(Nsrc * sizeof(int*));
   for (i = 0; i < Nsrc; i++) {
-    pnts[i] = malloc(NDIMS * sizeof(int));
     for (j = 0; j < NDIMS; j++)
       pnts[i][j] = par_buf.pnts[i][j];
   }

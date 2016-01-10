@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------
-// Measure two- and four-fermion correlators
+// Measure four-fermion correlator, susceptibility and correlators
 #include "so4_includes.h"
 // -----------------------------------------------------------------
 

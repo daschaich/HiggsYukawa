@@ -164,7 +164,7 @@ gauge_file *reload_lattice(int flag, char *filename) {
   }
   dtime += dclock();
   if (flag != FRESH && flag != RANDOM && flag != CONTINUE)
-    node0_printf("Time to reload gauge configuration = %e\n",dtime);
+    node0_printf("Time to reload gauge configuration = %e\n", dtime);
 
   d_sigmasum(&sigmasum);
 #if PRECISION == 1
@@ -196,7 +196,7 @@ int ask_starting_lattice(FILE *fp, int prompt, int *flag, char *filename) {
   }
   if (status != 1) {
     printf("\nask_starting_lattice: ERROR IN INPUT: ");
-    printf("can't read starting lattice command\n");
+    printf("can't read starting lattice option\n");
     return 1;
   }
 
@@ -216,7 +216,7 @@ int ask_starting_lattice(FILE *fp, int prompt, int *flag, char *filename) {
   else if (strcmp("reload_serial", savebuf) == 0)
     *flag = RELOAD_SERIAL;
   else {
-    printf(" is not a valid starting lattice command. INPUT ERROR.\n");
+    printf(" is not a valid starting lattice option. INPUT ERROR.\n");
     return 1;
   }
 
@@ -260,7 +260,7 @@ int ask_ending_lattice(FILE *fp, int prompt, int *flag, char *filename) {
     printf("\n");
   }
   else {
-    printf("is not a save lattice command. INPUT ERROR\n");
+    printf(" is not a save lattice command. INPUT ERROR\n");
     return 1;
   }
 
@@ -311,7 +311,7 @@ static int get_tag(FILE *fp, char *tag, char *myname) {
     else {
       if (strcmp(checktag, tag) != 0) {
         printf("\n%s: ERROR IN INPUT: expected %s but found %s\n",
-            myname, tag, checktag);
+               myname, tag, checktag);
         return 1;
       }
       printf("%s ", tag);
