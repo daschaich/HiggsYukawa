@@ -3,7 +3,7 @@ Microcanonical simulation with refreshing
 Machine = MPI (portable), with 2 nodes
 Hybrid Monte Carlo algorithm
 Phi algorithm
-start: Wed Jan  6 14:25:22 2016
+start: Sat Jan  9 22:30:56 2016
 
 type 0 for no prompts or 1 for prompts
 nx 16
@@ -26,7 +26,7 @@ warms 0
 trajecs 3
 traj_length 1
 nstep 5
-nstep_gauge 15
+nstep_scalar 15
 traj_between_meas 3
 G 0.5
 max_cg_iterations 5000
@@ -36,7 +36,7 @@ forget
 Restored binary gauge configuration serially from file config.16
 Time stamp Sat Oct  3 23:38:26 2015
 Checksums a2e43207 660393d3 OK
-Time to reload gauge configuration = 1.593113e-03
+Time to reload gauge configuration = 2.093077e-03
 CHECK SIGMA SUM: -3.0437050910894214e-03
 START 2.997221
 f_eps 0.2 s_eps 0.006667
@@ -63,6 +63,6 @@ RUNNING COMPLETED
 STOP 3.0098748
 Average CG iters for steps: 882.7
 
-Time = 7.836 seconds
+Time = 4.201 seconds
 total_iters = 2648
 
