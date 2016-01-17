@@ -39,8 +39,8 @@ int get_prompt(FILE *fp, int *value);
 
 // layout_hyper_prime.c
 void setup_layout();
-int node_number(int x, int y, int t);
-int node_index(int x, int y, int t);
+int node_number(int x, int y, int z, int t);
+int node_index(int x, int y, int z, int t);
 size_t num_sites(int node);
 const int *get_logical_dimensions();
 const int *get_logical_coordinate();

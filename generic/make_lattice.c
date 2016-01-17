@@ -12,7 +12,7 @@
 // -----------------------------------------------------------------
 void make_lattice() {
   register int i;
-  int x, y, t;
+  int x, y, z, t;
 
   // Allocate space for lattice
   node0_printf("Mallocing %.1f MBytes per core for lattice\n",
@@ -34,21 +34,24 @@ void make_lattice() {
 
   // Fill in parity, coordinates and index
   for (t = 0; t < nt; t++) {
-    for (y = 0; y < ny; y++) {
-      for (x = 0; x < nx; x++) {
-        if (node_number(x, y, t) == mynode()) {
-          i = node_index(x, y, t);
-          lattice[i].x = x;
-          lattice[i].y = y;
-          lattice[i].t = t;
-          lattice[i].index = x + nx * (y + ny * t);
-          if ((x + y + t) % 2 == 0)
-            lattice[i].parity = EVEN;
-          else
-            lattice[i].parity = ODD;
+    for (z = 0; z < nz; z++) {
+      for (y = 0; y < ny; y++) {
+        for (x = 0; x < nx; x++) {
+          if (node_number(x, y, z, t) == mynode()) {
+            i = node_index(x, y, z, t);
+            lattice[i].x = x;
+            lattice[i].y = y;
+            lattice[i].z = z;
+            lattice[i].t = t;
+            lattice[i].index = x + nx * (y + ny * (z + nz * t));
+            if ((x + y + z + t) % 2 == 0)
+              lattice[i].parity = EVEN;
+            else
+              lattice[i].parity = ODD;
 #ifdef SITERAND
-          initialize_prn(&(lattice[i].site_prn), iseed, lattice[i].index);
+            initialize_prn(&(lattice[i].site_prn), iseed, lattice[i].index);
 #endif
+          }
         }
       }
     }

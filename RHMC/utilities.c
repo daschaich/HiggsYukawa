@@ -28,7 +28,7 @@ void fermion_op(vector *src, vector *dest, int sign) {
   int dir, a, b, c, d, p;
   Real tr, halfG = 0.5 * G;
   vector tvec, tvec_dir, tvec_opp;
-  msg_tag *tag[6];    // 6 = 2NDIMS
+  msg_tag *tag[2 * NDIMS];
 
   // Quick sanity check
   if (sign != 1 && sign != -1) {

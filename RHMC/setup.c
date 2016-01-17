@@ -1,10 +1,11 @@
 // -----------------------------------------------------------------
-// Three-dimensional four-fermion system setup
-#include "params.h"
+// Four-fermion SO(4) system setup
 #include "so4_includes.h"
+
 #define IF_OK if(status==0)
 
 // Each node has a params structure for passing simulation parameters
+#include "params.h"
 params par_buf;
 // -----------------------------------------------------------------
 
@@ -13,7 +14,7 @@ params par_buf;
 // -----------------------------------------------------------------
 // On node zero, read lattice size and seed, and send to others
 int initial_set() {
-  int prompt, status;
+  int prompt = 0, status = 0;
   if (mynode() == 0) {
     // Print banner
     // stringification kludge from GNU preprocessor manual
@@ -21,7 +22,7 @@ int initial_set() {
 #define XSTR(s) STR(s)
 #define STR(s) #s
     // end kludge
-    printf("Three-dimensional four-fermion SO(%d) system\n", DIMF);
+    printf("Four-fermion SO(%d) system\n", DIMF);
     printf("Microcanonical simulation with refreshing\n");
     printf("Machine = %s, with %d nodes\n", machine_type(), numnodes());
 #ifdef HMC_ALGORITHM
@@ -38,6 +39,7 @@ int initial_set() {
 
     IF_OK status += get_i(stdin, prompt, "nx", &par_buf.nx);
     IF_OK status += get_i(stdin, prompt, "ny", &par_buf.ny);
+    IF_OK status += get_i(stdin, prompt, "nz", &par_buf.nz);
     IF_OK status += get_i(stdin, prompt, "nt", &par_buf.nt);
     IF_OK status += get_i(stdin, prompt, "PBC", &par_buf.PBC);
     IF_OK status += get_i(stdin, prompt, "iseed", &par_buf.iseed);
@@ -66,11 +68,10 @@ int initial_set() {
 
   nx = par_buf.nx;
   ny = par_buf.ny;
+  nz = par_buf.nz;
   nt = par_buf.nt;
   PBC = par_buf.PBC;
   iseed = par_buf.iseed;
-
-
 
   // Set up stuff for RHMC and multi-mass CG
   Nroot = par_buf.Nroot;
@@ -87,7 +88,7 @@ int initial_set() {
 
   this_node = mynode();
   number_of_nodes = numnodes();
-  volume = nx * ny * nt;
+  volume = nx * ny * nz * nt;
   total_iters = 0;
   return prompt;
 }
@@ -112,6 +113,11 @@ void setup_phases() {
       s->phase[YUP] = -s->phase[XUP];
     else
       s->phase[YUP] = s->phase[XUP];
+
+    if ((s->y) % 2 == 1)
+      s->phase[ZUP] = -s->phase[YUP];
+    else
+      s->phase[ZUP] = s->phase[YUP];
   }
 }
 // -----------------------------------------------------------------
@@ -126,6 +132,7 @@ void make_fields() {
   FIELD_ALLOC(dest, vector);
 
   // Momenta and forces for the scalars
+  size += (double)(2.0 * sizeof(antisym));
   FIELD_ALLOC(mom, antisym);
   FIELD_ALLOC(force, antisym);
 
@@ -181,9 +188,8 @@ int readin(int prompt) {
   // prompt=1 indicates prompts are to be given for input
   int status;
   Real x;
-
 #ifdef CORR
-  int i, j;
+  int j, k;
 #endif
 
   // On node zero, read parameters and send to all other nodes
@@ -224,8 +230,8 @@ int readin(int prompt) {
       node0_printf("       Recompile with different MAX_SRC for more\n");
       status++;
     }
-    for (i = 0; i < par_buf.Nsrc; i++) {
-      IF_OK status += get_vi(stdin, prompt, "pnt", par_buf.pnts[i], NDIMS);
+    for (j = 0; j < par_buf.Nsrc; j++) {
+      IF_OK status += get_vi(stdin, prompt, "pnt", par_buf.pnts[j], NDIMS);
     }
 #endif
 
@@ -275,12 +281,11 @@ int readin(int prompt) {
 
 #ifdef CORR
   Nsrc = par_buf.Nsrc;
-  for (i = 0; i < Nsrc; i++) {
-    for (j = 0; j < NDIMS; j++)
-      pnts[i][j] = par_buf.pnts[i][j];
+  for (j = 0; j < Nsrc; j++) {
+    for (k = 0; k < NDIMS; k++)
+      pnts[j][k] = par_buf.pnts[j][k];
   }
 #endif
-
 #ifdef EIG
   Nvec = par_buf.Nvec;
   eig_tol = par_buf.eig_tol;

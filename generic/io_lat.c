@@ -220,7 +220,7 @@ static void send_buf_to_node0(fantisym *tbuf, int tbuf_length,
 void w_serial(gauge_file *gf) {
   register int i, j;
   int rank29, rank31, buf_length, tbuf_length;
-  int x, y, t, currentnode, newnode;
+  int x, y, z, t, currentnode, newnode;
   FILE *fp = NULL;
   gauge_header *gh = NULL;
   fantisym *lbuf = NULL;
@@ -284,45 +284,47 @@ void w_serial(gauge_file *gf) {
   buf_length = 0;
   tbuf_length = 0;
   for (j = 0, t = 0; t < nt; t++) {
-    for (y = 0; y < ny; y++) {
-      for (x = 0; x < nx; x++, j++) {
-        newnode = node_number(x, y, t);  // The node providing the next site
-        if (newnode != currentnode || x == 0) {
-          // We are switching to a new node or have exhausted a line of nx
-          // Sweep any data in the retiring node's tbuf to the node0 lbuf
-          if (tbuf_length > 0) {
-            if (currentnode != 0)
-              send_buf_to_node0(tbuf, tbuf_length, currentnode);
+    for (z = 0; z < nz; z++) {
+      for (y = 0; y < ny; y++) {
+        for (x = 0; x < nx; x++, j++) {
+          newnode = node_number(x, y, z, t);  // The node providing the next site
+          if (newnode != currentnode || x == 0) {
+            // We are switching to a new node or have exhausted a line of nx
+            // Sweep any data in the retiring node's tbuf to the node0 lbuf
+            if (tbuf_length > 0) {
+              if (currentnode != 0)
+                send_buf_to_node0(tbuf, tbuf_length, currentnode);
 
-            // node0 flushes tbuf, accumulates checksum
-            // and writes lbuf if it is full
-            if (this_node == 0) {
-              flush_tbuf_to_lbuf(gf, &rank29, &rank31, lbuf, &buf_length,
-                                                       tbuf, tbuf_length);
-              if (buf_length > MAX_BUF_LENGTH - nx)
-                flush_lbuf_to_file(gf, lbuf, &buf_length);
+              // node0 flushes tbuf, accumulates checksum
+              // and writes lbuf if it is full
+              if (this_node == 0) {
+                flush_tbuf_to_lbuf(gf, &rank29, &rank31, lbuf, &buf_length,
+                                                         tbuf, tbuf_length);
+                if (buf_length > MAX_BUF_LENGTH - nx)
+                  flush_lbuf_to_file(gf, lbuf, &buf_length);
+              }
+              tbuf_length = 0;
             }
-            tbuf_length = 0;
+
+            // node0 sends a few bytes to newnode as a clear to send signal
+            if (newnode != currentnode) {
+              if (this_node == 0 && newnode != 0)
+                send_field((char *)tbuf, 1, newnode);
+              if (this_node == newnode && newnode != 0)
+                get_field((char *)tbuf, 1, 0);
+              currentnode = newnode;
+            }
           }
 
-          // node0 sends a few bytes to newnode as a clear to send signal
-          if (newnode != currentnode) {
-            if (this_node == 0 && newnode != 0)
-              send_field((char *)tbuf, 1, newnode);
-            if (this_node == newnode && newnode != 0)
-              get_field((char *)tbuf, 1, 0);
-            currentnode = newnode;
+          // The node with the data just appends to its tbuf
+          if (this_node == currentnode) {
+            i = node_index(x, y, z, t);
+            d2f_scalar(&lattice[i].sigma, &tbuf[tbuf_length]);
           }
-        }
 
-        // The node with the data just appends to its tbuf
-        if (this_node == currentnode) {
-          i = node_index(x, y, t);
-          d2f_scalar(&lattice[i].sigma, &tbuf[tbuf_length]);
+          if (this_node == currentnode || this_node == 0)
+            tbuf_length++;
         }
-
-        if (this_node == currentnode || this_node == 0)
-          tbuf_length++;
       }
     }
   }
@@ -378,7 +380,7 @@ void r_serial(gauge_file *gf) {
   off_t checksum_offset = 0;  // Where we put the checksum
   int rcv_rank, rcv_coords;
   int destnode, stat;
-  int k, x, y, t;
+  int k, x, y, z, t;
   int buf_length = 0, where_in_buf = 0;
   gauge_check test_gc;
   u_int32type *val;
@@ -450,10 +452,12 @@ void r_serial(gauge_file *gf) {
     rcv_coords /= nx;
     y = rcv_coords % ny;
     rcv_coords /= ny;
+    z = rcv_coords % nz;
+    rcv_coords /= nz;
     t = rcv_coords % nt;
 
     // The node that gets the next set of gauge links
-    destnode = node_number(x, y, t);
+    destnode = node_number(x, y, z, t);
 
     if (this_node == 0) {
       /* node0 fills its buffer, if necessary */
@@ -476,7 +480,7 @@ void r_serial(gauge_file *gf) {
       }  // End of the buffer read
 
       if (destnode == 0) {  // Just copy links
-        idest = node_index(x, y, t);
+        idest = node_index(x, y, z, t);
         // Save scalars in tmpas for further processing
         memcpy(tmpas, &lbuf[where_in_buf], sizeof(fantisym));
       }
@@ -489,7 +493,7 @@ void r_serial(gauge_file *gf) {
     // The node that contains this site reads the message
     else {  // All nodes other than node 0
       if (this_node == destnode) {
-        idest = node_index(x, y, t);
+        idest = node_index(x, y, z, t);
         // Receive scalars in temporary space for further processing
         get_field((char *)tmpas, sizeof(fantisym), 0);
       }

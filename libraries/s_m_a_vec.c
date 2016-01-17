@@ -1,8 +1,6 @@
 // -----------------------------------------------------------------
 // Add result of scalar multiplication on vector
 // c <-- a + s * b
-#include "../include/config.h"
-#include "../include/complex.h"
 #include "../include/so4.h"
 
 void scalar_mult_add_vec(vector *a, vector *b, Real s, vector *c) {

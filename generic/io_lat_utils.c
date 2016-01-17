@@ -148,7 +148,7 @@ int write_gauge_info_item(FILE *fpout,    /* ascii file pointer */
       strcmp(gauge_info_keyword[i], keyword) != 0; i++);
   if (strlen(gauge_info_keyword[i]) == 0)
     printf("write_gauge_info_item: WARNING: keyword %s not in table\n",
-        keyword);
+           keyword);
 
   // Write keyword
   fprintf(fpout, "%s =", keyword);
@@ -170,9 +170,8 @@ int write_gauge_info_item(FILE *fpout,    /* ascii file pointer */
       fprintf(fpout,fmt,*(int *)data);
     else if (strstr(fmt,"lu") != NULL)
       fprintf(fpout,fmt,*(unsigned long *)data);
-    else if (strstr(fmt,"e") != NULL ||
-        strstr(fmt,"f") != NULL ||
-        strstr(fmt,"g") != NULL) {
+    else if (strstr(fmt,"e") != NULL || strstr(fmt,"f") != NULL ||
+                                        strstr(fmt,"g") != NULL) {
       tt = *(Real *)data;
       fprintf(fpout,fmt,tt);
     }
@@ -212,7 +211,7 @@ int sprint_gauge_info_item(
       strcmp(gauge_info_keyword[i], keyword) != 0; i++);
   if (strlen(gauge_info_keyword[i]) == 0)
     printf("write_gauge_info_item: WARNING: keyword %s not in table\n",
-        keyword);
+           keyword);
 
   /* Write keyword */
   bytes = 0;
@@ -251,9 +250,8 @@ int sprint_gauge_info_item(
       bytes = strlen(string);
       if (bytes >= nstring)return 1;
     }
-    else if (strstr(fmt, "e") != NULL ||
-        strstr(fmt, "f") != NULL ||
-        strstr(fmt, "g") != NULL) {
+    else if (strstr(fmt, "e") != NULL || strstr(fmt, "f") != NULL ||
+                                         strstr(fmt, "g") != NULL) {
       tt = *(Real *)data;
       snprintf(string+bytes,nstring-bytes,fmt,tt);
       bytes = strlen(string);
@@ -303,6 +301,7 @@ void write_gauge_info_file(gauge_file *gf) {
   write_gauge_info_item(info_fp, "checksums", "\"%s\"", sums, 0, 0);
   write_gauge_info_item(info_fp, "nx", "%d", (char *)&nx, 0, 0);
   write_gauge_info_item(info_fp, "ny", "%d", (char *)&ny, 0, 0);
+  write_gauge_info_item(info_fp, "nz", "%d", (char *)&nz, 0, 0);
   write_gauge_info_item(info_fp, "nt", "%d", (char *)&nt, 0, 0);
   write_appl_gauge_info(info_fp);
   fclose(info_fp);
@@ -379,7 +378,8 @@ gauge_file* setup_output_gauge_file() {
 
   gh->dims[0] = nx;
   gh->dims[1] = ny;
-  gh->dims[2] = nt;
+  gh->dims[2] = nz;
+  gh->dims[3] = nt;
 
   // Get date and time stamp using local time on node0
   if (this_node == 0) {
@@ -464,8 +464,7 @@ void read_site_list(gauge_file *gf) {
       terminate(1);
     }
 
-    /* Only node0 reads the site list */
-
+    // Only node0 reads the site list
     if (this_node == 0) {
       /* Reads receiving site coordinate if file is not in natural order */
       if ((int)fread(gf->rank2rcv,sizeof(int32type), volume,gf->fp) != volume) {
@@ -478,7 +477,7 @@ void read_site_list(gauge_file *gf) {
         byterevn(gf->rank2rcv, volume);
     }
 
-    /* Broadcast result to all nodes */
+    // Broadcast result to all nodes
     broadcast_bytes((char *)gf->rank2rcv, volume * sizeof(int32type));
   }
   else
@@ -549,11 +548,12 @@ int read_gauge_hdr(gauge_file *gf) {
   // Check lattice dimensions for consistency
   if (gh->dims[0] != nx ||
       gh->dims[1] != ny ||
-      gh->dims[2] != nt) {
+      gh->dims[2] != nz ||
+      gh->dims[3] != nt) {
     /* So we can use this routine to discover the dimensions,
-       we provide that if nx = ny = nt = -1 initially
+       we provide that if nx = ny = nz = nt = -1 initially
        we don't die */
-    if (nx != -1 || ny != -1 || nt != -1) {
+    if (nx != -1 || ny != -1 || nz != -1 || nt != -1) {
       printf("%s: Incorrect lattice dimensions ",myname);
       for (j = 0; j < NDIMS; j++)
         printf("%d ", gh->dims[j]);
@@ -564,8 +564,9 @@ int read_gauge_hdr(gauge_file *gf) {
     else {
       nx = gh->dims[0];
       ny = gh->dims[1];
-      nt = gh->dims[2];
-      volume = nx * ny * nt;
+      nz = gh->dims[2];
+      nt = gh->dims[3];
+      volume = nx * ny * nz * nt;
     }
   }
   // Read date and time stamp
@@ -691,6 +692,7 @@ void read_lat_dim_gf(char *filename, int *ndim, int dims[]) {
   // Open the file
   nx = -1;
   ny = -1;
+  nz = -1;
   nt = -1;
   gf = r_serial_i(filename);
 

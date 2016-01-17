@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------
-// Defines and subroutine declarations for the three-dimensional
-// four-fermion system with global SO(4) symmetry
+// Defines and subroutine declarations
+// for the  four-fermion system with global SO(4) symmetry
 #ifndef _SON_H
 #define _SON_H
 

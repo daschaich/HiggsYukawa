@@ -33,9 +33,9 @@
    get_field()            Receive a field from some other node
    dclock()               Return a double precision time, with arbitrary zero
    time_stamp()           Print wall clock time with message
-   sort_six_gathers()     Sort six contiguous gathers
-                            from XUP, XDOWN, YUP, YDOWN, TUP, TDOWN
-                            to XUP, YUP, TUP, XDOWN, YDOWN, TDOWN
+   sort_eight_gathers()   Sort eight contiguous gathers
+                            from XUP, XDOWN, YUP, YDOWN, ...
+                            to XUP, YUP, ..., XDOWN, YDOWN, ...
    make_nn_gathers()      Make all necessary lists for communications with
                             nodes containing neighbor sites
    make_gather()          Calculate and store necessary communications lists
@@ -53,10 +53,10 @@
    cleanup_gather()       Free all the buffers that were allocated, WHICH
                             MEANS THAT THE GATHERED DATA MAY SOON DISAPPEAR
    accumulate_gather()    Combine gathers into single message tag
-   declare_accumulate_gather_site()  Do declare_gather_site() and
-                                     accumulate_gather() in single step
-   declare_accumulate_gather_field() Do declare_gather_field() and
-                                     accumulate_gather() in single step.
+   declare_accumulate_gather_site()   Do declare_gather_site() and
+                                      accumulate_gather() in single step
+   declare_accumulate_gather_field()  Do declare_gather_field() and
+                                      accumulate_gather() in single step
    start_gather_site()    Older function which does declare/prepare/do_gather
                            in a single step
    start_gather_field()   Older function which does
@@ -65,7 +65,7 @@
                              to gather fields at arbitrary displacement.
    start_general_gather_field() starts asynchronous sends and receives
                              required to gather neighbors from an
-           array of fields
+                                array of fields
    wait_general_gather()   waits for receives to finish, insuring that the
                              data has actually arrived, and sets pointers to
            received data.
@@ -189,11 +189,11 @@ void g_doublesum(double *dpt) {
 void g_vecdoublesum(double *dpt, int ndoubles) {
 }
 
-// Sum the generic precision complex type over all nodes
+// Sum complex over all nodes
 void g_complexsum(complex *cpt) {
 }
 
-// Sum a vector of the generic precision complex type over all nodes
+// Sum a vector of complex over all nodes
 void g_veccomplexsum(complex *cpt, int ncomplex) {
 }
 
@@ -317,14 +317,14 @@ void time_stamp(char *msg) {
 
 // -----------------------------------------------------------------
 // Functions used for gathers
-// Sort a list of six gather_t structures into the order we want:
-// XUP, YUP, TUP, TDOWN, YDOWN, XDOWN
+// Sort a list of eight gather_t structures into the order we want:
+// XUP, YUP, ZUP, TUP, TDOWN, ZDOWN, YDOWN, XDOWN
 // Start from the index for the first pointer
-void sort_six_gathers(int index) {
-  gather_t tt[6];
+void sort_eight_gathers(int index) {
+  gather_t tt[8];
   int i;
 
-  for (i = 0; i < 6; i++)
+  for (i = 0; i < 8; i++)
     memcpy(&tt[i], &gather_array[index + i], sizeof(gather_t));
   for (i = XUP; i <= TUP; i++) {
     memcpy(&gather_array[index + i], &tt[2 * i], sizeof(gather_t));
@@ -336,22 +336,26 @@ void sort_six_gathers(int index) {
 // Find coordinates of neighbor
 // Used by make_gather for nearest neighbor gathers
 static void neighbor_coords_special(
-  int x, int y, int t,              /* coordinates of site */
-  int *dirpt,                       /* direction (eg XUP) */
-  int fb,                           /* "forwards/backwards"  */
-  int *x2p, int *y2p, int *t2p)     /* pointers to coordinates of neighbor */
+  int x, int y, int z, int t,       // Coordinates of site
+  int *dirpt,                       // Direction (eg XUP)
+  int fb,                           // Forwards/backwards
+  int *x2p, int *y2p, int *z2p, int *t2p)
+                                    // Pointers to coordinates of neighbor
 {
   int dir;
 
   dir = (fb==FORWARDS) ? *dirpt : OPP_DIR(*dirpt);
   *x2p = x;
   *y2p = y;
+  *z2p = z;
   *t2p = t;
   switch(dir) {
     case XUP   : *x2p = (x + 1) % nx;       break;
     case XDOWN : *x2p = (x + nx - 1) % nx;  break;
     case YUP   : *y2p = (y + 1) % ny;       break;
     case YDOWN : *y2p = (y + ny - 1) % ny;  break;
+    case ZUP   : *z2p = (z + 1) % nz;       break;
+    case ZDOWN : *z2p = (z + nz - 1) % nz;  break;
     case TUP   : *t2p = (t + 1) % nt;       break;
     case TDOWN : *t2p = (t + nt - 1) % nt;  break;
     default: printf("BOTCH: bad direction\n"); terminate(1);
@@ -368,14 +372,14 @@ void make_nn_gathers() {
     terminate(1);
   }
 
-  gather_array_len = 6;
+  gather_array_len = 8;
   gather_array = malloc(gather_array_len * sizeof(*gather_array));
   if (gather_array == NULL) {
     printf("make_nn_gathers: node%d can't malloc gather_array\n", this_node);
     terminate(1);
   }
 
-  if ((nx&1) || (ny&1) || (nt&1))
+  if ((nx&1) || (ny&1) || (nz&1) || (nt&1))
     gather_parity = SCRAMBLE_PARITY;
   else
     gather_parity = SWITCH_PARITY;
@@ -386,7 +390,7 @@ void make_nn_gathers() {
 
   /* Sort into the order we want for nearest neighbor gathers,
      so you can use XUP, XDOWN, etc. as argument in calling them. */
-  sort_six_gathers(0);
+  sort_eight_gathers(0);
 }
 // -----------------------------------------------------------------
 
@@ -397,13 +401,13 @@ void make_nn_gathers() {
 #define RECEIVE 0
 #define SEND    1
 
-static int parity_function(int x, int y, int t) {
-  return (x + y + t)&1;
+static int parity_function(int x, int y, int z, int t) {
+  return (x + y + z + t)&1;
 }
 
 // Add another gather to the list of tables
 int make_gather(
-  void (*func)(int, int, int, int*, int, int*, int*, int*),
+  void (*func)(int, int, int, int, int*, int, int*, int*, int*, int*),
                         /* function which defines sites to gather from */
   int *args,    /* list of arguments, to be passed to function */
   int inverse,    /* OWN_INVERSE, WANT_INVERSE, or NO_INVERSE */
@@ -412,7 +416,7 @@ int make_gather(
 {
   int i, subl;
   site *s;
-  int dir, x, y, t;
+  int dir, x, y, z, t;
   int *send_subl;       /* sublist of sender for a given receiver */
 
   // We will have one or two more gathers
@@ -459,18 +463,20 @@ int make_gather(
   // Also check to see if it returns legal values for coordinates
   FORALLSITES(i, s) {
     // Find coordinates of neighbor who sends us data
-    func(s->x, s->y, s->t, args, FORWARDS, &x, &y, &t);
+    func(s->x, s->y, s->z, s->t, args, FORWARDS, &x, &y, &z, &t);
 
-    if (x < 0 || y < 0 || t < 0 || x >= nx || y >= ny || t >= nt) {
+    if (x < 0 || y < 0 || z < 0 || t < 0 ||
+        x >= nx || y >= ny || z >= nz || t >= nt) {
       printf("Gather mapping does not stay in lattice\n");
-      printf("It mapped %d %d %d to %d %d %d\n", s->x, s->y, s->t, x, y, t);
+      printf("It mapped %d %d %d %d to %d %d %d %d\n",
+             s->x, s->y, s->z, s->t, x, y, z, t);
       terminate(1);
     }
 
     if (parity_conserve != SCRAMBLE_PARITY) {
       int r_subl, s_subl;
-      r_subl = parity_function(s->x, s->y, s->t);
-      s_subl = parity_function(x, y, t);
+      r_subl = parity_function(s->x, s->y, s->z, s->t);
+      s_subl = parity_function(x, y, z, t);
 
       if (want_even_odd == ALLOW_EVEN_ODD) {
         if (send_subl[r_subl] == NOWHERE)
@@ -478,32 +484,32 @@ int make_gather(
         else if (send_subl[r_subl] != s_subl) {
           printf("Gather mixes up sublattices: %d vs %d\n",
                  send_subl[r_subl], s_subl);
-          printf("on mapping %d %d %d -> %d %d %d\n",
-                 s->x, s->y, s->t, x, y, t);
+          printf("on mapping %d %d %d %d -> %d %d %d %d\n",
+                 s->x, s->y, s->z, s->t, x, y, z, t);
           terminate(1);
         }
       }
 
       if (parity_conserve == SAME_PARITY && s_subl != r_subl) {
         printf("Gather mapping does not obey claimed SAME_PARITY\n");
-        printf("It mapped %d %d %d with %d to %d %d %d with %d\n",
-               s->x, s->y, s->t, r_subl, x, y, t, s_subl);
+        printf("It mapped %d %d %d %d with %d to %d %d %d %d with %d\n",
+               s->x, s->y, s->z, s->t, r_subl, x, y, z, t, s_subl);
         terminate(1);
       }
       if (parity_conserve == SWITCH_PARITY && s_subl == r_subl) {
         printf("Gather mapping does not obey claimed SWITCH_PARITY\n");
-        printf("It mapped %d %d %d with %d to %d %d %d with %d\n",
-               s->x, s->y, s->t, r_subl, x, y, t, s_subl);
+        printf("It mapped %d %d %d %d with %d to %d %d %d %d with %d\n",
+               s->x, s->y, s->z, s->t, r_subl, x, y, z, t, s_subl);
         terminate(1);
       }
 
       if (inverse == OWN_INVERSE) {
-        int x2, y2, t2;
-        func(x, y, t, args, FORWARDS, &x2, &y2, &t2);
-        if (s->x != x2 || s->y != y2 || s->t != t2) {
+        int x2, y2, z2, t2;
+        func(x, y, z, t, args, FORWARDS, &x2, &y2, &z2, &t2);
+        if (s->x != x2 || s->y != y2 || s->z != z2 || s->t != t2) {
           printf("Gather mapping is not its own inverse\n");
-          printf("Its square mapped %d %d %d to %d %d %d\n",
-                 s->x, s->y, s->t, x2, y2, t2);
+          printf("Its square mapped %d %d %d %d to %d %d %d %d\n",
+                 s->x, s->y, s->z, s->t, x2, y2, z2, t2);
           terminate(1);
         }
       }
@@ -513,8 +519,8 @@ int make_gather(
   // Receive lists: fill in pointers to sites
   FORALLSITES(i, s) {
     // Find coordinates of neighbor who sends us data
-    func(s->x, s->y, s->t, args, FORWARDS, &x, &y, &t);
-    gather_array[dir].neighbor[i] = node_index(x, y, t);
+    func(s->x, s->y, s->z, s->t, args, FORWARDS, &x, &y, &z, &t);
+    gather_array[dir].neighbor[i] = node_index(x, y, z, t);
   }
 
   if (inverse != WANT_INVERSE) {
@@ -532,9 +538,9 @@ int make_gather(
   /* scan sites in lattice */
   FORALLSITES(i, s) {
     // Find coordinates of neighbor who sends us data
-    func(s->x, s->y, s->t, args, BACKWARDS, &x, &y, &t);
+    func(s->x, s->y, s->z, s->t, args, BACKWARDS, &x, &y, &z, &t);
     /* set up pointer */
-    gather_array[dir].neighbor[i] = node_index(x, y, t);
+    gather_array[dir].neighbor[i] = node_index(x, y, z, t);
   }
 
   free(send_subl);
@@ -619,7 +625,7 @@ msg_tag* declare_strided_gather(
     FORSOMEPARITY(i, s, subl) {
       if (gt->neighbor[i] != NOWHERE)
         dest[i] = (char *)field + gt->neighbor[i] * stride;
-  }
+    }
   }
   return NULL;
 }
@@ -849,10 +855,7 @@ void declare_accumulate_gather_field(
 // Usage: tag = start_general_gather_site(src, size, disp, parity, dest)
 // Example:
 //  msg_tag *tag;
-//  int disp[3];    // Displacement
-//  disp[XUP] = 1;
-//  disp[YUP] = -1;
-//  disp[TUP] = 0;
+//  int disp[4] = {1, -1, 0, 0};    // Displacement
 //  tag = start_general_gather_site(F_OFFSET(phi), sizeof(vector), disp,
 //                                  EVEN, gen_pt[0]);
 //
@@ -878,7 +881,7 @@ msg_tag* start_general_strided_gather(
 {
   site *s;      /* scratch pointer to site */
   int i;          /* scratch */
-  int tx, ty, tt;  /* temporary coordinates */
+  int tx, ty, tz, tt;  /* temporary coordinates */
 
   // Check for gather already in progress
   if (g_gather_flag != 0) {
@@ -899,11 +902,15 @@ msg_tag* start_general_strided_gather(
         ty = (s->y + displacement[YUP] + ny) % ny;
       else
         ty = s->y;
+      if (displacement[ZUP] != 0)
+        tz = (s->z + displacement[ZUP] + nz) % nz;
+      else
+        tz = s->z;
       if (displacement[TUP] != 0)
         tt = (s->t + displacement[TUP] + nt) % nt;
       else
         tt = s->t;
-      dest[i] = field + stride * node_index(tx, ty, tt);
+      dest[i] = field + stride * node_index(tx, ty, tz, tt);
     }
   }
   else {
@@ -916,11 +923,15 @@ msg_tag* start_general_strided_gather(
         ty = (s->y + displacement[YUP] + ny) % ny;
       else
         ty = s->y;
+      if (displacement[ZUP] != 0)
+        tz = (s->z + displacement[ZUP] + nz) % nz;
+      else
+        tz = s->z;
       if (displacement[TUP] != 0)
         tt = (s->t + displacement[TUP] + nt) % nt;
       else
         tt = s->t;
-      dest[i] = field + stride * node_index(tx, ty, tt);
+      dest[i] = field + stride * node_index(tx, ty, tz, tt);
     }
   }
 

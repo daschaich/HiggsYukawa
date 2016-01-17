@@ -9,9 +9,12 @@
 // -----------------------------------------------------------------
 int main(int argc, char *argv[]) {
   int prompt;
-  int traj_done, s_iters, avs_iters = 0, avm_iters = 0, Nmeas = 0, j;
+  int traj_done, s_iters, avs_iters = 0, avm_iters = 0, Nmeas = 0;
   Real f_eps, s_eps;
   double dtime, s_act;
+#ifdef CORR
+  int j;
+#endif
 
   // Setup
   setlinebuf(stdout); // DEBUG
@@ -60,8 +63,8 @@ int main(int argc, char *argv[]) {
 #ifdef CORR
       // Correlator measurements
       for (j = 0; j < Nsrc; j++) {
-        node0_printf("Source point %d %d %d\n",
-                     pnts[j][0], pnts[j][1], pnts[j][2]);
+        node0_printf("Source point %d %d %d %d\n",
+                     pnts[j][0], pnts[j][1], pnts[j][2], pnts[j][3]);
         avm_iters += correlators(pnts[j]);
       }
       Nmeas++;

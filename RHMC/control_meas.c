@@ -39,8 +39,8 @@ int main(int argc, char *argv[]) {
   // Correlator measurements
   int j, avm_iters = 0;
   for (j = 0; j < Nsrc; j++) {
-    node0_printf("Source point %d %d %d\n",
-                 pnts[j][0], pnts[j][1], pnts[j][2]);
+    node0_printf("Source point %d %d %d %d\n",
+                 pnts[j][0], pnts[j][1], pnts[j][2], pnts[j][3]);
     avm_iters += correlators(pnts[j]);
   }
 #endif

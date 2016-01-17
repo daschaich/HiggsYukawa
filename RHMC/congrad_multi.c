@@ -83,7 +83,7 @@ int congrad_multi(vector *src, vector **psim,
     DSq(pm0, mpm);
     iteration++;
     total_iters++;
-    FORALLSITES(i,s)
+    FORALLSITES(i, s)
       scalar_mult_add_vec(&(mpm[i]), &(pm0[i]), shift[0], &(mpm[i]));
 
     // beta_i[0] = -(r, r) / (pm, Mpm)

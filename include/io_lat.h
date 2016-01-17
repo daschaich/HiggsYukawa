@@ -66,6 +66,7 @@ char *gauge_info_keyword[] = {
       "checksums",
       "nx",
       "ny",
+      "nz",
       "nt",
       "gauge.previous.filename",
       "gauge.previous.time_stamp",

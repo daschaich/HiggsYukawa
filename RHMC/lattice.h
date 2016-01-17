@@ -16,17 +16,16 @@
 // -----------------------------------------------------------------
 // The lattice is an array of this site struct
 typedef struct {
-  short x, y, t;  // Coordinates of this site
-  char parity;    // Is it even or odd?
-  int index;      // Index in the array
+  short x, y, z, t;   // Coordinates of this site
+  char parity;        // Is it even or odd?
+  int index;          // Index in the array
 
 #ifdef SITERAND
   // The state information for a random number generator
   double_prn site_prn;
 #endif
 
-  // Staggered phases, which have been absorbed into the matrices
-  // Also includes the antiperiodic temporal boundary conditions
+  // Staggered phases not including temporal boundary conditions
   Real phase[NDIMS];
 
   // Hubbard--Stratonovich scalar field
@@ -48,10 +47,10 @@ typedef struct {
 #endif
 
 // Global variables
-EXTERN int nx, ny, nt;  // Lattice dimensions
-EXTERN int PBC;         // Temporal fermion boundary condition
-EXTERN int volume;      // Volume of lattice
-EXTERN int iseed;       // Random number seed
+EXTERN int nx, ny, nz, nt;  // Lattice dimensions
+EXTERN int PBC;             // Temporal fermion boundary condition
+EXTERN int volume;          // Volume of lattice
+EXTERN int iseed;           // Random number seed
 EXTERN int warms, trajecs, niter, propinterval;
 EXTERN Real traj_length;
 
@@ -66,8 +65,8 @@ EXTERN Real rsqmin, rsqprop;
 EXTERN Real G;
 EXTERN double sigmasum;
 EXTERN char startfile[MAXFILENAME], savefile[MAXFILENAME];
-EXTERN int startflag; // Beginning lattice: CONTINUE, RELOAD, FRESH
-EXTERN int saveflag;  // 1 if we will save the lattice;
+EXTERN int startflag;     // Beginning lattice: CONTINUE, RELOAD, FRESH
+EXTERN int saveflag;      // 1 if we will save the lattice;
 EXTERN int total_iters;   // To be incremented by the multi-mass CG
 
 // Some of these global variables are node dependent
@@ -85,10 +84,6 @@ EXTERN Real ampdeg4, *amp4, *shift4;
 EXTERN Real ampdeg8, *amp8, *shift8;
 EXTERN int Nroot, Norder;
 EXTERN Real snorm, *fnorm, max_sf, *max_ff;
-
-// Stuff for gathers -- both forwards and backwards
-EXTERN int goffset[2 * NDIMS];
-EXTERN int offset[NDIMS][NDIMS];    // Path along each link
 
 // Momenta and forces for the scalars
 antisym *mom, *force;
@@ -116,8 +111,8 @@ EXTERN site *lattice;
 
 // Vectors for addressing
 // Generic pointers, for gather routines
-// Probably need at least 6=2NDIMS
-#define N_POINTERS 6
+// Probably need at least 8=2NDIMS
+#define N_POINTERS 8
 EXTERN char **gen_pt[N_POINTERS];
 
 #ifdef CORR
