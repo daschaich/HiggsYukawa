@@ -70,11 +70,9 @@ int update_step(double *fnorm, double *snorm, vector **src, vector ***psim) {
   Real final_rsq, eps = traj_length / (Real)nsteps[0], tr;
   node0_printf("eps %.4g\n", eps);
 
-  // First u(t/2)
-  update_scalar(0.5 * eps);
-
   for (step = 0; step < nsteps[0]; step++) {
-    // Inner steps p(t) u(t)
+    // One step u(t/2) p(t) u(t/2)
+    update_scalar(0.5 * eps);
     tr = scalar_force(eps);
     *snorm += tr;
     if (tr > max_sf)
@@ -89,10 +87,7 @@ int update_step(double *fnorm, double *snorm, vector **src, vector ***psim) {
         max_ff[n] = tr;
     }
 
-    if (step < nsteps[0] - 1)
-      update_scalar(eps);
-    else                // Final u(t/2)
-      update_scalar(0.5 * eps);
+    update_scalar(0.5 * eps);
   }
   return iters;
 }

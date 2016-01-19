@@ -25,8 +25,8 @@ void scalar_field_copy(field_offset src, field_offset dest) {
 void fermion_op(vector *src, vector *dest, int sign) {
   register int i;
   register site *s;
-  int dir, a, b, c, d;
-  Real tr, halfG = 0.25 * G;
+  int dir, a, b, c, d, p;
+  Real tr, halfG = 0.5 * G;
   vector tvec, tvec_dir, tvec_opp;
   msg_tag *tag[2 * NDIMS];
 
@@ -50,13 +50,17 @@ void fermion_op(vector *src, vector *dest, int sign) {
     clearvec(&(dest[i]));
     for (a = 0; a < DIMF; a++) {
       for (b = a + 1; b < DIMF; b++) {
-        tr = s->sigma.e[as_index[a][b]];
+        p = as_index[a][b];
+        dest[i].c[a] += s->sigma.e[p] * src[i].c[b];
+        dest[i].c[b] -= s->sigma.e[p] * src[i].c[a];
         for (c = 0; c < DIMF; c++) {
-          for (d = c + 1; d < DIMF; d++)
-            tr += perm[a][b][c][d] * s->sigma.e[as_index[c][d]];
-        }   // No half since not double-counting
-        dest[i].c[a] += tr * src[i].c[b];
-        dest[i].c[b] -= tr * src[i].c[a];
+          for (d = c + 1; d < DIMF; d++) {
+            p = as_index[c][d];
+            tr = perm[a][b][c][d];    // No half since not double-counting
+            dest[i].c[a] += tr * s->sigma.e[p] * src[i].c[b];
+            dest[i].c[b] -= tr * s->sigma.e[p] * src[i].c[a];
+          }
+        }
       }
     }
     scalar_mult_vec(&(dest[i]), halfG, &(dest[i]));

@@ -38,7 +38,7 @@ double fermion_force(Real eps, vector *src, vector **sol) {
   register int i;
   register site *s;
   int n, a, b, c, d, p;
-  Real tr, halfG = 0.25 * G;
+  Real tr, halfG = 0.5 * G;
   double returnit = 0.0;
   antisym tempas;
 

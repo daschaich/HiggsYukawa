@@ -34,7 +34,7 @@ double mom_action() {
 
 // -----------------------------------------------------------------
 // Scalar contribution to the action
-// Only sum over half of anti-symmetric 4x4 matrix, with doubled coefficient
+// Identical terms in self-dual matrix cancel factor of 1/2
 double scalar_action() {
 #if (DIMF != 4)
   #error "Assuming DIMF=4!"
