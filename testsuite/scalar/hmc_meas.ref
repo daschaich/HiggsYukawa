@@ -3,7 +3,7 @@ Microcanonical simulation with refreshing
 Machine = Scalar processor, with 1 nodes
 Hybrid Monte Carlo algorithm
 Phi algorithm
-start: Sat Jan 16 21:40:06 2016
+start: Tue Jan 19 11:57:53 2016
 
 type 0 for no prompts or 1 for prompts
 nx 1
@@ -46,82 +46,82 @@ forget
 Restored binary gauge configuration serially from file config.16
 Time stamp Sat Jan 16 21:35:34 2016
 Checksums 74554f6d 56e46f81 OK
-Time to reload gauge configuration = 4.210472e-04
+Time to reload gauge configuration = 3.821850e-04
 CHECK SIGMA SUM: -2.1906770202531511e-02
 START 3.0144021
 f_eps 0.2 s_eps 0.01
 WARMUPS COMPLETED
 action: scalar 12346.991 fermion0 8191.1186 mom 12158.941 sum 32697.051
 action: scalar 12188.075 fermion0 8212.4847 mom 12296.501 sum 32697.06
-ACCEPT: delta S = 0.009427 start S = 32697.0506388 end S = 32697.0600657
+ACCEPT: delta S = 0.009425 start S = 32697.0506416 end S = 32697.0600665
 MONITOR_FORCE_SCALAR   0.0002706 0.0002713
 MONITOR_FORCE_FERMION0 0.000238 0.0002936
 GMES 970 2.9756041
 action: scalar 12188.075 fermion0 8355.5878 mom 12375.986 sum 32919.649
 action: scalar 12248.35 fermion0 8356.8719 mom 12314.42 sum 32919.642
-ACCEPT: delta S = -0.006159 start S = 32919.648518 end S = 32919.642359
+ACCEPT: delta S = -0.006159 start S = 32919.6485185 end S = 32919.6423596
 MONITOR_FORCE_SCALAR   0.0002694 0.0002701
 MONITOR_FORCE_FERMION0 0.0002372 0.0002917
 GMES 888 2.9903198
 action: scalar 12248.35 fermion0 8026.2348 mom 12316.781 sum 32591.366
 action: scalar 12312.797 fermion0 8023.1253 mom 12255.441 sum 32591.363
-ACCEPT: delta S = -0.002228 start S = 32591.3656152 end S = 32591.3633869
+ACCEPT: delta S = -0.002228 start S = 32591.3656153 end S = 32591.363387
 MONITOR_FORCE_SCALAR   0.0002705 0.0002709
 MONITOR_FORCE_FERMION0 0.0002312 0.0002847
 GMES 880 3.0060539
 Source point 0 0 0 0
-Inversion 1 of 4 took 65 iters and 0.1165 seconds
-Inversion 2 of 4 took 65 iters and 0.1169 seconds
-Inversion 3 of 4 took 65 iters and 0.1159 seconds
-Inversion 4 of 4 took 65 iters and 0.1126 seconds
+Inversion 1 of 4 took 65 iters and 0.06321 seconds
+Inversion 2 of 4 took 65 iters and 0.06314 seconds
+Inversion 3 of 4 took 65 iters and 0.06289 seconds
+Inversion 4 of 4 took 65 iters and 0.06295 seconds
 FOUR 0 0 0 0 0.0805726 12.238 260
 Source point 0 0 0 8
-Inversion 1 of 4 took 63 iters and 0.1121 seconds
-Inversion 2 of 4 took 63 iters and 0.129 seconds
-Inversion 3 of 4 took 63 iters and 0.1277 seconds
-Inversion 4 of 4 took 63 iters and 0.1223 seconds
+Inversion 1 of 4 took 63 iters and 0.06136 seconds
+Inversion 2 of 4 took 63 iters and 0.06114 seconds
+Inversion 3 of 4 took 63 iters and 0.06107 seconds
+Inversion 4 of 4 took 63 iters and 0.06129 seconds
 FOUR 0 0 0 8 0.151045 14.1954 252
 Source point 0 0 8 0
-Inversion 1 of 4 took 63 iters and 0.1087 seconds
-Inversion 2 of 4 took 63 iters and 0.109 seconds
-Inversion 3 of 4 took 63 iters and 0.108 seconds
-Inversion 4 of 4 took 63 iters and 0.1078 seconds
+Inversion 1 of 4 took 63 iters and 0.06126 seconds
+Inversion 2 of 4 took 63 iters and 0.06117 seconds
+Inversion 3 of 4 took 63 iters and 0.06185 seconds
+Inversion 4 of 4 took 63 iters and 0.06154 seconds
 FOUR 0 0 8 0 0.240209 13.4987 252
 Source point 0 0 8 8
-Inversion 1 of 4 took 62 iters and 0.1065 seconds
-Inversion 2 of 4 took 62 iters and 0.1059 seconds
-Inversion 3 of 4 took 62 iters and 0.1061 seconds
-Inversion 4 of 4 took 62 iters and 0.1057 seconds
+Inversion 1 of 4 took 62 iters and 0.06007 seconds
+Inversion 2 of 4 took 62 iters and 0.06017 seconds
+Inversion 3 of 4 took 62 iters and 0.06008 seconds
+Inversion 4 of 4 took 62 iters and 0.05993 seconds
 FOUR 0 0 8 8 0.0698721 12.2167 248
 Source point 0 8 0 0
-Inversion 1 of 4 took 65 iters and 0.1112 seconds
-Inversion 2 of 4 took 65 iters and 0.1112 seconds
-Inversion 3 of 4 took 65 iters and 0.1128 seconds
-Inversion 4 of 4 took 65 iters and 0.1105 seconds
+Inversion 1 of 4 took 65 iters and 0.0633 seconds
+Inversion 2 of 4 took 65 iters and 0.06364 seconds
+Inversion 3 of 4 took 65 iters and 0.06338 seconds
+Inversion 4 of 4 took 65 iters and 0.06304 seconds
 FOUR 0 8 0 0 0.363111 14.1734 260
 Source point 0 8 0 8
-Inversion 1 of 4 took 62 iters and 0.1057 seconds
-Inversion 2 of 4 took 62 iters and 0.1061 seconds
-Inversion 3 of 4 took 62 iters and 0.1063 seconds
-Inversion 4 of 4 took 62 iters and 0.1057 seconds
+Inversion 1 of 4 took 62 iters and 0.06015 seconds
+Inversion 2 of 4 took 62 iters and 0.06013 seconds
+Inversion 3 of 4 took 62 iters and 0.06061 seconds
+Inversion 4 of 4 took 62 iters and 0.06017 seconds
 FOUR 0 8 0 8 0.155456 12.0146 248
 Source point 0 8 8 0
-Inversion 1 of 4 took 64 iters and 0.111 seconds
-Inversion 2 of 4 took 64 iters and 0.1101 seconds
-Inversion 3 of 4 took 64 iters and 0.1093 seconds
-Inversion 4 of 4 took 64 iters and 0.1105 seconds
+Inversion 1 of 4 took 64 iters and 0.06206 seconds
+Inversion 2 of 4 took 64 iters and 0.06173 seconds
+Inversion 3 of 4 took 64 iters and 0.06229 seconds
+Inversion 4 of 4 took 64 iters and 0.0622 seconds
 FOUR 0 8 8 0 0.0959807 12.5052 256
 Source point 0 8 8 8
-Inversion 1 of 4 took 63 iters and 0.1076 seconds
-Inversion 2 of 4 took 63 iters and 0.111 seconds
-Inversion 3 of 4 took 63 iters and 0.1074 seconds
-Inversion 4 of 4 took 63 iters and 0.108 seconds
+Inversion 1 of 4 took 63 iters and 0.06102 seconds
+Inversion 2 of 4 took 63 iters and 0.06131 seconds
+Inversion 3 of 4 took 63 iters and 0.06099 seconds
+Inversion 4 of 4 took 63 iters and 0.06178 seconds
 FOUR 0 8 8 8 0.0511449 14.067 252
 RUNNING COMPLETED
 STOP 3.0060539
 Average CG iters for steps: 912.7
 Average CG iters for measurements: 2028
 
-Time = 11.16 seconds
+Time = 6.92 seconds
 total_iters = 4766
 

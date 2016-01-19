@@ -3,7 +3,7 @@ Microcanonical simulation with refreshing
 Machine = MPI (portable), with 2 nodes
 Hybrid Monte Carlo algorithm
 Phi algorithm
-start: Sat Jan 16 19:47:46 2016
+start: Tue Jan 19 10:00:47 2016
 
 type 0 for no prompts or 1 for prompts
 nx 1
@@ -37,26 +37,26 @@ forget
 Restored binary gauge configuration serially from file config.16
 Time stamp Sat Jan 16 21:35:34 2016
 Checksums 74554f6d 56e46f81 OK
-Time to reload gauge configuration = 1.580954e-03
+Time to reload gauge configuration = 1.152205e-02
 CHECK SIGMA SUM: -2.1906770202531511e-02
 START 3.0144021
 f_eps 0.2 s_eps 0.01
 WARMUPS COMPLETED
 action: scalar 12346.991 fermion0 8191.1186 mom 12158.941 sum 32697.051
 action: scalar 12188.075 fermion0 8212.4847 mom 12296.501 sum 32697.06
-ACCEPT: delta S = 0.009424 start S = 32697.0506417 end S = 32697.0600661
+ACCEPT: delta S = 0.009427 start S = 32697.0506403 end S = 32697.0600668
 MONITOR_FORCE_SCALAR   0.0002706 0.0002713
 MONITOR_FORCE_FERMION0 0.000238 0.0002936
 GMES 970 2.9756041
 action: scalar 12188.075 fermion0 8355.5878 mom 12375.986 sum 32919.649
 action: scalar 12248.35 fermion0 8356.8719 mom 12314.42 sum 32919.642
-ACCEPT: delta S = -0.006159 start S = 32919.6485184 end S = 32919.6423593
+ACCEPT: delta S = -0.006159 start S = 32919.6485184 end S = 32919.6423594
 MONITOR_FORCE_SCALAR   0.0002694 0.0002701
 MONITOR_FORCE_FERMION0 0.0002372 0.0002917
 GMES 888 2.9903198
 action: scalar 12248.35 fermion0 8026.2348 mom 12316.781 sum 32591.366
 action: scalar 12312.797 fermion0 8023.1253 mom 12255.441 sum 32591.363
-ACCEPT: delta S = -0.002228 start S = 32591.3656153 end S = 32591.3633869
+ACCEPT: delta S = -0.002228 start S = 32591.3656155 end S = 32591.3633872
 MONITOR_FORCE_SCALAR   0.0002705 0.0002709
 MONITOR_FORCE_FERMION0 0.0002312 0.0002847
 GMES 880 3.0060539
@@ -64,6 +64,6 @@ RUNNING COMPLETED
 STOP 3.0060539
 Average CG iters for steps: 912.7
 
-Time = 4.336 seconds
+Time = 7.33 seconds
 total_iters = 2738
 
