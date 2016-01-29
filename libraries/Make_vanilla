@@ -11,7 +11,7 @@ OPT      = -O3 -Wall # -g
 CODETYPE = # -DFAST # Only works if NCOL=DIMF=3
 AR = ar
 
-# Also check choices in include/config.h.
+# Also check include/config.h
 # ------------------------------------------------------------------
 
 

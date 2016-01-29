@@ -35,7 +35,7 @@ fi
 # Otherwise consider all active targets
 # Compile
 cd ../../RHMC/
-for target in hmc meas hmc_meas ; do
+for target in hmc meas hmc_meas eig ; do
   echo "Compiling so4_$target..."
   if ! make -f Make_scalar so4_$target >& /dev/null ; then
     echo "ERROR: so4_$target compilation failed"
@@ -46,7 +46,7 @@ done
 
 # Run
 cd ../testsuite/
-for target in hmc meas hmc_meas ; do
+for target in hmc meas hmc_meas eig ; do
   rm -f scalar/$target.out
   echo "Running so4_$target..."
   ../RHMC/so4_$target < in.$target > scalar/$target.out
@@ -54,7 +54,7 @@ done
 
 # Check
 cd scalar/
-for target in hmc meas hmc_meas ; do
+for target in hmc meas hmc_meas eig ; do
   d="`diff -I'Time' -I'time' -I'seconds' -I'^start' $target.ref $target.out`"
   if [ -n "$d" ] ; then   # Non-zero string length
     echo "$target.ref and $target.out differ:"
