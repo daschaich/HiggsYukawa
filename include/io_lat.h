@@ -192,11 +192,11 @@ void byterevn(int32type w[], int n);
 // -----------------------------------------------------------------
 // IO for columns and diagonal elements of matrix Q
 // in pfaffian phase calculation
-#ifdef PHASE
-void loadQ(complex **Q, int ckpt_load);
-void saveQ(complex **Q, int ckpt_save);
-void load_diag(complex *diag, int ckpt_load);
-void save_diag(complex *diag, int ckpt_save);
+#ifdef PFAFF
+void loadQ(Real **Q, int ckpt_load);
+void saveQ(Real **Q, int ckpt_save);
+void load_diag(Real *diag, int ckpt_load);
+void save_diag(Real *diag, int ckpt_save);
 #endif
 #endif
 // -----------------------------------------------------------------

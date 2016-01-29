@@ -13,8 +13,8 @@ int main(int argc, char *argv[]) {
   double linktr[NUMLINK], linktr_ave, linktr_width;
   double link_det[NUMLINK], det_ave, det_width;
   complex plp = cmplx(99.0, 99.0);
-#ifndef PHASE
-  node0_printf("Don't use control_phase unless compiling with -DPHASE!\n");
+#ifndef PFAFF
+  node0_printf("Don't use control_phase unless compiling with -DPFAFF!\n");
   terminate(1);
 #endif
 

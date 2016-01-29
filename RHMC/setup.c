@@ -143,7 +143,7 @@ void make_fields() {
 
   size *= sites_on_node;
   node0_printf("Mallocing %.1f MBytes per core for fields\n", size / 1e6);
-#ifdef PHASE
+#ifdef PFAFF
   // Total number of matvecs is (volume * DIMF)^2 / 4
   Nmatvecs = volume * volume * DIMF * DIMF / 4;
 
@@ -242,7 +242,7 @@ int readin(int prompt) {
     IF_OK status += get_i(stdin, prompt, "maxIter", &par_buf.maxIter);
 #endif
 
-#ifdef PHASE
+#ifdef PFAFF
     // Optional checkpointing for pfaffian computation
     IF_OK status += get_i(stdin, prompt, "ckpt_load", &par_buf.ckpt_load);
     IF_OK status += get_i(stdin, prompt, "ckpt_save", &par_buf.ckpt_save);
@@ -291,7 +291,7 @@ int readin(int prompt) {
   eig_tol = par_buf.eig_tol;
   maxIter = par_buf.maxIter;
 #endif
-#ifdef PHASE
+#ifdef PFAFF
   ckpt_load = par_buf.ckpt_load;
   ckpt_save = par_buf.ckpt_save;
 #endif

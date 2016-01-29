@@ -9,7 +9,8 @@
 #   so4_phi uses phi algorithm
 #   so4_hmc uses hybrid Monte Carlo algorithm, i.e., phi + accept/reject
 #   so4_meas measures two- and four-fermion correlation functions
-#   so4_phase calculates the pfaffian phase
+#   so4_eig  measures two- and four-fermion correlation functions
+#   so4_pfaff calculates the pfaffian
 #
 # Routines in this directory use RHMC, multiple time scale integration,
 # and Omelyan integrators.  See README.
@@ -88,6 +89,7 @@ ALL_MAKES =               \
 ${OBJECTS} : ${HEADERS} ${LASTMAKE} ${ALL_MAKES}
 
 ##### Targets:
+# -DEIG needs lapack and blas
 so4_hmc::
 	${MAKE} -f ${MAKEFILE} target "MYTARGET= $@" \
 	"DEFINES = ${DEFINES} -DPHI_ALGORITHM -DHMC_ALGORITHM " \
@@ -103,10 +105,17 @@ so4_hmc_meas::
 	"DEFINES = ${DEFINES} -DPHI_ALGORITHM -DHMC_ALGORITHM -DCORR " \
 	"EXTRA_OBJECTS = control.o update_o.o update_h.o setup_rhmc.o "
 
-so4_phase::
+so4_eig::
 	${MAKE} -f ${MAKEFILE} target "MYTARGET= $@" \
-	"DEFINES = ${DEFINES} -DPHI_ALGORITHM -DPHASE " \
-	"EXTRA_OBJECTS = control_phase.o phase.o io_phase.o "
+	"DEFINES = ${DEFINES} -DPHI_ALGORITHM -DEIG " \
+	"LIBRARIES = ${LIBRARIES} ${PLIB} " \
+	"LAPACK = -llapack -lblas " \
+	"EXTRA_OBJECTS = control_eig.o eig.o "
+
+so4_pfaff::
+	${MAKE} -f ${MAKEFILE} target "MYTARGET= $@" \
+	"DEFINES = ${DEFINES} -DPHI_ALGORITHM -DPFAFF " \
+	"EXTRA_OBJECTS = control_pfaff.o pfaff.o io_pfaff.o "
 
 # The targets below have not been used/tested recently
 so4_phi::

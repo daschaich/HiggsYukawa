@@ -34,6 +34,9 @@ void pnt_src(int *pnt, int index) {
 // Then set src = Ddag dest
 // so that (Ddag.D)^(-1).src will give D^(-1).vol_src
 void vol_src() {
+#if (DIMF != 4)
+  #error "Assuming DIMF=4!"
+#endif
   register int i;
   register site *s;
 

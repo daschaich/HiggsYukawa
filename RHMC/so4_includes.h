@@ -76,27 +76,28 @@ void check_Dmat(int Nvec, vector **eigVec);
 
 // Use LAPACK to diagonalize <psi_j | D | psi_i>
 // on the subspace of Ddag.D eigenvalues psi
-// http://www.physics.orst.edu/~rubin/nacphy/lapack/routines/zgeev.html
+// http://www.physics.orst.edu/~rubin/nacphy/lapack/routines/dgeev.html
 // First two arguments turn off eigenvector computations
 // Third and fifth arguments are the dimensions of the matrix
 // Fourth argument is that matrix, which will be overwritten
 // Sixth argument holds the computed eigenvalues
-// Seventh and ninth arguments are eigenvectors
-// Eighth and tenth arguments are the dimensions of the eigenvectors
-// Eleventh argument is real workspace, of size given by the twelfth argument
-// Thirteenth argument is real workspace, of size given by the third argument
+// Seventh argument holds their imaginary parts
+// Eighth and tenth arguments are eigenvectors
+// Ninth and eleventh arguments are the dimensions of the eigenvectors
+// Twelfth argument is real workspace, of size given by the thirteenth argument
 // Final argument reports success or information about failure
-void zgeev_(char *doL, char *doR, int *N1, double *store, int *N2, double *eigs,
+void dgeev_(char *doL, char *doR, int *N1, double *store, int *N2,
+            double *eigs, double *imag,
             double *dumL, int *NL, double *dumR, int *NR,
-            double *work, int *Nwork, double *Rwork, int *stat);
+            double *work, int *Nwork, int *stat);
 #endif
 // -----------------------------------------------------------------
 
 
 
 // -----------------------------------------------------------------
-// Pfaffian phase
-#ifdef PHASE
-void phase();
+// Pfaffian
+#ifdef PFAFF
+void pfaff();
 #endif
 // -----------------------------------------------------------------

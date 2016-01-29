@@ -44,7 +44,7 @@ typedef struct {
   Real eig_tol;
 #endif
 
-#ifdef PHASE
+#ifdef PFAFF
   // Pfaffian parameters
   int ckpt_load, ckpt_save;
 #endif

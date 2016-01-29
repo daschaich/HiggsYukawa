@@ -199,8 +199,8 @@ void matvec(complex *in, complex *out) {
 
 
 // -----------------------------------------------------------------
-#ifdef PHASE
-void phase() {
+#ifdef PFAFF
+void pfaff() {
   register int i, j, k;
   int Ndat = 16 * DIMF, shift = this_node * sites_on_node * Ndat;
   double phase, log_mag, tr, dtime;

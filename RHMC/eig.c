@@ -1,47 +1,34 @@
 // -----------------------------------------------------------------
 // Eigenvalue computation and helper functions
 // !!!Path to primme.h may need local customization
-#include "susy_includes.h"
+#include "so4_includes.h"
 #include "../PRIMME/PRIMMESRC/COMMONSRC/primme.h"
 // -----------------------------------------------------------------
 
 
 
 // -----------------------------------------------------------------
-// Gaussian random Twist_Fermion
-void rand_TFsource(Twist_Fermion *src) {
-  register int i, j, mu;
+// Gaussian random vector
+void rand_src(vector *src) {
+#if (DIMF != 4)
+  #error "Assuming DIMF=4!"
+#endif
+  register int i;
   register site *s;
 
   // Begin with pure gaussian random numbers
   FORALLSITES(i, s) {
-    for (j = 0; j < DIMF; j++) {                // Site fermions
 #ifdef SITERAND
-      src[i].Fsite.c[j].real = gaussian_rand_no(&(s->site_prn));
-      src[i].Fsite.c[j].imag = gaussian_rand_no(&(s->site_prn));
+    src[i].c[0] = gaussian_rand_no(&(s->site_prn));
+    src[i].c[1] = gaussian_rand_no(&(s->site_prn));
+    src[i].c[2] = gaussian_rand_no(&(s->site_prn));
+    src[i].c[3] = gaussian_rand_no(&(s->site_prn));
 #else
-      src[i].Fsite.c[j].real = gaussian_rand_no(&node_prn);
-      src[i].Fsite.c[j].imag = gaussian_rand_no(&node_prn);
+    src[i].c[0] = gaussian_rand_no(&node_prn);
+    src[i].c[1] = gaussian_rand_no(&node_prn);
+    src[i].c[2] = gaussian_rand_no(&node_prn);
+    src[i].c[3] = gaussian_rand_no(&node_prn);
 #endif
-      for (mu = 0; mu < NUMLINK; mu++) {        // Link fermions
-#ifdef SITERAND
-        src[i].Flink[mu].c[j].real = gaussian_rand_no(&(s->site_prn));
-        src[i].Flink[mu].c[j].imag = gaussian_rand_no(&(s->site_prn));
-#else
-        src[i].Flink[mu].c[j].real = gaussian_rand_no(&node_prn);
-        src[i].Flink[mu].c[j].imag = gaussian_rand_no(&node_prn);
-#endif
-      }
-      for (mu = 0; mu < NPLAQ; mu++) {        // Plaquette fermions
-#ifdef SITERAND
-        src[i].Fplaq[mu].c[j].real = gaussian_rand_no(&(s->site_prn));
-        src[i].Fplaq[mu].c[j].imag = gaussian_rand_no(&(s->site_prn));
-#else
-        src[i].Fplaq[mu].c[j].real = gaussian_rand_no(&node_prn);
-        src[i].Fplaq[mu].c[j].imag = gaussian_rand_no(&node_prn);
-#endif
-      }
-    }
   }
 }
 // -----------------------------------------------------------------
@@ -51,45 +38,33 @@ void rand_TFsource(Twist_Fermion *src) {
 // -----------------------------------------------------------------
 // Get Nvec vectors (stored consecutively) and hit them by the matrix
 void av_ov (void *x, void *y, int *Nvec, primme_params *primme) {
-  int i, j, mu, iter, ivec, Ndat = 16 * DIMF;
-  Complex_Z *xx;
+  int i, j, iter, ivec;
+  double *xx;
 
   for (ivec = 0; ivec < *Nvec; ivec++) {
-    // Copy double precision complex vector x
-    // into Real precision Twist_Fermion src
-    // Each Twist_Fermion has Ndat=16DIMF non-trivial complex components
-    xx = ((Complex_Z*) x) + Ndat * ivec * sites_on_node;  // This vector in x
+    // Copy double-precision vector x into Real precision vector src
+    // Each vector has DIMF components
+    xx = ((double*) x) + DIMF * ivec * sites_on_node;  // This vector in x
     iter = 0;
     for (i = 0; i < sites_on_node; i++) {
       for (j = 0; j < DIMF; j++) {
-        src[i].Fsite.c[j].real = xx[iter].r;
-        src[i].Fsite.c[j].imag = xx[iter].i;
+        src[i].c[j] = xx[iter];
         iter++;
-        for (mu = 0; mu < NUMLINK; mu++) {
-          src[i].Flink[mu].c[j].real = xx[iter].r;
-          src[i].Flink[mu].c[j].imag = xx[iter].i;
-          iter++;
-        }
-        for (mu = 0; mu < NPLAQ; mu++) {
-          src[i].Fplaq[mu].c[j].real = xx[iter].r;
-          src[i].Fplaq[mu].c[j].imag = xx[iter].i;
-          iter++;
-        }
       }
     }
 
 #ifdef DEBUG_CHECK
-    if (iter != Ndat * sites_on_node)
+    if (iter != DIMF * sites_on_node)
       printf("av_ov: iter = %d after source\n", iter);
 
     // Check that src is the same magnitude as x[ivec]
     register site *s;
     double xmag = 0.0, src_mag = 0.0;
-    xx = ((Complex_Z*) x) + Ndat * ivec * sites_on_node;   // This vector in x
-    for (i = 0; i < sites_on_node * Ndat; i++)
+    xx = ((double*) x) + DIMF * ivec * sites_on_node;   // This vector in x
+    for (i = 0; i < sites_on_node * DIMF; i++)
       xmag += xx[i].r * xx[i].r + xx[i].i * xx[i].i;
     FORALLSITES(i, s)
-      src_mag += magsq_TF(&(src[i]));
+      src_mag += magsq_vec(&(src[i]));
     if (fabs(xmag - src_mag) > eig_tol * eig_tol) {
       node0_printf("av_ov: |x[%d]|^2 = %.4g but |src|^2 = %.4g (%.4g)\n",
                    ivec, xmag, src_mag, fabs(xmag - src_mag));
@@ -99,47 +74,36 @@ void av_ov (void *x, void *y, int *Nvec, primme_params *primme) {
 #ifdef DEBUG_CHECK
     // Check that src is being copied appropriately
     node0_printf("eigVec[0] copy check:\n");
-    dump_TF(&(src[0]));
+    dump_vec(&(src[0]));
 #endif
 
-    DSq(src, res);    // D^2
+    DSq(src, dest);    // D^2
 
-    // Copy the resulting Twist_Fermion res back to complex vector y
-    // Each Twist_Fermion has Ndat=16DIMF non-trivial complex components
-    xx = ((Complex_Z*) y) + Ndat * ivec * sites_on_node;  // This vector in y
+    // Copy the resulting vector dest back to double-precision vector y
+    // Each vector has DIMF components
+    xx = ((double*) y) + DIMF * ivec * sites_on_node;  // This vector in y
     iter = 0;
     for (i = 0; i < sites_on_node; i++) {
       for (j = 0; j < DIMF; j++) {
-        xx[iter].r = (double)res[i].Fsite.c[j].real;
-        xx[iter].i = (double)res[i].Fsite.c[j].imag;
+        xx[iter] = (double)dest[i].c[j];
         iter++;
-        for (mu = 0; mu < NUMLINK; mu++) {
-          xx[iter].r = (double)res[i].Flink[mu].c[j].real;
-          xx[iter].i = (double)res[i].Flink[mu].c[j].imag;
-          iter++;
-        }
-        for (mu = 0; mu < NPLAQ; mu++) {
-          xx[iter].r = (double)res[i].Fplaq[mu].c[j].real;
-          xx[iter].i = (double)res[i].Fplaq[mu].c[j].imag;
-          iter++;
-        }
       }
     }
 
 #ifdef DEBUG_CHECK
-    if (iter != Ndat * sites_on_node)
+    if (iter != DIMF * sites_on_node)
       printf("av_ov: iter = %d after source\n", iter);
 
-    // Check that res is the same magnitude as y[ivec]
-    double ymag = 0.0, res_mag = 0.0;
-    xx = ((Complex_Z*) y) + Ndat * ivec * sites_on_node;   // This vector in x
-    for (i = 0; i < sites_on_node * Ndat; i++)
+    // Check that dest is the same magnitude as y[ivec]
+    double ymag = 0.0, dest_mag = 0.0;
+    xx = ((double*) y) + DIMF * ivec * sites_on_node;   // This vector in x
+    for (i = 0; i < sites_on_node * DIMF; i++)
       ymag += xx[i].r * xx[i].r + xx[i].i * xx[i].i;
     FORALLSITES(i, s)
-      res_mag += magsq_TF(&(res[i]));
-    if (fabs(ymag - res_mag) > eig_tol * eig_tol) {
-      node0_printf("av_ov: |y[%d]|^2 = %.4g but |res|^2 = %.4g (%.4g)\n",
-                   ivec, ymag, res_mag, fabs(ymag - res_mag));
+      dest_mag += magsq_vec(&(dest[i]));
+    if (fabs(ymag - dest_mag) > eig_tol * eig_tol) {
+      node0_printf("av_ov: |y[%d]|^2 = %.4g but |dest|^2 = %.4g (%.4g)\n",
+                   ivec, ymag, dest_mag, fabs(ymag - dest_mag));
     }
 #endif
   }
@@ -168,14 +132,13 @@ void par_GlobalSumDouble(void *sendBuf, void *recvBuf,
 // Prints them with a quick check of |D^dag D phi - lambda phi|^2
 // If flag==1 we calculate the smallest eigenvalues
 // If flag==-1 we calculate the largest eigenvalues
-int make_evs(int Nvec, Twist_Fermion **eigVec, double *eigVal, int flag) {
+int make_evs(int Nvec, vector **eigVec, double *eigVal, int flag) {
   register site* s;
-  int i, j, mu, ivec, iter = 0, ret, Ndat = 16 * DIMF;
-  int maxn = sites_on_node * Ndat;
+  int i, j, ivec, iter = 0, ret, maxn = sites_on_node * DIMF;
   double check, *rnorms = malloc(Nvec * sizeof(*rnorms));
-  Complex_Z *workVecs = malloc(Nvec * maxn * sizeof(*workVecs));
+  double *workVecs = malloc(Nvec * maxn * sizeof(*workVecs));
   static primme_params primme;
-  Twist_Fermion tTF, *tmpTF = malloc(sites_on_node * sizeof(*tmpTF));
+  vector tvec, *tmpVec = malloc(sites_on_node * sizeof(*tmpVec));
 
   // Check memory allocations
   if (workVecs == NULL) {
@@ -190,28 +153,17 @@ int make_evs(int Nvec, Twist_Fermion **eigVec, double *eigVal, int flag) {
   // Initialize all the eigenvectors to random vectors
   for (ivec = 0; ivec < Nvec; ivec++) {
     eigVal[ivec] = 1e16;
-    rand_TFsource(eigVec[ivec]);
+    rand_src(eigVec[ivec]);
   }
 
   // Copy initial guesses into double-precision temporary fields
-  // Each Twist_Fermion has Ndat = 16DIMF non-trivial complex components
+  // Each vector has DIMF components
   for (ivec = 0; ivec < Nvec; ivec++) {
-    iter = Ndat * ivec * sites_on_node;   // This vector in workvecs
+    iter = DIMF * ivec * sites_on_node;   // This vector in workvecs
     for (i = 0; i < sites_on_node; i++) {
       for (j = 0; j < DIMF; j++) {
-        workVecs[iter].r = eigVec[ivec][i].Fsite.c[j].real;
-        workVecs[iter].i = eigVec[ivec][i].Fsite.c[j].imag;
+        workVecs[iter] = eigVec[ivec][i].c[j];
         iter++;
-        for (mu = 0; mu < NUMLINK; mu++) {
-          workVecs[iter].r = eigVec[ivec][i].Flink[mu].c[j].real;
-          workVecs[iter].i = eigVec[ivec][i].Flink[mu].c[j].imag;
-          iter++;
-        }
-        for (mu = 0; mu < NPLAQ; mu++) {
-          workVecs[iter].r = eigVec[ivec][i].Fplaq[mu].c[j].real;
-          workVecs[iter].i = eigVec[ivec][i].Fplaq[mu].c[j].imag;
-          iter++;
-        }
       }
     }
   }
@@ -247,31 +199,20 @@ int make_evs(int Nvec, Twist_Fermion **eigVec, double *eigVal, int flag) {
 //  primme_display_params(primme);
 
   // Call the actual EV finder and check return value
-  ret = zprimme(eigVal, workVecs, rnorms, &primme);
+  ret = dprimme(eigVal, workVecs, rnorms, &primme);
   if (ret != 0) {
     node0_printf("PRIMME failed with return value %d\n", ret);
     terminate(1);
   }
 
   // Copy double-precision temporary fields back into output
-  // Each Twist_Fermion has Ndat = 16DIMF non-trivial complex components
+  // Each vector DIMF components
   for (ivec = 0; ivec < Nvec; ivec++) {
-    iter = Ndat * ivec * sites_on_node;   // This vector in workvecs
+    iter = DIMF * ivec * sites_on_node;   // This vector in workvecs
     for (i = 0; i < sites_on_node; i++) {
       for (j = 0; j < DIMF; j++) {
-        eigVec[ivec][i].Fsite.c[j].real = workVecs[iter].r;
-        eigVec[ivec][i].Fsite.c[j].imag = workVecs[iter].i;
+        eigVec[ivec][i].c[j] = workVecs[iter];
         iter++;
-        for (mu = 0; mu < NUMLINK; mu++) {
-          eigVec[ivec][i].Flink[mu].c[j].real = workVecs[iter].r;
-          eigVec[ivec][i].Flink[mu].c[j].imag = workVecs[iter].i;
-          iter++;
-        }
-        for (mu = 0; mu < NPLAQ; mu++) {
-          eigVec[ivec][i].Fplaq[mu].c[j].real = workVecs[iter].r;
-          eigVec[ivec][i].Fplaq[mu].c[j].imag = workVecs[iter].i;
-          iter++;
-        }
       }
     }
   }
@@ -283,12 +224,12 @@ int make_evs(int Nvec, Twist_Fermion **eigVec, double *eigVal, int flag) {
   // Print results and check |D^dag D phi - lambda phi|^2
   for (ivec = 0; ivec < Nvec; ivec++) {
     check = 0.0;
-    DSq(eigVec[ivec], tmpTF);
+    DSq(eigVec[ivec], tmpVec);
     FORALLSITES(i, s) {
-      // tTF = tmpTF - eigVal[ivec] * eigVec[ivec]
-      scalar_mult_add_TF(&(tmpTF[i]), &(eigVec[ivec][i]),
-                                      -1.0 * eigVal[ivec], &tTF);
-      check += magsq_TF(&tTF);
+      // tvec = tmpVec - eigVal[ivec] * eigVec[ivec]
+      scalar_mult_add_vec(&(tmpVec[i]), &(eigVec[ivec][i]),
+                                       -1.0 * eigVal[ivec], &tvec);
+      check += magsq_vec(&tvec);
     }
     g_doublesum(&check);    // Accumulate across all nodes
     if (flag == 1)  {       // Braces suppress compiler warning
@@ -313,57 +254,58 @@ int make_evs(int Nvec, Twist_Fermion **eigVec, double *eigVal, int flag) {
 // Check matrix elements and eigenvalues of <psi_j | D | psi_i>
 // where the psi are eigenvectors of DDag.D
 // Have checked that <psi_j | Ddag | psi_i> produces conjugate eigenvalues
-void check_Dmat(int Nvec, Twist_Fermion **eigVec) {
+void check_Dmat(int Nvec, vector **eigVec) {
   register int i;
   register site *s;
   char N = 'N';
-  int ivec, jvec, stat = 0, unit = 1, doub = 2 * Nvec;
-  double *store, *work, *eigs, *dum;
-  double_complex tc, check;
-  Twist_Fermion *tmpTF = malloc(sites_on_node * sizeof(*tmpTF));
+  int ivec, jvec, stat = 0, unit = 1, trip = 3 * Nvec;
+  double *store, *work, *eigs, *imag, *dum, check;
+  vector *tmpVec = malloc(sites_on_node * sizeof(*tmpVec));
 
   // Allocate double arrays expected by LAPACK
-  store = malloc(2 * Nvec * Nvec * sizeof(*store));
-  work = malloc(4 * Nvec * sizeof(*work));
-  eigs = malloc(2 * Nvec * sizeof(*eigs));
-  dum = malloc(2 * sizeof(*dum));
+  store = malloc(Nvec * Nvec * sizeof(*store));
+  work = malloc(3 * Nvec * sizeof(*work));
+  eigs = malloc(Nvec * sizeof(*eigs));
+  imag = malloc(Nvec * sizeof(*imag));
+  dum = malloc(sizeof(*dum));
 
   // Hit each eigVec with D, then contract with every other eigVec
   for (ivec = 0; ivec < Nvec; ivec++) {
-    fermion_op(eigVec[ivec], tmpTF, PLUS);
+    fermion_op(eigVec[ivec], tmpVec, PLUS);
 
     for (jvec = 0; jvec < Nvec; jvec++) {
-      check = cmplx(0.0, 0.0);
-      FORALLSITES(i, s) {
-        tc = TF_dot(&(eigVec[jvec][i]), &(tmpTF[i]));
-        CSUM(check, tc);
-      }
-      g_dcomplexsum(&check);    // Accumulate across all nodes
-//      node0_printf("D[%d, %d] (%.8g, %.4g)\n",
-//                   ivec, jvec, check.real, check.imag);
+      check = 0.0;
+      FORALLSITES(i, s)
+        check += dot(&(eigVec[jvec][i]), &(tmpVec[i]));
+      g_doublesum(&check);    // Accumulate across all nodes
+//      node0_printf("D[%d, %d] %.8g\n", ivec, jvec, check);
 
       // Save in column-major double array expected by LAPACK
-      store[2 * (jvec + Nvec * ivec)] = check.real;
-      store[2 * (jvec + Nvec * ivec) + 1] = check.imag;
+      store[jvec + Nvec * ivec] = check;
     }
+    eigs[ivec] = 0.0;
+    imag[ivec] = 0.0;
   }
-  free(tmpTF);
+  free(tmpVec);
 
   // Diagonalize <psi|D|psi> using LAPACK
   // Arguments summarized in susy_includes.h
   node0_printf("Using LAPACK to diagonalize <psi_j | D | psi_i>\n");
-  zgeev_(&N, &N, &Nvec, store, &Nvec, eigs,
-         dum, &unit, dum, &unit, work, &doub, work, &stat);
+  dgeev_(&N, &N, &Nvec, store, &Nvec, eigs, imag,
+         dum, &unit, dum, &unit, work, &trip, &stat);
 
-  // Print resulting eigenvalues
-  for (ivec = 0; ivec < Nvec; ivec++)
-    node0_printf("D_eig %d (%.6g, %.6g)\n",
-                 ivec, eigs[2 * ivec], eigs[2 * ivec + 1]);
+  // Print resulting eigenvalues, which should be purely imaginary
+  for (ivec = 0; ivec < Nvec; ivec++) {
+    node0_printf("D_eig %d %.6g\n", ivec, imag[ivec]);
+    if (fabs(eigs[ivec]) > SQ_TOL)
+      node0_printf("         %.6g real part non-negligible...\n", eigs[ivec]);
+  }
 
   // Free double arrays expected by LAPACK
   free(store);
   free(work);
   free(eigs);
+  free(imag);
   free(dum);
 }
 // -----------------------------------------------------------------

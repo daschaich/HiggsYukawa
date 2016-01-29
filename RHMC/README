@@ -77,7 +77,6 @@ forget                # What to do with lattice at end: only forget or save_seri
 defines.h       -- Defines Omelyan parameters and maximum number of point sources
 lattice.h       -- Defines Twist_Fermions, the site struct, global variables and fields
 params.h        -- Defines a struct for reading input parameters
-primme.h        -- Defines for PRIMME eigenvalue calculations
 so4_includes.h  -- Defines lots of routines, some of which are discussed below
 
 # 1) Routines in this directory:
@@ -102,9 +101,9 @@ control_eig.c     -- Main program for eigenvalues measurements only
 control_phase.c   -- Main program for pfaffian measurements only
 correlators.c     -- Measure correlators and condensates
 eig.c             -- Eigenvalue measurements using PRIMME
-                     Must specify path to libzprimme.a as PLIB in makefile
+                     Must specify path to libprimme.a as PLIB in makefile
                      Also need LAPACK and BLAS in linkable location
-phase.c           -- Phase and (log of) magnitude of the pfaffian
+pfaff.c           -- Pfaffian measurement with optional checkpointing
 
 # 1d) Files not currently used, retained for potential future testing
 update_leapfrog.c -- Leapfrog HMC evolution, includes ranmom() routine

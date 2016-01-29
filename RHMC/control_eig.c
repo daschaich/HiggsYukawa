@@ -1,18 +1,15 @@
 // -----------------------------------------------------------------
 // Main procedure for four-fermion eigenvalues
 #define CONTROL
-#include "susy_includes.h"
+#include "so4_includes.h"
 // -----------------------------------------------------------------
 
 
 
 // -----------------------------------------------------------------
 int main(int argc, char *argv[]) {
-  int prompt, dir;
-  double dssplaq, dstplaq, dtime, plpMod = 0.0;
-  double linktr[NUMLINK], linktr_ave, linktr_width;
-  double link_det[NUMLINK], det_ave, det_width;
-  complex plp = cmplx(99.0, 99.0);
+  int prompt;
+  double dtime, s_act;
   int ivec, total_iters = 0;
 #ifndef EIG
   node0_printf("Don't use control_eig unless compiling with -DEIG!\n");
@@ -28,10 +25,7 @@ int main(int argc, char *argv[]) {
 
   g_sync();
   prompt = setup();
-  setup_lambda();
   epsilon();
-  setup_PtoP();
-  setup_FQ();
 
   // Load input and run
   if (readin(prompt) != 0) {
@@ -40,47 +34,17 @@ int main(int argc, char *argv[]) {
   }
   dtime = -dclock();
 
-  // Check: compute initial plaquette and bosonic action
-  plaquette(&dssplaq, &dstplaq);
-  node0_printf("START %.8g %.8g %.8g ", dssplaq, dstplaq, dssplaq + dstplaq);
-  dssplaq = gauge_action(NODET);
-  node0_printf("%.8g\n", dssplaq / (double)volume);
-
-  // Do "local" measurements to check configuration
-  // Polyakov loop measurement
-  plp = ploop(&plpMod);
-
-  // Tr[Udag.U] / N
-  linktr_ave = link(linktr, &linktr_width, link_det, &det_ave, &det_width);
-  node0_printf("FLINK");
-  for (dir = XUP; dir < NUMLINK; dir++)
-    node0_printf(" %.6g", linktr[dir]);
-  node0_printf(" %.6g %.6g\n", linktr_ave, linktr_width);
-  node0_printf("FLINK_DET");
-  for (dir = XUP; dir < NUMLINK; dir++)
-    node0_printf(" %.6g", link_det[dir]);
-  node0_printf(" %.6g %.6g\n", det_ave, det_width);
-
-  // Polyakov loop and plaquette measurements
-  // Format: GMES Re(Polyakov) Im(Poyakov) cg_iters ss_plaq st_plaq
-  plp = ploop(&plpMod);
-  plaquette(&dssplaq, &dstplaq);
-  node0_printf("GMES %.8g %.8g 0 %.8g %.8g ",
-               plp.real, plp.imag, dssplaq, dstplaq);
-
-  // Bosonic action (printed twice by request)
-  // Might as well spit out volume average of Polyakov loop modulus
-  dssplaq = gauge_action(NODET) / (double)volume;
-  node0_printf("%.8g ", dssplaq);
-  node0_printf("%.8g\n", plpMod);
-  node0_printf("BACTION %.8g\n", dssplaq);
+  // Check: compute initial scalar action
+  // This is the only local measurement for now
+  s_act = scalar_action();
+  node0_printf("START %.8g\n", s_act / (double)volume);
 
   // Main measurement: PRIMME eigenvalues
   // Allocate eigenvectors
   eigVal = malloc(Nvec * sizeof(*eigVal));
   eigVec = malloc(Nvec * sizeof(*eigVec));
   for (ivec = 0; ivec < Nvec; ivec++)
-    eigVec[ivec] = malloc(sites_on_node * sizeof(Twist_Fermion));
+    eigVec[ivec] = malloc(sites_on_node * sizeof(vector));
 
   // Calculate and print smallest eigenvalues,
   // checking |D^dag D phi - lambda phi|^2
@@ -106,7 +70,7 @@ int main(int argc, char *argv[]) {
 
     eigVec = malloc(Nvec * sizeof(*eigVec));
     for (ivec = 0; ivec < Nvec; ivec++)
-      eigVec[ivec] = malloc(sites_on_node * sizeof(Twist_Fermion));
+      eigVec[ivec] = malloc(sites_on_node * sizeof(vector));
   }
   total_iters += make_evs(Nvec, eigVec, eigVal, -1);
 

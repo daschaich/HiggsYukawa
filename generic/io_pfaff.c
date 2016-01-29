@@ -10,7 +10,7 @@
 
 
 // -----------------------------------------------------------------
-#ifdef PHASE
+#ifdef PFAFF
 // Only load completed diagonal elements on node0
 void load_diag(complex *diag, int ckpt_load) {
   int i;
@@ -38,7 +38,7 @@ void load_diag(complex *diag, int ckpt_load) {
 
 
 // -----------------------------------------------------------------
-#ifdef PHASE
+#ifdef PFAFF
 // Only load non-zero elements of remaining columns of Q
 // Read from node0 only -- transfer data to all other nodes one by one
 void loadQ(complex **Q, int ckpt_load) {
@@ -162,7 +162,7 @@ void loadQ(complex **Q, int ckpt_load) {
 
 
 // -----------------------------------------------------------------
-#ifdef PHASE
+#ifdef PFAFF
 // Only save completed diagonal elements on node0
 void save_diag(complex *diag, int ckpt_save) {
   int i;
@@ -191,7 +191,7 @@ void save_diag(complex *diag, int ckpt_save) {
 
 
 // -----------------------------------------------------------------
-#ifdef PHASE
+#ifdef PFAFF
 // Only save non-zero elements of remaining columns of Q
 // Write from node0 only -- transfer data from all other nodes one by one
 void saveQ(complex **Q, int ckpt_save) {
