@@ -58,6 +58,9 @@ void scalar_field_copy(field_offset src, field_offset dest);
 // -----------------------------------------------------------------
 // More measurements
 #ifdef CORR
+// Four-fermion condensate and its susceptibility
+int condensates();
+
 // Two- and four-fermion correlator measurements
 int correlators(int *pnt);
 #endif

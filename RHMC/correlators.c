@@ -60,6 +60,76 @@ void vol_src() {
 
 
 // -----------------------------------------------------------------
+// Measure four-fermion condensate and its susceptibility
+// Use gaussian stochastic sources
+// Return total number of iterations
+int condensates() {
+  register int i, j, k, l;
+  register site *s;
+  int index, iters, tot_iters = 0, sav = Norder;
+  Real size_r, four = 0.0, sus = 0.0, tr;
+  double dtime;
+  vector **psim, rand, tvec;
+
+  // Hack a basic CG out of the multi-mass CG
+  Norder = 1;
+  psim = malloc(sizeof(**psim));
+  psim[0] = malloc(sites_on_node * sizeof(vector));
+  shift[0] = 0;
+
+  // Make random source dest
+  // Hit it with Mdag to get src, invert to get M^{-1} dest
+  dtime = -dclock();
+  vol_src();
+  iters = congrad_multi(src, psim, niter, rsqmin, &size_r);
+  dtime += dclock();
+  tot_iters += iters;
+  node0_printf("Inversion took %d iters and %.4g seconds\n", iters, dtime);
+
+  // Compute four-fermion condensate and its susceptibility
+  FORALLSITES(index, s) {
+    rand = dest[index];
+    tvec = psim[0][index];
+    for (i = 0; i < DIMF; i++) {
+      for (j = 0; j < DIMF; j++) {
+        sus += rand.c[i] * tvec.c[i] * rand.c[j] * tvec.c[j];
+        sus -= rand.c[i] * tvec.c[j] * rand.c[j] * tvec.c[i];
+        if (j == i)
+          continue;
+        for (k = 0; k < DIMF; k++) {
+          if (k == j || k == i)
+            continue;
+          for (l = 0; l < DIMF; l++) {
+            if (l == k || l == j || l == i)
+              continue;
+            tr = perm[i][j][k][l];
+            four += tr * rand.c[i] * tvec.c[j] * rand.c[k] * tvec.c[l];
+//            node0_printf("%d %d %d %d %d %.4g\n", index, i, j, k, l, tr * rand.c[i] * tvec.c[j] * rand.c[k] * tvec.c[l]);
+          }
+        }
+      }
+    }
+    node0_printf("\n");
+  }
+  g_doublesum(&four);
+  g_doublesum(&sus);
+  four /= (double)volume;
+  sus /= (double)volume;
+
+  // Print four-fermion condensate and susceptibility
+  node0_printf("FOUR %.6g %.6g %d\n", four, sus, tot_iters);
+
+  // Reset multi-mass CG and clean up
+  Norder = sav;
+  free(psim[0]);
+  free(psim);
+  return tot_iters;
+}
+// -----------------------------------------------------------------
+
+
+
+// -----------------------------------------------------------------
 // Measure two- and four-fermion correlators
 // Return total number of iterations
 int correlators(int *pnt) {
@@ -122,7 +192,7 @@ int correlators(int *pnt) {
           for (l = 0; l < DIMF; l++) {
             if (l == k || l == j || l == i)
               continue;
-          four += perm[i][j][k][l] * prop[i][j][index] * prop[k][l][index];
+            four += perm[i][j][k][l] * prop[i][j][index] * prop[k][l][index];
           }
         }
       }

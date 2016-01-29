@@ -3,16 +3,12 @@
 // Probability distribution exp(-x * x), so <x^2> = 1 / 2
 // This requires a random number generator, myrand(),
 // to return a Real uniformly distributed between zero and one
+// prn_pt is a pointer passed to myrand()
 #include "../include/config.h"
 #include <math.h>
 #include "../include/so4.h"
 #include "../include/random.h"
-// -----------------------------------------------------------------
 
-
-
-// -----------------------------------------------------------------
-// prn_pt is a pointer passed to myrand()
 Real gaussian_rand_no(double_prn *prn_pt) {
   static int iset = 0;
   static Real gset;
