@@ -197,7 +197,7 @@ int make_evs(int Nvec, vector **eigVec, double *eigVal, int flag) {
     node0_printf("make_evs: Unrecognized flag %d\n", flag);
     terminate(1);
   }
-//  primme.stats.numOuterIterations = 0;    // Just to make sure
+  primme.stats.numOuterIterations = 0;    // Just to make sure
 //  primme_display_params(primme);
 
   // Call the actual EV finder and check return value
@@ -205,7 +205,7 @@ int make_evs(int Nvec, vector **eigVec, double *eigVal, int flag) {
   ret = dprimme(eigVal, workVecs, rnorms, &primme);
   iter = primme.stats.numOuterIterations;
   total_iters += iter;
-//  primme.stats.numOuterIterations = 0;
+  primme.stats.numOuterIterations = 0;
   while (ret != 0) {
     // Try again with looser residual
     primme.eps *= 2;
@@ -217,7 +217,7 @@ int make_evs(int Nvec, vector **eigVec, double *eigVal, int flag) {
     ret = dprimme(eigVal, workVecs, rnorms, &primme);
     iter = primme.stats.numOuterIterations;
     total_iters += iter;
-//    primme.stats.numOuterIterations = 0;
+    primme.stats.numOuterIterations = 0;
   }
   dtime += dclock();
   node0_printf("Converged after %d iterations in %.4g seconds\n", iter, dtime);
@@ -239,7 +239,8 @@ int make_evs(int Nvec, vector **eigVec, double *eigVal, int flag) {
 #endif
 
   // Print results and check |D^dag D phi - lambda phi|^2
-  for (ivec = 0; ivec < Nvec; ivec++) {
+  // !!! Assume Nvec has been increased by 2 to help quartet formation
+  for (ivec = 0; ivec < Nvec - 2; ivec++) {
     check = 0.0;
     DSq(eigVec[ivec], tmpVec);
     FORALLSITES(i, s) {

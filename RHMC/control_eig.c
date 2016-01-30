@@ -41,6 +41,7 @@ int main(int argc, char *argv[]) {
 
   // Main measurement: PRIMME eigenvalues
   // Allocate eigenvectors
+  Nvec += 2;    // !!! Extra pair may help quartet formation...
   eigVal = malloc(Nvec * sizeof(*eigVal));
   eigVec = malloc(Nvec * sizeof(*eigVec));
   for (ivec = 0; ivec < Nvec; ivec++)
@@ -55,12 +56,13 @@ int main(int argc, char *argv[]) {
   // positive/negative matrix elements
   // In principle, one could tighten eig_tol until all pairs are found
   // For now we just print them all out to check offline
-  check_Dmat(Nvec, eigVec);
+  // !!! Omit extra pair of eigenvalues
+  check_Dmat(Nvec - 2, eigVec);
 
   // Calculate and print largest eigenvalues, for tuning RHMC
   // Don't need to compute many here...
-  if (Nvec > 12) {
-    Nvec = 12;
+  if (Nvec > 14) {    // !!! Extra pair of eigenvalues
+    Nvec = 14;
     free(eigVal);
     eigVal = malloc(Nvec * sizeof(*eigVal));
 
