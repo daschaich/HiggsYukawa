@@ -135,7 +135,8 @@ void par_GlobalSumDouble(void *sendBuf, void *recvBuf,
 int make_evs(int Nvec, vector **eigVec, double *eigVal, int flag) {
   register site* s;
   int i, j, ivec, iter = 0, ret, maxn = sites_on_node * DIMF;
-  double check, *rnorms = malloc(Nvec * sizeof(*rnorms));
+  int total_iters = 0;
+  double check, *rnorms = malloc(Nvec * sizeof(*rnorms)), dtime;
   double *workVecs = malloc(Nvec * maxn * sizeof(*workVecs));
   static primme_params primme;
   vector tvec, *tmpVec = malloc(sites_on_node * sizeof(*tmpVec));
@@ -196,16 +197,30 @@ int make_evs(int Nvec, vector **eigVec, double *eigVal, int flag) {
     node0_printf("make_evs: Unrecognized flag %d\n", flag);
     terminate(1);
   }
+//  primme.stats.numOuterIterations = 0;    // Just to make sure
 //  primme_display_params(primme);
 
   // Call the actual EV finder and check return value
+  dtime = -dclock();
   ret = dprimme(eigVal, workVecs, rnorms, &primme);
+  iter = primme.stats.numOuterIterations;
+  total_iters += iter;
+//  primme.stats.numOuterIterations = 0;
   while (ret != 0) {
     // Try again with looser residual
-    primme.eps *= 10;
-    node0_printf("Loosening stopping condition to %.4g\n", primme.eps);
+    primme.eps *= 2;
+    dtime += dclock();
+    node0_printf("%d iterations saturated in %.4g seconds, ", iter, dtime);
+    node0_printf("loosening stopping condition to %.4g\n", primme.eps);
+
+    dtime = -dclock();
     ret = dprimme(eigVal, workVecs, rnorms, &primme);
+    iter = primme.stats.numOuterIterations;
+    total_iters += iter;
+//    primme.stats.numOuterIterations = 0;
   }
+  dtime += dclock();
+  node0_printf("Converged after %d iterations in %.4g seconds\n", iter, dtime);
 
   // Copy double-precision temporary fields back into output
   // Each vector DIMF components
@@ -246,7 +261,7 @@ int make_evs(int Nvec, vector **eigVec, double *eigVal, int flag) {
   free(workVecs);
   free(rnorms);
   primme_Free(&primme);
-  return primme.stats.numOuterIterations;
+  return total_iters;
 }
 // -----------------------------------------------------------------
 

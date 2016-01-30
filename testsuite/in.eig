@@ -23,7 +23,7 @@ error_per_site 1e-5
 
 Nvec 12
 eig_tol 1e-12
-maxIter 50000
+maxIter 5000
 
 reload_serial config.16
 forget
