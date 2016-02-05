@@ -66,6 +66,7 @@ int main(int argc, char *argv[]) {
         node0_printf("Source point %d %d %d %d\n",
                      pnts[j][0], pnts[j][1], pnts[j][2], pnts[j][3]);
         avm_iters += correlators(pnts[j]);
+        avm_iters += condensates();
       }
       Nmeas++;
 #endif

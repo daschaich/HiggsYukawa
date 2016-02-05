@@ -67,12 +67,25 @@ void vol_src() {
 // Use gaussian stochastic sources
 // Return total number of iterations
 int condensates() {
-  register int i, j, k, l;
-  register site *s;
-  int index, iters, tot_iters = 0, sav = Norder;
-  Real size_r, four = 0.0, sus = 0.0, tr;
-  double dtime;
-  vector **psim, rand, tvec;
+  register int i, ii;
+  register site *s, *ss;
+  int iters, tot_iters = 0, sav = Norder;
+  int a, b, c, d, j, Nsrc = DIMF;
+  Real size_r, norm = 1.0 / (Real)Nsrc, ***prop;
+  double bilin = 0.0, four = 0.0, sus = 0.0, dtime;
+  vector **psim;
+
+  // Allocate and initialize stochastic propagator
+  prop = malloc(DIMF * sizeof(***prop));
+  for (a = 0; a < DIMF; a++) {
+    prop[a] = malloc(DIMF * sizeof(Real*));
+    for (b = 0; b < DIMF; b++) {
+      prop[a][b] = malloc(sites_on_node * sizeof(Real));
+      FORALLSITES(i, s) {
+        prop[a][b][i] = 0.0;
+      }
+    }
+  }
 
   // Hack a basic CG out of the multi-mass CG
   Norder = 1;
@@ -80,47 +93,97 @@ int condensates() {
   psim[0] = malloc(sites_on_node * sizeof(vector));
   shift[0] = 0;
 
-  // Make random source dest
-  // Hit it with Mdag to get src, invert to get M^{-1} dest
-  dtime = -dclock();
-  vol_src();
-  iters = congrad_multi(src, psim, niter, rsqmin, &size_r);
-  dtime += dclock();
-  tot_iters += iters;
-  node0_printf("Inversion took %d iters and %.4g seconds\n", iters, dtime);
+  // Construct stochastic propagator
+  //   D_{ab}^{-1}(x) = (1/N) sum_N psi_a(x) dest_b(x)
+  // where dest are random gaussian sources
+  // Hit each dest with Mdag to get src_j, invert to get D_{kj}^{-1} dest_j
+  for (j = 0; j < Nsrc; j++) {
+    dtime = -dclock();
+    vol_src();
+    iters = congrad_multi(src, psim, niter, rsqmin, &size_r);
+    dtime += dclock();
+    tot_iters += iters;
+    node0_printf("Inversion %d of %d took %d iters and %.4g seconds\n",
+                 j + 1, DIMF, iters, dtime);
 
-  // Compute four-fermion condensate and its susceptibility
-  FORALLSITES(index, s) {
-    rand = dest[index];
-    tvec = psim[0][index];
-    for (i = 0; i < DIMF; i++) {
-      for (j = 0; j < DIMF; j++) {
-        sus += rand.c[i] * tvec.c[i] * rand.c[j] * tvec.c[j];
-        sus -= rand.c[i] * tvec.c[j] * rand.c[j] * tvec.c[i];
-        if (j == i)
-          continue;
-        for (k = 0; k < DIMF; k++) {
-          if (k == j || k == i)
-            continue;
-          for (l = 0; l < DIMF; l++) {
-            if (l == k || l == j || l == i)
-              continue;
-            tr = perm[i][j][k][l];
-            four += tr * rand.c[i] * tvec.c[j] * rand.c[k] * tvec.c[l];
-//            node0_printf("%d %d %d %d %d %.4g\n", index, i, j, k, l, tr * rand.c[i] * tvec.c[j] * rand.c[k] * tvec.c[l]);
-          }
+    // Copy psim into f[k][j]
+    for (a = 0; a < DIMF; a++) {
+      for (b = 0; b < DIMF; b++) {
+        FORALLSITES(i, s) {
+          prop[a][b][i] += psim[0][i].c[a] * dest[i].c[b];
+//          FORALLSITES(ii, ss) {
+//            sus += psim[0][i].c[a] * dest[ii].c[b] * psim[0][i].c[b] * dest[ii].c[a];
+//            sus -= psim[0][i].c[a] * dest[ii].c[a] * psim[0][i].c[b] * dest[ii].c[b];
+//          }
         }
       }
     }
-    node0_printf("\n");
   }
-  g_doublesum(&four);
-  g_doublesum(&sus);
-  four /= (double)volume;
-  sus /= (double)volume;
 
-  // Print four-fermion condensate and susceptibility
-  node0_printf("FOUR %.6g %.6g %d\n", four, sus, tot_iters);
+  // Normalize stochastic propagator by norm = 1 / Nsrc
+  for (a = 0; a < DIMF; a++) {
+    for (b = 0; b < DIMF; b++) {
+      FORALLSITES(i, s)
+        prop[a][b][i] *= norm;
+    }
+  }
+
+  // Four-fermion condensate is just eps_{abcd} D_{ab}^{-1} D_{cd}^{-1}
+  // Other permutations (-D_ac D_bd + D_ad D_bc) give identical contribution
+  // TODO: Susceptibility is
+  //   psi_a(x) psi_b(x) psi_a(y) psi_b(y)
+  //     = D_{ab}^{-1} D_{ab}^{-1}
+  //     - D_{aa}^{-1}(x - y) D_{bb}^{-1}(x - y)
+  //     + D_{ab}^{-1}(x - y) D_{ba}^{-1}(x - y)
+  for (a = 0; a < DIMF; a++) {
+    for (b = 0; b < DIMF; b++) {
+      if (b == a)
+        continue;
+      FORALLSITES(i, s) {
+        bilin += prop[a][b][i];
+//        sus_abab += prop[a][b][i] * prop[a][b][i];
+//        FORALLSITES(ii, ss) {     // TODO: Need gathers...
+//          sus_aabb -= prop[a][a][i] * prop[b][b][ii];
+//          sus_abba += prop[a][b][i] * prop[b][a][ii];
+//        }
+      }
+      for (c = 0; c < DIMF; c++) {
+        if (c == b || c == a)
+          continue;
+        for (d = 0; d < DIMF; d++) {
+          if (d == c || d == b || d == a)
+            continue;
+          FORALLSITES(i, s)
+            four += perm[a][b][c][d] * prop[a][b][i] * prop[c][d][i];
+        }
+      }
+    }
+  }
+  g_doublesum(&bilin);
+//  g_doublesum(&sus_abab);
+//  g_doublesum(&sus_aabb);
+//  g_doublesum(&sus_abba);
+  g_doublesum(&four);
+  bilin /= (double)volume;
+//  sus_abba /= (double)volume;
+//  sus_aabb /= (double)volume;
+//  sus_abab /= (double)volume;
+  four /= (double)volume;
+
+  // Print condensates and susceptibility
+  node0_printf("STOCH BILIN %.6g %d\n", bilin, tot_iters);
+  node0_printf("STOCH FOUR %.6g %d\n", four, tot_iters);
+//  sus = sus_abab + sus_aabb + sus_abba;
+//  node0_printf("STOCH SUS %.6g %.6g %.6g %.6g %d\n",
+//               sus_abab, sus_aabb, sus_abba, sus, tot_iters);
+
+  // Free structure to hold all DIMF propagators
+  for (a = 0; a < DIMF; a++) {
+    for (b = 0; b < DIMF; b++)
+      free(prop[a][b]);
+    free(prop[a]);
+  }
+  free(prop);
 
   // Reset multi-mass CG and clean up
   Norder = sav;
@@ -136,11 +199,12 @@ int condensates() {
 // Measure two- and four-fermion correlators
 // Return total number of iterations
 int correlators(int *pnt) {
-  register int i, j, k, l;
+  register int i;
   register site *s;
-  int index, iters, tot_iters = 0, sav = Norder;
-  Real size_r, four = 0.0, sus = 0.0, ***prop;
-  double dtime;
+  int a, b, c, d, iters, tot_iters = 0, sav = Norder;
+  Real size_r, ***prop;
+  double bilin = 0.0, four = 0.0, dtime;
+  double sus_abba = 0.0, sus_aabb = 0.0, sus_abab = 0.0, sus;
   vector **psim;
 
   // Make sure pnt stays within lattice volume
@@ -151,10 +215,10 @@ int correlators(int *pnt) {
 
   // Allocate structure to hold all DIMF propagators
   prop = malloc(DIMF * sizeof(***prop));
-  for (i = 0; i < DIMF; i++) {
-    prop[i] = malloc(DIMF * sizeof(Real*));
-    for (j = 0; j < DIMF; j++)
-      prop[i][j] = malloc(sites_on_node * sizeof(Real));
+  for (a = 0; a < DIMF; a++) {
+    prop[a] = malloc(DIMF * sizeof(Real*));
+    for (b = 0; b < DIMF; b++)
+      prop[a][b] = malloc(sites_on_node * sizeof(Real));
   }
 
   // Hack a basic CG out of the multi-mass CG
@@ -163,19 +227,19 @@ int correlators(int *pnt) {
   psim[0] = malloc(sites_on_node * sizeof(vector));
   shift[0] = 0;
 
-  for (j = 0; j < DIMF; j++) {
+  for (a = 0; a < DIMF; a++) {
     dtime = -dclock();
-    pnt_src(pnt, j);
+    pnt_src(pnt, a);
     iters = congrad_multi(src, psim, niter, rsqmin, &size_r);
     dtime += dclock();
     tot_iters += iters;
     node0_printf("Inversion %d of %d took %d iters and %.4g seconds\n",
-                 j + 1, DIMF, iters, dtime);
+                 a + 1, DIMF, iters, dtime);
 
     // Copy psim into f[j][k]
     FORALLSITES(i, s) {
-      for (k = 0; k < DIMF; k++)
-        prop[j][k][i] = psim[0][i].c[k];
+      for (b = 0; b < DIMF; b++)
+        prop[b][a][i] = psim[0][i].c[b];
     }
 
     // Now construct correlators
@@ -184,46 +248,59 @@ int correlators(int *pnt) {
 
   // Compute four-fermion condensate
   if (node_number(pnt[0], pnt[1], pnt[2], pnt[3]) == mynode()) {
-    index = node_index(pnt[0], pnt[1], pnt[2], pnt[3]);
-    for (i = 0; i < DIMF; i++) {
-      for (j = 0; j < DIMF; j++) {
-        if (j == i)
+    i = node_index(pnt[0], pnt[1], pnt[2], pnt[3]);
+    for (a = 0; a < DIMF; a++) {
+      for (b = 0; b < DIMF; b++) {
+        if (b == a)
           continue;
-        for (k = 0; k < DIMF; k++) {
-          if (k == j || k == i)
+        bilin += prop[a][b][i];
+        sus_abab += prop[a][b][i] * prop[a][b][i];
+        for (c = 0; c < DIMF; c++) {
+          if (c == b || c == a)
             continue;
-          for (l = 0; l < DIMF; l++) {
-            if (l == k || l == j || l == i)
+          for (d = 0; d < DIMF; d++) {
+            if (d == c || d == b || d == a)
               continue;
-            four += perm[i][j][k][l] * prop[i][j][index] * prop[k][l][index];
+            four += perm[a][b][c][d] * prop[a][b][i] * prop[c][d][i];
           }
         }
       }
     }
   }
+  g_doublesum(&bilin);
+  g_doublesum(&sus_abab);
   g_doublesum(&four);
 
   // Compute four-fermion susceptibility
-  FORALLSITES(i, s) {
-    for (j = 0; j < DIMF; j++) {
-      for (k = 0; k < DIMF; k++)
-        sus += prop[j][j][i] * prop[k][k][i] - prop[j][k][i] * prop[k][j][i];
+  for (a = 0; a < DIMF; a++) {
+    for (b = 0; b < DIMF; b++) {
+      FORALLSITES(i, s) {
+        sus_aabb -= prop[a][a][i] * prop[b][b][i];
+        sus_abba += prop[a][b][i] * prop[b][a][i];
+      }
     }
   }
-  g_doublesum(&sus);
+  g_doublesum(&sus_aabb);
+  g_doublesum(&sus_abba);
 
-  // Print four-fermion condensate and susceptibility
-  node0_printf("FOUR %d %d %d %d %.6g %.6g %d\n",
-               pnt[0], pnt[1], pnt[2], pnt[3], four, sus, tot_iters);
+  // Print condensates and susceptibility
+  node0_printf("PNT BILIN %d %d %d %d %.6g %d\n",
+               pnt[0], pnt[1], pnt[2], pnt[3], bilin, tot_iters);
+  node0_printf("PNT FOUR %d %d %d %d %.6g %d\n",
+               pnt[0], pnt[1], pnt[2], pnt[3], four, tot_iters);
+  sus = sus_abab + sus_aabb + sus_abba;
+  node0_printf("PNT SUS %d %d %d %d %.6g %.6g %.6g %.6g %d\n",
+               pnt[0], pnt[1], pnt[2], pnt[3],
+               sus_abab, sus_aabb, sus_abba, sus, tot_iters);
 
   // Normalize correlators and print results
   // TODO: ...
 
   // Free structure to hold all DIMF propagators
-  for (i = 0; i < DIMF; i++) {
-    for (j = 0; j < DIMF; j++)
-      free(prop[i][j]);
-    free(prop[i]);
+  for (a = 0; a < DIMF; a++) {
+    for (b = 0; b < DIMF; b++)
+      free(prop[a][b]);
+    free(prop[a]);
   }
   free(prop);
 
