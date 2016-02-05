@@ -100,12 +100,12 @@ void randomlat() {
     s->sigma.e[4] = gaussian_rand_no(&(s->site_prn));
     s->sigma.e[5] = gaussian_rand_no(&(s->site_prn));
 #else
-    s->sigma.e[0] = gaussian_rand_no(&(s->node_prn));
-    s->sigma.e[1] = gaussian_rand_no(&(s->node_prn));
-    s->sigma.e[2] = gaussian_rand_no(&(s->node_prn));
-    s->sigma.e[3] = gaussian_rand_no(&(s->node_prn));
-    s->sigma.e[4] = gaussian_rand_no(&(s->node_prn));
-    s->sigma.e[5] = gaussian_rand_no(&(s->node_prn));
+    s->sigma.e[0] = gaussian_rand_no(&node_prn);
+    s->sigma.e[1] = gaussian_rand_no(&node_prn);
+    s->sigma.e[2] = gaussian_rand_no(&node_prn);
+    s->sigma.e[3] = gaussian_rand_no(&node_prn);
+    s->sigma.e[4] = gaussian_rand_no(&node_prn);
+    s->sigma.e[5] = gaussian_rand_no(&node_prn);
 #endif
   }
   node0_printf("random scalar configuration loaded\n");

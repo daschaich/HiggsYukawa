@@ -30,7 +30,15 @@ void pnt_src(int *pnt, int index) {
 
 
 // -----------------------------------------------------------------
-// Set dest to random gaussian source at all sites
+// For some reason this doesn't work in the libraries
+Real Z2_rand_no(double_prn *prn_pt) {
+  if (myrand(prn_pt) > 0.5)
+    return 1.0;
+  else
+    return -1.0;
+}
+
+// Set dest to random Z2 source at all sites
 // Then set src = Ddag dest
 // so that (Ddag.D)^(-1).src will give D^(-1).vol_src
 void vol_src() {
@@ -40,22 +48,19 @@ void vol_src() {
   register int i;
   register site *s;
 
-  // Set dest to random gaussian source at all sites
   FORALLSITES(i, s) {
 #ifdef SITERAND
-    dest[i].c[0] = gaussian_rand_no(&(s->site_prn));
-    dest[i].c[1] = gaussian_rand_no(&(s->site_prn));
-    dest[i].c[2] = gaussian_rand_no(&(s->site_prn));
-    dest[i].c[3] = gaussian_rand_no(&(s->site_prn));
+    dest[i].c[0] = Z2_rand_no(&(s->site_prn));
+    dest[i].c[1] = Z2_rand_no(&(s->site_prn));
+    dest[i].c[2] = Z2_rand_no(&(s->site_prn));
+    dest[i].c[3] = Z2_rand_no(&(s->site_prn));
 #else
-    dest[i].c[0] = gaussian_rand_no(&node_prn);
-    dest[i].c[1] = gaussian_rand_no(&node_prn);
-    dest[i].c[2] = gaussian_rand_no(&node_prn);
-    dest[i].c[3] = gaussian_rand_no(&node_prn);
+    dest[i].c[0] = Z2_rand_no(&node_prn);
+    dest[i].c[1] = Z2_rand_no(&node_prn);
+    dest[i].c[2] = Z2_rand_no(&node_prn);
+    dest[i].c[3] = Z2_rand_no(&node_prn);
 #endif
   }
-
-  // Set src = Ddag dest
   fermion_op(dest, src, MINUS);
 }
 // -----------------------------------------------------------------
@@ -64,7 +69,7 @@ void vol_src() {
 
 // -----------------------------------------------------------------
 // Measure four-fermion condensate and its susceptibility
-// Use gaussian stochastic sources
+// Use Z2 stochastic sources
 // Return total number of iterations
 int condensates() {
   register int i, ii;
@@ -95,7 +100,7 @@ int condensates() {
 
   // Construct stochastic propagator
   //   D_{ab}^{-1}(x) = (1/N) sum_N psi_a(x) dest_b(x)
-  // where dest are random gaussian sources
+  // where dest are random Z2 sources
   // Hit each dest with Mdag to get src_j, invert to get D_{kj}^{-1} dest_j
   for (j = 0; j < Nsrc; j++) {
     dtime = -dclock();

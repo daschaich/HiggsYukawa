@@ -14,7 +14,7 @@ Real gaussian_rand_no(double_prn *prn_pt) {
   static Real gset;
   Real fac, r, v1, v2;
 
-  if  (iset == 0) {
+  if (iset == 0) {
     do {
       v1 = 2.0 * myrand(prn_pt) - 1.0;    // [-1, 1]
       v2 = 2.0 * myrand(prn_pt) - 1.0;
