@@ -27,6 +27,7 @@ typedef struct {
   int startflag;          // What to do for beginning lattice
   int saveflag;           // What to do with lattice at end
   Real G;                 // Four-fermion coupling
+  Real site_mass;         // On-site SO(4)-breaking mass term
 
   // Inversion parameters
   int niter;                    // Maximum number of CG iterations

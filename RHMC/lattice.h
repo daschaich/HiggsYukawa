@@ -63,6 +63,7 @@ EXTERN int sd_index[DIMF][DIMF];
 // More global parameters
 EXTERN Real rsqmin, rsqprop;
 EXTERN Real G;
+EXTERN Real site_mass;
 EXTERN double sigmasum;
 EXTERN char startfile[MAXFILENAME], savefile[MAXFILENAME];
 EXTERN int startflag;     // Beginning lattice: CONTINUE, RELOAD, FRESH

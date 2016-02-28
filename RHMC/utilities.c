@@ -60,6 +60,15 @@ void fermion_op(vector *src, vector *dest, int sign) {
       }
     }
     scalar_mult_vec(&(dest[i]), halfG, &(dest[i]));
+
+    // Add SO(4)-breaking 'site mass' term with same structure as sigma
+    // Keep this separate in case G is zero
+    for (a = 0; a < DIMF; a++) {
+      for (b = a + 1; b < DIMF; b++) {
+        dest[i].c[a] += site_mass * src[i].c[b];
+        dest[i].c[b] -= site_mass * src[i].c[a];
+      }
+    }
   }
 
   // Accumulate kinetic term as gathers finish

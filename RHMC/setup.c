@@ -213,6 +213,9 @@ int readin(int prompt) {
     // Four-fermion coupling
     IF_OK status += get_f(stdin, prompt, "G", &par_buf.G);
 
+    // On-site SO(4)-breaking mass term
+    IF_OK status += get_f(stdin, prompt, "site_mass", &par_buf.site_mass);
+
     // Maximum conjugate gradient iterations
     IF_OK status += get_i(stdin, prompt, "max_cg_iterations", &par_buf.niter);
 
@@ -278,6 +281,7 @@ int readin(int prompt) {
   rsqmin = par_buf.rsqmin;
 
   G = par_buf.G;
+  site_mass = par_buf.site_mass;
 
 #ifdef CORR
   Nsrc = par_buf.Nsrc;

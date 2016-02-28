@@ -19,7 +19,6 @@ Eigenvalue measurements (so4_eig) require PRIMME and LAPACK -- PRIMME can be obt
 -DHMC_ALGORITHM switches on the accept/reject step
 -DCORR switches on the correlator measurements
 -DEIG switches on the PRIMME eigenvalue calculation
--DPUREGAUGE switches off the fermions (FOR TESTING)
 
 # Fermion and scalar rep:
 For now we fix to SO(4) fermions with four real components
@@ -52,6 +51,7 @@ nstep_gauge 10        # Gauge steps per fermion step
 traj_between_meas 1   # How many trajectories to skip between less-frequent measurements
 
 G 0.1                 # Four-fermion coupling
+site_mass 0.1         # On-site SO(4)-breaking mass term
 
 max_cg_iterations 500 # Maximum number of CG iterations
 error_per_site 1e-5   # Stopping condition for CG (will be squared)
