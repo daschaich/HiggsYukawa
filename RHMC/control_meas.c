@@ -9,7 +9,7 @@
 // -----------------------------------------------------------------
 int main(int argc, char *argv[]) {
   int prompt;
-  double dtime, s_act;
+  double dtime, s_act, plus_act, minus_act;
 
   // Setup
   setlinebuf(stdout); // DEBUG
@@ -31,8 +31,10 @@ int main(int argc, char *argv[]) {
 
   // Check: compute initial scalar action
   // This is the only local measurement for now
-  s_act = scalar_action();
-  node0_printf("START %.8g\n", s_act / (double)volume);
+  s_act = scalar_action(&plus_act, &minus_act) / (double)volume;
+  plus_act /= (double)volume;
+  minus_act /= (double)volume;
+  node0_printf("START %.8g %.8g %.8g\n", plus_act, minus_act, s_act);
 
   // Main measurements
 #ifdef CORR

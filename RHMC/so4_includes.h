@@ -32,7 +32,7 @@ int grsource(vector *src);
 
 // Action routines
 double action(vector **src, vector ***sol);
-double scalar_action();
+double scalar_action(double *plus_act, double *minus_act);
 double fermion_action();
 
 // Force routines

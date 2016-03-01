@@ -34,24 +34,54 @@ double mom_action() {
 
 // -----------------------------------------------------------------
 // Scalar contribution to the action
-// Only sum over half of anti-symmetric 4x4 matrix, with doubled coefficient
-double scalar_action() {
+// Separately compute sigma_+, sigma_- and the total
+double scalar_action(double *plus_act, double *minus_act) {
 #if (DIMF != 4)
   #error "Assuming DIMF=4!"
 #endif
   register int i;
   register site *s;
-  double s_action = 0.0;
+  int a, b, c, d;
+  double tr, s_action;
+  antisym plus, minus;
+
+  // Initialize plus_act and minus_act
+  *plus_act = 0.0;
+  *minus_act = 0.0;
 
   FORALLSITES(i, s) {
-    s_action += (double)(s->sigma.e[0] * s->sigma.e[0]);
-    s_action += (double)(s->sigma.e[1] * s->sigma.e[1]);
-    s_action += (double)(s->sigma.e[2] * s->sigma.e[2]);
-    s_action += (double)(s->sigma.e[3] * s->sigma.e[3]);
-    s_action += (double)(s->sigma.e[4] * s->sigma.e[4]);
-    s_action += (double)(s->sigma.e[5] * s->sigma.e[5]);
+    // Clear +/- scalar fields
+    for (a = 0; a < NAS; a++) {
+      plus.e[a] = 0.0;
+      minus.e[a] = 0.0;
+    }
+
+    // Compute +/- scalar fields
+    for (a = 0; a < DIMF; a++) {
+      for (b = a + 1; b < DIMF; b++) {
+        plus.e[as_index[a][b]] += s->sigma.e[as_index[a][b]];
+        minus.e[as_index[a][b]] += s->sigma.e[as_index[a][b]];
+        for (c = 0; c < DIMF; c++) {
+          for (d = c + 1; d < DIMF; d++) {
+            tr = perm[a][b][c][d] * s->sigma.e[as_index[c][d]];
+            plus.e[as_index[a][b]] += tr;
+            minus.e[as_index[a][b]] -= tr;
+          }
+        }   // No half since not double-counting
+      }
+    }
+
+    // Final factor of 1/2 and add square to plus_act, minus_act
+    for (a = 0; a < NAS; a++) {
+      *plus_act += 0.25 * plus.e[a] * plus.e[a];
+      *minus_act += 0.25 * minus.e[a] * minus.e[a];
+    }
   }
-  g_doublesum(&s_action);
+  g_doublesum(plus_act);
+  g_doublesum(minus_act);
+
+  // Total action is just sum
+  s_action = *plus_act + *minus_act;
   return s_action;
 }
 // -----------------------------------------------------------------
@@ -92,9 +122,9 @@ double fermion_action(vector *src, vector **sol) {
 // Print out total action and individual contributions
 double action(vector **src, vector ***sol) {
   int n;
-  double h_act, f_act, total;
+  double h_act, f_act, total, tr, tr2;
 
-  total = scalar_action();
+  total = scalar_action(&tr, &tr2);
   node0_printf("action: scalar %.8g ", total);
 
   for (n = 0; n < Nroot; n++) {

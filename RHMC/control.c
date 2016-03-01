@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
   int prompt;
   int traj_done, s_iters, avs_iters = 0, avm_iters = 0, Nmeas = 0;
   Real f_eps, s_eps;
-  double dtime, s_act;
+  double dtime, s_act, plus_act, minus_act;
 #ifdef CORR
   int j;
 #endif
@@ -36,8 +36,10 @@ int main(int argc, char *argv[]) {
   dtime = -dclock();
 
   // Check: compute initial scalar action
-  s_act = scalar_action();
-  node0_printf("START %.8g\n", s_act / (double)volume);
+  s_act = scalar_action(&plus_act, &minus_act) / (double)volume;
+  plus_act /= (double)volume;
+  minus_act /= (double)volume;
+  node0_printf("START %.8g %.8g %.8g\n", plus_act, minus_act, s_act);
 
   // Perform warmup trajectories
   f_eps = traj_length / (Real)nsteps[0];
@@ -54,9 +56,12 @@ int main(int argc, char *argv[]) {
 
     // Do "local" measurements every trajectory!
     // Scalar action and CG iterations
-    // Format: GMES cg_iters s_action
-    s_act = scalar_action();
-    node0_printf("GMES %d %.8g\n", s_iters, s_act / (double)volume);
+    // Format: GMES cg_iters plus_act minus_act s_action
+    s_act = scalar_action(&plus_act, &minus_act) / (double)volume;
+    plus_act /= (double)volume;
+    minus_act /= (double)volume;
+    node0_printf("GMES %d %.8g %.8g %.8g\n",
+                 s_iters, plus_act, minus_act, s_act);
 
     // Less frequent measurements every "propinterval" trajectories
     if ((traj_done % propinterval) == (propinterval - 1)) {
@@ -75,8 +80,10 @@ int main(int argc, char *argv[]) {
   node0_printf("RUNNING COMPLETED\n");
 
   // Check: compute final scalar action
-  s_act = scalar_action();
-  node0_printf("STOP %.8g\n", s_act / (double)volume);
+  s_act = scalar_action(&plus_act, &minus_act) / (double)volume;
+  plus_act /= (double)volume;
+  minus_act /= (double)volume;
+  node0_printf("STOP %.8g %.8g %.8g\n", plus_act, minus_act, s_act);
   node0_printf("Average CG iters for steps: %.4g\n",
                (double)avs_iters / trajecs);
   if (Nmeas > 0) {

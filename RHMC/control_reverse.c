@@ -20,7 +20,7 @@ int main(int argc, char *argv[]){
   register site *s;
   int prompt, s_iters = 0, j, n;
   Real final_rsq;
-  double startAct, midAct, endAct, change, s_act, dtime;
+  double startAct, midAct, endAct, change, s_act, plus_act, minus_act, dtime;
 
   // Setup
   setlinebuf(stdout); // DEBUG
@@ -73,9 +73,12 @@ int main(int argc, char *argv[]){
     s_iters += congrad_multi(src[n], psim[n], niter, rsqmin, &final_rsq);
 
   // Observables at start of trajectory
-  s_act = scalar_action();
+  s_act = scalar_action(&plus_act, &minus_act) / (double)volume;
+  plus_act /= (double)volume;
+  minus_act /= (double)volume;
   startAct = action(src, psim);
-  node0_printf("GMES %d %.8g\n", s_iters, s_act / (double)volume);
+  node0_printf("GMES %d %.8g %.8g %.8g\n",
+               s_iters, plus_act, minus_act, s_act);
   node0_printf("ACT %.8g\n", startAct);
 
   // Evolve forward for one trajectory
@@ -89,7 +92,6 @@ int main(int argc, char *argv[]){
 
   // Observables at end of trajectory
   // Scalar action and CG iterations at end of trajectory
-  s_act = scalar_action();
   midAct = action(src, psim);
   change = midAct - startAct;
   node0_printf("delta S = %.4g start S = %.12g end S = %.12g\n",
@@ -101,7 +103,11 @@ int main(int argc, char *argv[]){
     node0_printf("MONITOR_FORCE_FERMION%d %.4g %.4g\n",
                  n, fnorm[n] / (double)(2 * nsteps[0]), max_ff[n]);
   }
-  node0_printf("GMES %d %.8g\n", s_iters, s_act / (double)volume);
+  s_act = scalar_action(&plus_act, &minus_act) / (double)volume;
+  plus_act /= (double)volume;
+  minus_act /= (double)volume;
+  node0_printf("GMES %d %.8g %.8g %.8g\n",
+               s_iters, plus_act, minus_act, s_act);
   node0_printf("ACT %.8g\n", midAct);
 
   // Reverse momenta and evolve backwards for one trajectory
@@ -123,7 +129,6 @@ int main(int argc, char *argv[]){
   s_iters = update_step(fnorm, &snorm, src, psim);
 
   // Observables hopefully back at the start of the trajectory
-  s_act = scalar_action();
   endAct = action(src, psim);
   change = endAct - midAct;
   node0_printf("delta S = %.4g start S = %.12g end S = %.12g\n",
@@ -135,7 +140,11 @@ int main(int argc, char *argv[]){
     node0_printf("MONITOR_FORCE_FERMION%d %.4g %.4g\n",
                  n, fnorm[n] / (double)(2 * nsteps[0]), max_ff[n]);
   }
-  node0_printf("GMES %d %.8g\n", s_iters, s_act / (double)volume);
+  s_act = scalar_action(&plus_act, &minus_act) / (double)volume;
+  plus_act /= (double)volume;
+  minus_act /= (double)volume;
+  node0_printf("GMES %d %.8g %.8g %.8g\n",
+               s_iters, plus_act, minus_act, s_act);
   node0_printf("ACT %.8g\n", endAct);
 
   // Done
