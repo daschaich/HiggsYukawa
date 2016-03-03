@@ -26,7 +26,7 @@ void fermion_op(vector *src, vector *dest, int sign) {
   register int i;
   register site *s;
   int dir, a, b, c, d;
-  Real tr, halfG = 0.5 * G;
+  Real tr, halfG = 0.5 * G, m_ov_G;
   vector tvec, tvec_dir, tvec_opp;
   msg_tag *tag[2 * NDIMS];
 
@@ -35,6 +35,13 @@ void fermion_op(vector *src, vector *dest, int sign) {
     node0_printf("Error: incorrect sign in fermion_op: %d\n", sign);
     terminate(1);
   }
+
+  // Ignore site_mass if G = 0 to avoid dividing by zero
+  // Could be made more robust, but unlikely to matter
+  if (G == 0.0)
+    m_ov_G = 0.0;
+  else
+    m_ov_G = 2.0 * site_mass / G;
 
   // Start gathers for kinetic term
   for (dir = XUP; dir <= TUP; dir++) {
@@ -45,30 +52,22 @@ void fermion_op(vector *src, vector *dest, int sign) {
   }
 
   // Compute scalar term as gathers run
-  // Initialize dest = 0.5G * sigma * src
+  // Initialize dest = 0.5G * (sigma + 2m / G) * src
+  // Add SO(4)-breaking 'site mass' term with same structure as sigma
   FORALLSITES(i, s) {
     clearvec(&(dest[i]));
     for (a = 0; a < DIMF; a++) {
       for (b = a + 1; b < DIMF; b++) {
-        tr = s->sigma.e[as_index[a][b]];
+        tr = s->sigma.e[as_index[a][b]] + m_ov_G;
         for (c = 0; c < DIMF; c++) {
           for (d = c + 1; d < DIMF; d++)
-            tr += perm[a][b][c][d] * s->sigma.e[as_index[c][d]];
+            tr += perm[a][b][c][d] * (s->sigma.e[as_index[c][d]] + m_ov_G);
         }   // No half since not double-counting
         dest[i].c[a] += tr * src[i].c[b];
         dest[i].c[b] -= tr * src[i].c[a];
       }
     }
     scalar_mult_vec(&(dest[i]), halfG, &(dest[i]));
-
-    // Add SO(4)-breaking 'site mass' term with same structure as sigma
-    // Keep this separate in case G is zero
-    for (a = 0; a < DIMF; a++) {
-      for (b = a + 1; b < DIMF; b++) {
-        dest[i].c[a] += site_mass * src[i].c[b];
-        dest[i].c[b] -= site_mass * src[i].c[a];
-      }
-    }
   }
 
   // Accumulate kinetic term as gathers finish

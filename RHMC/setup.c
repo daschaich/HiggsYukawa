@@ -282,6 +282,10 @@ int readin(int prompt) {
 
   G = par_buf.G;
   site_mass = par_buf.site_mass;
+  if (G == 0.0 && site_mass != 0.0) {
+    node0_printf("Warning: Setting site_mass = 0 since G = 0\n");
+    site_mass = 0.0;
+  }
 
 #ifdef CORR
   Nsrc = par_buf.Nsrc;
