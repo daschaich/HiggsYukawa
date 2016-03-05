@@ -72,8 +72,8 @@ void vol_src() {
 // Use Z2 stochastic sources
 // Return total number of iterations
 int condensates() {
-  register int i, ii;
-  register site *s, *ss;
+  register int i;//, ii;
+  register site *s;//, *ss;
   int iters, tot_iters = 0, sav = Norder;
   int a, b, c, d, j, Nsrc = DIMF;
   Real size_r, norm = 1.0 / (Real)Nsrc, ***prop;
@@ -146,7 +146,7 @@ int condensates() {
         continue;
       FORALLSITES(i, s) {
         bilin += prop[a][b][i];
-//        sus_abab += prop[a][b][i] * prop[a][b][i];
+//        sus_abab += prop[a][b][i] * prop[a][b][i]; // TODO: 
 //        FORALLSITES(ii, ss) {     // TODO: Need gathers...
 //          sus_aabb -= prop[a][a][i] * prop[b][b][ii];
 //          sus_abba += prop[a][b][i] * prop[b][a][ii];
@@ -259,7 +259,6 @@ int correlators(int *pnt) {
         if (b == a)
           continue;
         bilin += prop[a][b][i];
-        sus_abab += prop[a][b][i] * prop[a][b][i];
         for (c = 0; c < DIMF; c++) {
           if (c == b || c == a)
             continue;
@@ -273,7 +272,6 @@ int correlators(int *pnt) {
     }
   }
   g_doublesum(&bilin);
-  g_doublesum(&sus_abab);
   g_doublesum(&four);
 
   // Compute four-fermion susceptibility
@@ -293,10 +291,10 @@ int correlators(int *pnt) {
                pnt[0], pnt[1], pnt[2], pnt[3], bilin, tot_iters);
   node0_printf("PNT FOUR %d %d %d %d %.6g %d\n",
                pnt[0], pnt[1], pnt[2], pnt[3], four, tot_iters);
-  sus = sus_abab + sus_aabb + sus_abba;
-  node0_printf("PNT SUS %d %d %d %d %.6g %.6g %.6g %.6g %d\n",
+  sus = sus_aabb + sus_abba;
+  node0_printf("PNT SUS %d %d %d %d %.6g %.6g %.6g %d\n",
                pnt[0], pnt[1], pnt[2], pnt[3],
-               sus_abab, sus_aabb, sus_abba, sus, tot_iters);
+               sus_aabb, sus_abba, sus, tot_iters);
 
   // Normalize correlators and print results
   // TODO: ...
