@@ -114,13 +114,8 @@ int condensates() {
     // Copy psim into f[k][j]
     for (a = 0; a < DIMF; a++) {
       for (b = 0; b < DIMF; b++) {
-        FORALLSITES(i, s) {
+        FORALLSITES(i, s)
           prop[a][b][i] += psim[0][i].c[a] * dest[i].c[b];
-//          FORALLSITES(ii, ss) {
-//            sus += psim[0][i].c[a] * dest[ii].c[b] * psim[0][i].c[b] * dest[ii].c[a];
-//            sus -= psim[0][i].c[a] * dest[ii].c[a] * psim[0][i].c[b] * dest[ii].c[b];
-//          }
-        }
       }
     }
   }
@@ -135,22 +130,13 @@ int condensates() {
 
   // Four-fermion condensate is just eps_{abcd} D_{ab}^{-1} D_{cd}^{-1}
   // Other permutations (-D_ac D_bd + D_ad D_bc) give identical contribution
-  // TODO: Susceptibility is
-  //   psi_a(x) psi_b(x) psi_a(y) psi_b(y)
-  //     = D_{ab}^{-1} D_{ab}^{-1}
-  //     - D_{aa}^{-1}(x - y) D_{bb}^{-1}(x - y)
-  //     + D_{ab}^{-1}(x - y) D_{ba}^{-1}(x - y)
   for (a = 0; a < DIMF; a++) {
     for (b = 0; b < DIMF; b++) {
       if (b == a)
         continue;
-      FORALLSITES(i, s) {
-        bilin += prop[a][b][i];
-//        sus_abab += prop[a][b][i] * prop[a][b][i]; // TODO: 
-//        FORALLSITES(ii, ss) {     // TODO: Need gathers...
-//          sus_aabb -= prop[a][a][i] * prop[b][b][ii];
-//          sus_abba += prop[a][b][i] * prop[b][a][ii];
-//        }
+      if (b > a) {
+        FORALLSITES(i, s)
+          bilin += prop[a][b][i];
       }
       for (c = 0; c < DIMF; c++) {
         if (c == b || c == a)
@@ -165,22 +151,13 @@ int condensates() {
     }
   }
   g_doublesum(&bilin);
-//  g_doublesum(&sus_abab);
-//  g_doublesum(&sus_aabb);
-//  g_doublesum(&sus_abba);
   g_doublesum(&four);
   bilin /= (double)volume;
-//  sus_abba /= (double)volume;
-//  sus_aabb /= (double)volume;
-//  sus_abab /= (double)volume;
   four /= (double)volume;
 
   // Print condensates and susceptibility
   node0_printf("STOCH BILIN %.6g %d\n", bilin, tot_iters);
   node0_printf("STOCH FOUR %.6g %d\n", four, tot_iters);
-//  sus = sus_abab + sus_aabb + sus_abba;
-//  node0_printf("STOCH SUS %.6g %.6g %.6g %.6g %d\n",
-//               sus_abab, sus_aabb, sus_abba, sus, tot_iters);
 
   // Free structure to hold all DIMF propagators
   for (a = 0; a < DIMF; a++) {
@@ -246,9 +223,6 @@ int correlators(int *pnt) {
       for (b = 0; b < DIMF; b++)
         prop[b][a][i] = psim[0][i].c[b];
     }
-
-    // Now construct correlators
-    // TODO: ...
   }
 
   // Compute four-fermion condensate
@@ -258,7 +232,8 @@ int correlators(int *pnt) {
       for (b = 0; b < DIMF; b++) {
         if (b == a)
           continue;
-        bilin += prop[a][b][i];
+        if (b > a)
+          bilin += prop[a][b][i];
         for (c = 0; c < DIMF; c++) {
           if (c == b || c == a)
             continue;
@@ -295,9 +270,6 @@ int correlators(int *pnt) {
   node0_printf("PNT SUS %d %d %d %d %.6g %.6g %.6g %d\n",
                pnt[0], pnt[1], pnt[2], pnt[3],
                sus_aabb, sus_abba, sus, tot_iters);
-
-  // Normalize correlators and print results
-  // TODO: ...
 
   // Free structure to hold all DIMF propagators
   for (a = 0; a < DIMF; a++) {
