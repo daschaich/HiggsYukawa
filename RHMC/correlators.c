@@ -75,8 +75,8 @@ int condensates() {
   register int i;//, ii;
   register site *s;//, *ss;
   int iters, tot_iters = 0, sav = Norder;
-  int a, b, c, d, j, Nsrc = DIMF;
-  Real size_r, norm = 1.0 / (Real)Nsrc, ***prop;
+  int a, b, c, d, j;
+  Real size_r, norm = 1.0 / (Real)DIMF, ***prop;
   double bilin = 0.0, four = 0.0, sus = 0.0, dtime;
   vector **psim;
 
@@ -86,9 +86,8 @@ int condensates() {
     prop[a] = malloc(DIMF * sizeof(Real*));
     for (b = 0; b < DIMF; b++) {
       prop[a][b] = malloc(sites_on_node * sizeof(Real));
-      FORALLSITES(i, s) {
+      FORALLSITES(i, s)
         prop[a][b][i] = 0.0;
-      }
     }
   }
 
@@ -102,7 +101,7 @@ int condensates() {
   //   D_{ab}^{-1}(x) = (1/N) sum_N psi_a(x) dest_b(x)
   // where dest are random Z2 sources
   // Hit each dest with Mdag to get src_j, invert to get D_{kj}^{-1} dest_j
-  for (j = 0; j < Nsrc; j++) {
+  for (j = 0; j < DIMF; j++) {
     dtime = -dclock();
     vol_src();
     iters = congrad_multi(src, psim, niter, rsqmin, &size_r);
@@ -120,7 +119,7 @@ int condensates() {
     }
   }
 
-  // Normalize stochastic propagator by norm = 1 / Nsrc
+  // Normalize stochastic propagator by norm = 1 / DIMF
   for (a = 0; a < DIMF; a++) {
     for (b = 0; b < DIMF; b++) {
       FORALLSITES(i, s)
