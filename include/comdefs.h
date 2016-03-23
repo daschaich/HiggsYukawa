@@ -5,7 +5,6 @@
 #define _COMDEFS_H
 #include "../include/int32type.h"
 #include "../include/so4.h"
-#include "../include/complex.h"
 
 // Arguments to the make_gather() routine
 #define FORWARDS         1
@@ -41,17 +40,11 @@ void g_floatsum(Real *fpt);
 void g_vecfloatsum(Real *fpt, int nReals);
 void g_doublesum(double *dpt);
 void g_vecdoublesum(double *dpt, int ndoubles);
-void g_complexsum(complex *cpt);
-void g_veccomplexsum(complex *cpt, int ncomplex);
-void g_dcomplexsum(double_complex *cpt);
-void g_vecdcomplexsum(double_complex *cpt, int ncomplex);
 void g_xor32(u_int32type *pt );
 void g_floatmax(Real *fpt);
 void g_doublemax(double *dpt);
 void broadcast_float(Real *fpt);
 void broadcast_double(double *dpt);
-void broadcast_complex(complex *cpt);
-void broadcast_dcomplex(double_complex *cpt);
 void broadcast_bytes(char *buf, int size);
 void send_integer(int tonode, int *address);
 void send_field(char *buf, int size, int tonode);

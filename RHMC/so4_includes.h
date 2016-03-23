@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>             // For print_var.c, setup.c, gauge_info.c
-#include "../include/complex.h"
 #include "../include/so4.h"
 #include "../include/macros.h"
 #include "lattice.h"

@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "../include/complex.h"
 #include "../include/so4.h"
 #include "../include/macros.h"
 #include "../include/comdefs.h"

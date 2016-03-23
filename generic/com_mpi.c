@@ -12,19 +12,12 @@
 // g_vecfloatsum()        Sum a vector of Reals over all nodes
 // g_doublesum()          Sum a double over all nodes
 // g_vecdoublesum()       Sum a vector of doubles over all nodes
-// g_complexsum()         Sum a generic precision complex number over all nodes
-// g_veccomplexsum()      Sum a vector of generic precision complex numbers
-//                          over all nodes
-// g_dcomplexsum()        Sum a double precision complex number over all nodes
-// g_vecdcomplexsum()     Sum a vector of double_complex over all nodes
 // g_xor32()              Find global exclusive or of 32-bit word
 // g_floatmax()           Find maximum Real over all nodes
 // g_doublemax()          Find maximum double over all nodes
 // broadcast_float()      Broadcast a generic precision number from
 //                          node 0 to all nodes
 // broadcast_double()     Broadcast a double precision number
-// broadcast_complex()    Broadcast a generic precision complex number
-// broadcast_dcomplex()   Broadcast a double precision complex number
 // broadcast_bytes()      Broadcast a number of bytes
 // send_integer()         Send an integer to one other node
 // receive_integer()      Receive an integer
@@ -351,40 +344,6 @@ void g_vecdoublesum(double *dpt, int length) {
     dpt[i] = work[i];
   free(work);
 }
-
-// Sum complex over all nodes
-void g_complexsum(complex *cpt) {
-  complex work;
-  MPI_Allreduce(cpt, &work, 2, OUR_MPI_REAL, MPI_SUM, MPI_COMM_WORLD);
-  *cpt = work;
-}
-
-// Sum a vector of complex over all nodes
-void g_veccomplexsum(complex *cpt, int length) {
-  int i;
-  complex *work = malloc(length * sizeof(*work));
-  MPI_Allreduce(cpt, work, 2 * length, OUR_MPI_REAL, MPI_SUM, MPI_COMM_WORLD);
-  for (i = 0; i < length; i++)
-    cpt[i] = work[i];
-  free(work);
-}
-
-// Sum double_complex over all nodes
-void g_dcomplexsum(double_complex *cpt) {
-  double_complex work;
-  MPI_Allreduce(cpt, &work, 2, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-  *cpt = work;
-}
-
-// Sum a vector of double_complex over all nodes
-void g_vecdcomplexsum(double_complex *cpt, int length) {
-  int i;
-  double_complex *work = malloc(length * sizeof(*work));
-  MPI_Allreduce(cpt, work, 2 * length, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-  for (i = 0; i < length; i++)
-    cpt[i] = work[i];
-  free(work);
-}
 // -----------------------------------------------------------------
 
 
@@ -431,16 +390,6 @@ void broadcast_float(Real *fpt) {
 // Broadcast double from node zero
 void broadcast_double(double *dpt) {
   MPI_Bcast(dpt, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-}
-
-// Broadcast generic precision complex number from node zero
-void broadcast_complex(complex *cpt) {
-  MPI_Bcast(cpt, 2, OUR_MPI_REAL, 0, MPI_COMM_WORLD);
-}
-
-// Broadcast double precision complex number from node zero
-void broadcast_dcomplex(double_complex *cpt) {
-  MPI_Bcast(cpt, 2, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 }
 
 // Broadcast bytes from node 0 to all others

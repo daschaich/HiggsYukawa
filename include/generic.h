@@ -8,7 +8,6 @@
 //   See io_lat.h for I/O
 #include <stdio.h>
 #include "../include/int32type.h"
-#include "../include/complex.h"
 #include "../include/so4.h"
 #include "../include/macros.h"
 #include "../include/random.h"

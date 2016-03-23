@@ -17,11 +17,10 @@
 
 MYINCLUDEDIR = .
 INCLUDEDIR = ../include
-#Where the complex and so4 libraries are
+#Where the so4 libraries are
 LIBDIR = ../libraries
 
 GLOBAL_HEADERS = ${INCLUDEDIR}/config.h      \
-                 ${INCLUDEDIR}/complex.h     \
                  ${INCLUDEDIR}/so4.h         \
                  ${INCLUDEDIR}/comdefs.h     \
                  ${INCLUDEDIR}/macros.h      \
@@ -64,8 +63,8 @@ ADD_OBJECTS = ${MACHINE_DEP_IO} ${COMMPKG}
 OBJECTS = ${MY_OBJECTS} ${G_OBJECTS} \
           ${LAYOUT} ${ADD_OBJECTS} ${EXTRA_OBJECTS}
 
-#Libraries for complex numbers and so4 functions
-QCDLIB = ${LIBDIR}/so4.${PRECISION}.a ${LIBDIR}/complex.${PRECISION}.a
+#Libraries for so4 functions
+QCDLIB = ${LIBDIR}/so4.${PRECISION}.a
 LIBRARIES = ${QCDLIB}
 
 # Default rule for C compilation
