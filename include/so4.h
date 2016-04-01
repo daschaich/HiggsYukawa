@@ -17,19 +17,23 @@
 #define NSD 3   // (DIMF / 4) * (DIMF - 1)
 
 typedef struct { float c[DIMF]; } fvector;
+typedef struct { float e[DIMF][DIMF]; } fmatrix;
 typedef struct { float e[NAS]; } fantisym;
 typedef struct { float e[NSD]; } fselfdual;
 
 typedef struct { double c[DIMF]; } dvector;
+typedef struct { double e[DIMF][DIMF]; } dmatrix;
 typedef struct { double e[NAS]; } dantisym;
 typedef struct { double e[NSD]; } dselfdual;
 
 #if (PRECISION == 1)
 #define vector      fvector
+#define matrix      fmatrix
 #define antisym     fantisym
 #define selfdual    fselfdual
 #else
 #define vector      dvector
+#define matrix      dmatrix
 #define antisym     dantisym
 #define selfdual    dselfdual
 #endif

@@ -2,7 +2,7 @@ Four-fermion SO(4) system
 Microcanonical simulation with refreshing
 Machine = Scalar processor, with 1 nodes
 Phi algorithm
-start: Wed Mar 16 13:01:04 2016
+start: Fri Apr  1 14:19:25 2016
 
 type 0 for no prompts or 1 for prompts
 nx 1
@@ -44,123 +44,131 @@ forget
 Restored binary gauge configuration serially from file config.16
 Time stamp Sat Jan 16 21:35:34 2016
 Checksums 74554f6d 56e46f81 OK
-Time to reload gauge configuration = 3.859997e-04
+Time to reload gauge configuration = 4.169941e-04
 CHECK SIGMA SUM: -2.1906770202531511e-02
 START 1.5129213 1.5014808 3.0144021
 Source point 0 0 0 0
-Inversion 1 of 4 took 256 iters and 0.292 seconds
-Inversion 2 of 4 took 256 iters and 0.2792 seconds
-Inversion 3 of 4 took 256 iters and 0.3212 seconds
-Inversion 4 of 4 took 256 iters and 0.299 seconds
+Inversion 1 of 4 took 256 iters and 0.2526 seconds
+Inversion 2 of 4 took 256 iters and 0.2473 seconds
+Inversion 3 of 4 took 256 iters and 0.2464 seconds
+Inversion 4 of 4 took 256 iters and 0.2522 seconds
 PNT BILIN 0 0 0 0 0.932243 1024
 PNT FOUR 0 0 0 0 0.898386 1024
 PNT SUS 0 0 0 0 -37.353 0.848208 -36.5048 1024
-Inversion 1 of 4 took 255 iters and 0.2963 seconds
-Inversion 2 of 4 took 256 iters and 0.2984 seconds
-Inversion 3 of 4 took 255 iters and 0.2933 seconds
-Inversion 4 of 4 took 237 iters and 0.2641 seconds
+PNT ONELINK 0 0 0 0 0 -0.0258812 0.00313596 0.0741081 1024
+Inversion 1 of 4 took 255 iters and 0.2468 seconds
+Inversion 2 of 4 took 256 iters and 0.2465 seconds
+Inversion 3 of 4 took 255 iters and 0.2511 seconds
+Inversion 4 of 4 took 237 iters and 0.2386 seconds
 STOCH BILIN 0.59983 1003
 STOCH FOUR 0.403096 1003
 Source point 0 0 0 8
-Inversion 1 of 4 took 225 iters and 0.2439 seconds
-Inversion 2 of 4 took 225 iters and 0.2777 seconds
-Inversion 3 of 4 took 226 iters and 0.2279 seconds
-Inversion 4 of 4 took 226 iters and 0.2341 seconds
+Inversion 1 of 4 took 225 iters and 0.2346 seconds
+Inversion 2 of 4 took 225 iters and 0.2215 seconds
+Inversion 3 of 4 took 226 iters and 0.2208 seconds
+Inversion 4 of 4 took 226 iters and 0.2256 seconds
 PNT BILIN 0 0 0 8 0.855384 902
 PNT FOUR 0 0 0 8 0.747991 902
 PNT SUS 0 0 0 8 -24.7794 1.2934 -23.486 902
-Inversion 1 of 4 took 257 iters and 0.267 seconds
-Inversion 2 of 4 took 253 iters and 0.2619 seconds
-Inversion 3 of 4 took 253 iters and 0.2449 seconds
-Inversion 4 of 4 took 256 iters and 0.2535 seconds
+PNT ONELINK 0 0 0 8 0 -0.0342235 -0.0409096 0.0351696 902
+Inversion 1 of 4 took 257 iters and 0.2578 seconds
+Inversion 2 of 4 took 253 iters and 0.2498 seconds
+Inversion 3 of 4 took 253 iters and 0.2675 seconds
+Inversion 4 of 4 took 256 iters and 0.2514 seconds
 STOCH BILIN 0.648032 1019
 STOCH FOUR 0.334389 1019
 Source point 0 0 8 0
-Inversion 1 of 4 took 254 iters and 0.2454 seconds
-Inversion 2 of 4 took 254 iters and 0.249 seconds
-Inversion 3 of 4 took 254 iters and 0.2558 seconds
-Inversion 4 of 4 took 254 iters and 0.2452 seconds
+Inversion 1 of 4 took 254 iters and 0.2441 seconds
+Inversion 2 of 4 took 254 iters and 0.2469 seconds
+Inversion 3 of 4 took 254 iters and 0.2465 seconds
+Inversion 4 of 4 took 254 iters and 0.2684 seconds
 PNT BILIN 0 0 8 0 0.803137 1016
 PNT FOUR 0 0 8 0 0.650158 1016
 PNT SUS 0 0 8 0 -25.2198 0.82145 -24.3984 1016
-Inversion 1 of 4 took 255 iters and 0.2463 seconds
-Inversion 2 of 4 took 254 iters and 0.261 seconds
-Inversion 3 of 4 took 257 iters and 0.2668 seconds
-Inversion 4 of 4 took 253 iters and 0.2516 seconds
+PNT ONELINK 0 0 8 0 0 -0.0242885 -0.0130824 0.0127613 1016
+Inversion 1 of 4 took 255 iters and 0.2577 seconds
+Inversion 2 of 4 took 254 iters and 0.2462 seconds
+Inversion 3 of 4 took 257 iters and 0.2471 seconds
+Inversion 4 of 4 took 253 iters and 0.274 seconds
 STOCH BILIN 0.643129 1019
 STOCH FOUR 0.418904 1019
 Source point 0 0 8 8
-Inversion 1 of 4 took 255 iters and 0.2513 seconds
-Inversion 2 of 4 took 255 iters and 0.2577 seconds
-Inversion 3 of 4 took 255 iters and 0.2726 seconds
-Inversion 4 of 4 took 255 iters and 0.2768 seconds
+Inversion 1 of 4 took 255 iters and 0.2449 seconds
+Inversion 2 of 4 took 255 iters and 0.2454 seconds
+Inversion 3 of 4 took 255 iters and 0.2459 seconds
+Inversion 4 of 4 took 255 iters and 0.2501 seconds
 PNT BILIN 0 0 8 8 0.995896 1020
 PNT FOUR 0 0 8 8 1.18031 1020
 PNT SUS 0 0 8 8 -26.0407 0.542851 -25.4979 1020
-Inversion 1 of 4 took 255 iters and 0.2594 seconds
-Inversion 2 of 4 took 255 iters and 0.2522 seconds
-Inversion 3 of 4 took 256 iters and 0.2534 seconds
-Inversion 4 of 4 took 257 iters and 0.2464 seconds
+PNT ONELINK 0 0 8 8 0 0.0104856 0.0352372 0.106145 1020
+Inversion 1 of 4 took 255 iters and 0.2468 seconds
+Inversion 2 of 4 took 255 iters and 0.2453 seconds
+Inversion 3 of 4 took 256 iters and 0.249 seconds
+Inversion 4 of 4 took 257 iters and 0.2498 seconds
 STOCH BILIN 0.58594 1023
 STOCH FOUR 0.464895 1023
 Source point 0 8 0 0
-Inversion 1 of 4 took 254 iters and 0.2465 seconds
-Inversion 2 of 4 took 254 iters and 0.2475 seconds
-Inversion 3 of 4 took 254 iters and 0.2461 seconds
-Inversion 4 of 4 took 254 iters and 0.2474 seconds
+Inversion 1 of 4 took 254 iters and 0.2486 seconds
+Inversion 2 of 4 took 254 iters and 0.2478 seconds
+Inversion 3 of 4 took 254 iters and 0.2426 seconds
+Inversion 4 of 4 took 254 iters and 0.2473 seconds
 PNT BILIN 0 8 0 0 0.720373 1016
 PNT FOUR 0 8 0 0 0.571842 1016
 PNT SUS 0 8 0 0 -25.5792 0.0119069 -25.5673 1016
-Inversion 1 of 4 took 252 iters and 0.2419 seconds
-Inversion 2 of 4 took 256 iters and 0.2453 seconds
-Inversion 3 of 4 took 256 iters and 0.2456 seconds
-Inversion 4 of 4 took 253 iters and 0.2421 seconds
+PNT ONELINK 0 8 0 0 0 -0.0663873 -0.0055013 0.0059039 1016
+Inversion 1 of 4 took 252 iters and 0.2421 seconds
+Inversion 2 of 4 took 256 iters and 0.2463 seconds
+Inversion 3 of 4 took 256 iters and 0.2452 seconds
+Inversion 4 of 4 took 253 iters and 0.2493 seconds
 STOCH BILIN 0.694179 1017
 STOCH FOUR 0.407166 1017
 Source point 0 8 0 8
-Inversion 1 of 4 took 251 iters and 0.2416 seconds
-Inversion 2 of 4 took 251 iters and 0.2432 seconds
-Inversion 3 of 4 took 251 iters and 0.2424 seconds
-Inversion 4 of 4 took 251 iters and 0.2402 seconds
+Inversion 1 of 4 took 251 iters and 0.2422 seconds
+Inversion 2 of 4 took 251 iters and 0.2404 seconds
+Inversion 3 of 4 took 251 iters and 0.2439 seconds
+Inversion 4 of 4 took 251 iters and 0.2459 seconds
 PNT BILIN 0 8 0 8 0.497757 1004
 PNT FOUR 0 8 0 8 0.367177 1004
 PNT SUS 0 8 0 8 -17.3446 0.535391 -16.8092 1004
-Inversion 1 of 4 took 254 iters and 0.2452 seconds
-Inversion 2 of 4 took 256 iters and 0.2456 seconds
-Inversion 3 of 4 took 255 iters and 0.2444 seconds
-Inversion 4 of 4 took 257 iters and 0.2535 seconds
+PNT ONELINK 0 8 0 8 0 0.0377785 0.0372907 -0.0534579 1004
+Inversion 1 of 4 took 254 iters and 0.2464 seconds
+Inversion 2 of 4 took 256 iters and 0.2464 seconds
+Inversion 3 of 4 took 255 iters and 0.2459 seconds
+Inversion 4 of 4 took 257 iters and 0.2545 seconds
 STOCH BILIN 0.629018 1022
 STOCH FOUR 0.469148 1022
 Source point 0 8 8 0
-Inversion 1 of 4 took 255 iters and 0.2457 seconds
-Inversion 2 of 4 took 255 iters and 0.2534 seconds
-Inversion 3 of 4 took 255 iters and 0.2544 seconds
-Inversion 4 of 4 took 255 iters and 0.2559 seconds
+Inversion 1 of 4 took 255 iters and 0.2448 seconds
+Inversion 2 of 4 took 255 iters and 0.2474 seconds
+Inversion 3 of 4 took 255 iters and 0.2482 seconds
+Inversion 4 of 4 took 255 iters and 0.2483 seconds
 PNT BILIN 0 8 8 0 0.514483 1020
 PNT FOUR 0 8 8 0 0.302087 1020
 PNT SUS 0 8 8 0 -27.577 1.21431 -26.3627 1020
-Inversion 1 of 4 took 256 iters and 0.2543 seconds
-Inversion 2 of 4 took 256 iters and 0.2553 seconds
-Inversion 3 of 4 took 255 iters and 0.2654 seconds
-Inversion 4 of 4 took 254 iters and 0.2515 seconds
+PNT ONELINK 0 8 8 0 0 -0.0642715 -0.0382023 0.00444698 1020
+Inversion 1 of 4 took 256 iters and 0.2477 seconds
+Inversion 2 of 4 took 256 iters and 0.2718 seconds
+Inversion 3 of 4 took 255 iters and 0.2466 seconds
+Inversion 4 of 4 took 254 iters and 0.2464 seconds
 STOCH BILIN 0.588987 1021
 STOCH FOUR 0.460003 1021
 Source point 0 8 8 8
-Inversion 1 of 4 took 255 iters and 0.259 seconds
-Inversion 2 of 4 took 255 iters and 0.2704 seconds
-Inversion 3 of 4 took 255 iters and 0.2451 seconds
-Inversion 4 of 4 took 255 iters and 0.2453 seconds
+Inversion 1 of 4 took 255 iters and 0.2464 seconds
+Inversion 2 of 4 took 255 iters and 0.2442 seconds
+Inversion 3 of 4 took 255 iters and 0.2485 seconds
+Inversion 4 of 4 took 255 iters and 0.2498 seconds
 PNT BILIN 0 8 8 8 0.886609 1020
 PNT FOUR 0 8 8 8 0.904822 1020
 PNT SUS 0 8 8 8 -24.4417 0.232594 -24.2091 1020
-Inversion 1 of 4 took 258 iters and 0.25 seconds
-Inversion 2 of 4 took 256 iters and 0.25 seconds
-Inversion 3 of 4 took 254 iters and 0.2457 seconds
-Inversion 4 of 4 took 256 iters and 0.2477 seconds
+PNT ONELINK 0 8 8 8 0 0.0410549 0.00355228 0.108756 1020
+Inversion 1 of 4 took 258 iters and 0.2498 seconds
+Inversion 2 of 4 took 256 iters and 0.2485 seconds
+Inversion 3 of 4 took 254 iters and 0.2439 seconds
+Inversion 4 of 4 took 256 iters and 0.2634 seconds
 STOCH BILIN 0.672337 1024
 STOCH FOUR 0.455209 1024
 RUNNING COMPLETED
 CG iters for measurements: 16170
 total_iters = 16170
 
-Time = 16.42 seconds
+Time = 15.86 seconds

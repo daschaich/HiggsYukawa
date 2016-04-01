@@ -178,28 +178,25 @@ int condensates() {
 
 // -----------------------------------------------------------------
 // Measure two- and four-fermion correlators
+// Use DIMF x DIMF matrix at each site for propagator
 // Return total number of iterations
 int correlators(int *pnt) {
   register int i;
   register site *s;
-  int a, b, c, d, iters, tot_iters = 0, sav = Norder;
-  Real size_r, ***prop;
+  int a, b, c, d, iters, tot_iters = 0, sav = Norder, dir;
+  int L[NDIMS] = {nx, ny, nz, nt};
+  Real size_r;
   double bilin = 0.0, four = 0.0, dtime;
   double sus_abba = 0.0, sus_aabb = 0.0, sus_abab = 0.0, sus;
+  double one_link[NDIMS];
   vector **psim;
+  matrix *prop = malloc(sites_on_node * sizeof(*prop));
+  msg_tag *tag[NDIMS];
 
   // Make sure pnt stays within lattice volume
-  i = pnt[0] % nx;      pnt[0] = i;
-  i = pnt[1] % ny;      pnt[1] = i;
-  i = pnt[2] % nz;      pnt[2] = i;
-  i = pnt[3] % nt;      pnt[3] = i;
-
-  // Allocate structure to hold all DIMF propagators
-  prop = malloc(DIMF * sizeof(***prop));
-  for (a = 0; a < DIMF; a++) {
-    prop[a] = malloc(DIMF * sizeof(Real*));
-    for (b = 0; b < DIMF; b++)
-      prop[a][b] = malloc(sites_on_node * sizeof(Real));
+  for (dir = XUP; dir <= TUP; dir++) {
+    i = pnt[dir] % L[dir];
+    pnt[dir] = i;
   }
 
   // Hack a basic CG out of the multi-mass CG
@@ -220,7 +217,15 @@ int correlators(int *pnt) {
     // Copy psim into f[j][k]
     FORALLSITES(i, s) {
       for (b = 0; b < DIMF; b++)
-        prop[b][a][i] = psim[0][i].c[b];
+        prop[i].e[b][a] = psim[0][i].c[b];
+    }
+  }
+
+  // Gather prop from -mu for one-link condensates
+  for (dir = XUP; dir <= TUP; dir++) {
+    if (L[dir] > 1) {
+      tag[dir] = start_gather_field(prop, sizeof(matrix), OPP_DIR(dir),
+                                    EVENANDODD, gen_pt[dir]);
     }
   }
 
@@ -232,14 +237,14 @@ int correlators(int *pnt) {
         if (b == a)
           continue;
         if (b > a)
-          bilin += prop[a][b][i];
+          bilin += prop[i].e[a][b];
         for (c = 0; c < DIMF; c++) {
           if (c == b || c == a)
             continue;
           for (d = 0; d < DIMF; d++) {
             if (d == c || d == b || d == a)
               continue;
-            four += perm[a][b][c][d] * prop[a][b][i] * prop[c][d][i];
+            four += perm[a][b][c][d] * prop[i].e[a][b] * prop[i].e[c][d];
           }
         }
       }
@@ -252,13 +257,32 @@ int correlators(int *pnt) {
   for (a = 0; a < DIMF; a++) {
     for (b = 0; b < DIMF; b++) {
       FORALLSITES(i, s) {
-        sus_aabb -= prop[a][a][i] * prop[b][b][i];
-        sus_abba += prop[a][b][i] * prop[b][a][i];
+        sus_aabb -= prop[i].e[a][a] * prop[i].e[b][b];
+        sus_abba += prop[i].e[a][b] * prop[i].e[b][a];
       }
     }
   }
   g_doublesum(&sus_aabb);
   g_doublesum(&sus_abba);
+
+  // Compute one-link condensates
+  for (dir = XUP; dir <= TUP; dir++) {
+    one_link[dir] = 0.0;
+    wait_gather(tag[dir]);
+    if (L[dir] <= 1) {        // Don't re-compute on-site bilinear
+      cleanup_gather(tag[dir]);
+      continue;
+    }
+    if (node_number(pnt[0], pnt[1], pnt[2], pnt[3]) == mynode()) {
+      i = node_index(pnt[0], pnt[1], pnt[2], pnt[3]);
+      for (a = 0; a < DIMF; a++) {
+        for (b = a + 1; b < DIMF; b++)
+          one_link[dir] += ((matrix *)gen_pt[dir][i])->e[a][b];
+      }
+    }
+    g_doublesum(&(one_link[dir]));
+    cleanup_gather(tag[dir]);
+  }
 
   // Print condensates and susceptibility
   node0_printf("PNT BILIN %d %d %d %d %.6g %d\n",
@@ -269,13 +293,11 @@ int correlators(int *pnt) {
   node0_printf("PNT SUS %d %d %d %d %.6g %.6g %.6g %d\n",
                pnt[0], pnt[1], pnt[2], pnt[3],
                sus_aabb, sus_abba, sus, tot_iters);
+  node0_printf("PNT ONELINK %d %d %d %d %.6g %.6g %.6g %.6g %d\n",
+               pnt[0], pnt[1], pnt[2], pnt[3],
+               one_link[0], one_link[1], one_link[2], one_link[3], tot_iters);
 
-  // Free structure to hold all DIMF propagators
-  for (a = 0; a < DIMF; a++) {
-    for (b = 0; b < DIMF; b++)
-      free(prop[a][b]);
-    free(prop[a]);
-  }
+  // Free propagator
   free(prop);
 
   // Reset multi-mass CG and clean up
