@@ -141,6 +141,12 @@ void make_fields() {
   FIELD_ALLOC(tempvec, vector);
   FIELD_ALLOC(tempas, antisym);
 
+#ifdef CORR
+  // Propagator for point-source condensates
+  size += (double)(sizeof(matrix));
+  FIELD_ALLOC(prop, matrix);
+#endif
+
   size *= sites_on_node;
   node0_printf("Mallocing %.1f MBytes per core for fields\n", size / 1e6);
 #ifdef PFAFF

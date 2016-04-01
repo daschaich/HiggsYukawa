@@ -119,6 +119,7 @@ EXTERN char **gen_pt[N_POINTERS];
 #ifdef CORR
 EXTERN int Nsrc;
 EXTERN int pnts[MAX_SRC][NDIMS];
+EXTERN matrix *prop;
 #endif
 
 #ifdef EIG

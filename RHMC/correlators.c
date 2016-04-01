@@ -178,7 +178,6 @@ int condensates() {
 
 // -----------------------------------------------------------------
 // Measure two- and four-fermion correlators
-// Use DIMF x DIMF matrix at each site for propagator
 // Return total number of iterations
 int correlators(int *pnt) {
   register int i;
@@ -188,9 +187,9 @@ int correlators(int *pnt) {
   Real size_r;
   double bilin = 0.0, four = 0.0, dtime;
   double sus_abba = 0.0, sus_aabb = 0.0, sus_abab = 0.0, sus;
-  double one_link[NDIMS];
+  double one_link[NDIMS] = {0.0, 0.0, 0.0, 0.0};
   vector **psim;
-  matrix *prop = malloc(sites_on_node * sizeof(*prop));
+  matrix *tm;
   msg_tag *tag[NDIMS];
 
   // Make sure pnt stays within lattice volume
@@ -267,17 +266,15 @@ int correlators(int *pnt) {
 
   // Compute one-link condensates
   for (dir = XUP; dir <= TUP; dir++) {
-    one_link[dir] = 0.0;
-    wait_gather(tag[dir]);
-    if (L[dir] <= 1) {        // Don't re-compute on-site bilinear
-      cleanup_gather(tag[dir]);
+    if (L[dir] <= 1)          // Don't re-compute on-site bilinear
       continue;
-    }
+    wait_gather(tag[dir]);
     if (node_number(pnt[0], pnt[1], pnt[2], pnt[3]) == mynode()) {
       i = node_index(pnt[0], pnt[1], pnt[2], pnt[3]);
+      tm = (matrix *)(gen_pt[dir][i]);
       for (a = 0; a < DIMF; a++) {
         for (b = a + 1; b < DIMF; b++)
-          one_link[dir] += ((matrix *)gen_pt[dir][i])->e[a][b];
+          one_link[dir] += tm->e[a][b];
       }
     }
     g_doublesum(&(one_link[dir]));
@@ -296,9 +293,6 @@ int correlators(int *pnt) {
   node0_printf("PNT ONELINK %d %d %d %d %.6g %.6g %.6g %.6g %d\n",
                pnt[0], pnt[1], pnt[2], pnt[3],
                one_link[0], one_link[1], one_link[2], one_link[3], tot_iters);
-
-  // Free propagator
-  free(prop);
 
   // Reset multi-mass CG and clean up
   Norder = sav;
