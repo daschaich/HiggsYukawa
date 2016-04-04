@@ -8,7 +8,7 @@
 
 // -----------------------------------------------------------------
 int main(int argc, char *argv[]) {
-  int prompt;
+  int prompt, avm_iters=0;
   double dtime, s_act, plus_act, minus_act;
 
   // Setup
@@ -38,13 +38,14 @@ int main(int argc, char *argv[]) {
 
   // Main measurements
 #ifdef CORR
-  // Correlator measurements
-  int j, avm_iters = 0;
+  // Correlator measurementsa
+  avm_iters=0;
+  avm_iters += condensates();
+  int j;
   for (j = 0; j < Nsrc; j++) {
     node0_printf("Source point %d %d %d %d\n",
                  pnts[j][0], pnts[j][1], pnts[j][2], pnts[j][3]);
     avm_iters += correlators(pnts[j]);
-    avm_iters += condensates();
   }
 #endif
 
