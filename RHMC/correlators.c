@@ -79,7 +79,8 @@ int condensates() {
   double bilin[DIMF][DIMF], bilin2[DIMF][DIMF];
   double four = 0.0, sus = 0.0, dtime;
   vector **psim;
-
+  double bilin[DIMF][DIMF],bilin2[DIMF][DIMF];
+ 
   for (a = 0; a < DIMF; a++) {
     for (b = 0; b < DIMF; b++) {
       bilin[a][b] = 0.0;
@@ -138,9 +139,24 @@ int condensates() {
           prop2[i].e[a][b] += psim[0][i].c[a] * dest[i].c[b];
       }
     }
+
+    dtime = -dclock();
+    vol_src();
+    iters = congrad_multi(src, psim, niter, rsqmin, &size_r);
+    dtime += dclock();
+    tot_iters += iters;
+    node0_printf("2nd inversion %d of %d took %d iters and %.4g seconds\n",
+                 j+1,Nsrc,iters,dtime);
+   
+    for (a = 0; a < DIMF; a++) {
+      for (b = 0; b < DIMF; b++) {
+        FORALLSITES(i, s)
+          prop2[a][b][i] += psim[0][i].c[a] * dest[i].c[b];
+      }
+    }
   }
 
-  // Normalize stochastic propagator by norm = 1 / DIMF
+  // Normalize stochastic propagator by norm = 1 / Nstoch
   FORALLSITES(i, s) {
     for (a = 0; a < DIMF; a++) {
       for (b = 0; b < DIMF; b++) {
@@ -165,7 +181,8 @@ int condensates() {
 
   for (a = 0; a < DIMF; a++) {
     for (b = 0; b < DIMF; b++) {
-      if (a == b) continue;
+      if (a == b)
+        continue;
       for (c = 0; c < DIMF; c++) {
         if (c == b || c == a)
           continue;
@@ -268,12 +285,11 @@ int correlators(int *pnt) {
   // Compute four-fermion condensate
   if (node_number(pnt[0], pnt[1], pnt[2], pnt[3]) == mynode()) {
     i = node_index(pnt[0], pnt[1], pnt[2], pnt[3]);
+    bilin += prop[i].e[0][1];
     for (a = 0; a < DIMF; a++) {
       for (b = 0; b < DIMF; b++) {
         if (b == a)
           continue;
-        if (b > a)
-          bilin[a][b] += prop[i].e[a][b];
         for (c = 0; c < DIMF; c++) {
           if (c == b || c == a)
             continue;
@@ -313,9 +329,13 @@ int correlators(int *pnt) {
       i = node_index(pnt[0], pnt[1], pnt[2], pnt[3]);
       tm = (matrix *)(gen_pt[dir][i]);
       for (a = 0; a < DIMF; a++) {
-        for (b = a + 1; b < DIMF; b++)
-          one_link[dir] += tm->e[a][b];
+        for (b = a + 1; b < DIMF; b++){
+         if (pnt[dir] % 2 == 0)
+            one_link[dir] += lattice[i].phase[dir] * tm->e[a][b];
+          else
+            one_link[dir] -= lattice[i].phase[dir] * tm->e[a][b];
       }
+     }
     }
     g_doublesum(&(one_link[dir]));
     cleanup_gather(tag[dir]);
