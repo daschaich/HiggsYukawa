@@ -143,8 +143,9 @@ void make_fields() {
 
 #ifdef CORR
   // Propagator for point-source condensates
-  size += (double)(sizeof(matrix));
+  size += (double)(2.0 * sizeof(matrix));
   FIELD_ALLOC(prop, matrix);
+  FIELD_ALLOC(prop2, matrix);
 #endif
 
   size *= sites_on_node;
@@ -218,7 +219,6 @@ int readin(int prompt) {
 
     // Four-fermion coupling
     IF_OK status += get_f(stdin, prompt, "G", &par_buf.G);
-    IF_OK status += get_i(stdin, prompt, "STOCHSOURCE", &par_buf.STOCHSOURCE);
 
     // On-site SO(4)-breaking mass term
     IF_OK status += get_f(stdin, prompt, "site_mass", &par_buf.site_mass);
@@ -233,6 +233,9 @@ int readin(int prompt) {
     }
 
 #ifdef CORR
+    // Number of stochastic sources
+    IF_OK status += get_i(stdin, prompt, "Nstoch", &par_buf.Nstoch);
+
     // Number of point sources
     IF_OK status += get_i(stdin, prompt, "Nsrc", &par_buf.Nsrc);
     if (par_buf.Nsrc > MAX_SRC) {
@@ -288,7 +291,6 @@ int readin(int prompt) {
   rsqmin = par_buf.rsqmin;
 
   G = par_buf.G;
-  STOCHSOURCE = par_buf.STOCHSOURCE;
   site_mass = par_buf.site_mass;
   if (G == 0.0 && site_mass != 0.0) {
     node0_printf("Warning: Setting site_mass = 0 since G = 0\n");
@@ -296,6 +298,7 @@ int readin(int prompt) {
   }
 
 #ifdef CORR
+  Nstoch = par_buf.Nstoch;
   Nsrc = par_buf.Nsrc;
   for (j = 0; j < Nsrc; j++) {
     for (k = 0; k < NDIMS; k++)

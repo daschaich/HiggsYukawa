@@ -26,8 +26,7 @@ typedef struct {
   int propinterval;       // Number of trajectories between measurements
   int startflag;          // What to do for beginning lattice
   int saveflag;           // What to do with lattice at end
-  Real G; // Four fermion coupling 
-  int STOCHSOURCE;                // Number of stochastic sources 
+  Real G;                 // Four fermion coupling
   Real site_mass;         // On-site SO(4)-breaking mass term
 
   // Inversion parameters
@@ -36,6 +35,7 @@ typedef struct {
   char startfile[MAXFILENAME], savefile[MAXFILENAME];
 
 #ifdef CORR
+  int Nstoch;                   // Number of stochastic sources
   int Nsrc;                     // Number of point sources
   int pnts[MAX_SRC][NDIMS];     // Point sources
 #endif

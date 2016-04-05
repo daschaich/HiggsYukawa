@@ -63,7 +63,6 @@ EXTERN int sd_index[DIMF][DIMF];
 // More global parameters
 EXTERN Real rsqmin, rsqprop;
 EXTERN Real G;
-EXTERN int STOCHSOURCE;
 EXTERN Real site_mass;
 EXTERN double sigmasum;
 EXTERN char startfile[MAXFILENAME], savefile[MAXFILENAME];
@@ -118,9 +117,10 @@ EXTERN site *lattice;
 EXTERN char **gen_pt[N_POINTERS];
 
 #ifdef CORR
-EXTERN int Nsrc;
-EXTERN int pnts[MAX_SRC][NDIMS];
-EXTERN matrix *prop;
+EXTERN int Nstoch;                  // Number of stochastic sources
+EXTERN int Nsrc;                    // Number of point sources
+EXTERN int pnts[MAX_SRC][NDIMS];    // Point sources
+EXTERN matrix *prop, *prop2;
 #endif
 
 #ifdef EIG

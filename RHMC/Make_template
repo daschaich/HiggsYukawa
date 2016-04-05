@@ -9,7 +9,7 @@
 #   so4_phi uses phi algorithm
 #   so4_hmc uses hybrid Monte Carlo algorithm, i.e., phi + accept/reject
 #   so4_meas measures two- and four-fermion correlation functions
-#   so4_eig  measures two- and four-fermion correlation functions
+#   so4_eig measures extremal eigenvalues of (squared) fermion operator
 #   so4_pfaff calculates the pfaffian
 #
 # Routines in this directory use RHMC, multiple time scale integration,
@@ -38,13 +38,12 @@ HEADERS = ${GLOBAL_HEADERS} ${MY_HEADERS} ${INLINE_HEADERS}
 
 # All required object files
 # Basic set from current directory
-MY_OBJECTS = setup.o        \
-             setup_perm.o   \
+MY_OBJECTS = setup.o      \
+             setup_perm.o \
              action.o     \
-             info.o         \
-             utilities.o    \
-             grsource.o     \
-             correlators.o  \
+             info.o       \
+             utilities.o  \
+             grsource.o   \
              congrad_multi.o
 
 # Basic set from generic directory
@@ -79,10 +78,9 @@ ${LASTMAKE}: ${ALL_MAKES}
 	touch ${LASTMAKE}
 
 # All make files used in this compilation
-ALL_MAKES =               \
-  Make_template           \
-  ${MAKEFILE}             \
-  ../generic/Make_template
+ALL_MAKES = Make_template \
+            ${MAKEFILE}   \
+            ../generic/Make_template
 
 # To force a remake when changing any make file, header, or target
 ${OBJECTS} : ${HEADERS} ${LASTMAKE} ${ALL_MAKES}
@@ -97,12 +95,12 @@ so4_hmc::
 so4_meas::
 	${MAKE} -f ${MAKEFILE} target "MYTARGET= $@" \
 	"DEFINES = ${DEFINES} -DPHI_ALGORITHM -DCORR " \
-	"EXTRA_OBJECTS = control_meas.o "
+	"EXTRA_OBJECTS = control_meas.o correlators.o "
 
 so4_hmc_meas::
 	${MAKE} -f ${MAKEFILE} target "MYTARGET= $@" \
 	"DEFINES = ${DEFINES} -DPHI_ALGORITHM -DHMC_ALGORITHM -DCORR " \
-	"EXTRA_OBJECTS = control.o update_o.o update_h.o setup_rhmc.o "
+	"EXTRA_OBJECTS = control.o update_o.o update_h.o setup_rhmc.o correlators.o "
 
 so4_eig::
 	${MAKE} -f ${MAKEFILE} target "MYTARGET= $@" \

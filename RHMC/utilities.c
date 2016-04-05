@@ -42,13 +42,12 @@ void fermion_op(vector *src, vector *dest, int sign) {
     m_ov_G = 0.0;
   else
     m_ov_G = 2.0 * site_mass / G;
-   for(a=0;a<DIMF;a++){
-	for(b=0;b<DIMF;b++){
-         vev[a][b]=0.0;}}
-    vev[0][1]=m_ov_G;
-    vev[2][3]=m_ov_G;
-    vev[1][0]=-m_ov_G;
-    vev[3][2]=-m_ov_G;
+  for (a = 0; a < DIMF; a++) {
+    for (b = 0; b < DIMF; b++)
+      vev[a][b] = 0.0;
+  }
+  vev[0][1] = m_ov_G;
+  vev[2][3] = m_ov_G;
 
   // Start gathers for kinetic term
   for (dir = XUP; dir <= TUP; dir++) {
