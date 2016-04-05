@@ -26,7 +26,7 @@ void fermion_op(vector *src, vector *dest, int sign) {
   register int i;
   register site *s;
   int dir, a, b, c, d;
-  Real tr, halfG = 0.5 * G, m_ov_G;
+  Real tr, halfG = 0.5 * G, m_ov_G, vev[DIMF][DIMF];
   vector tvec, tvec_dir, tvec_opp;
   msg_tag *tag[2 * NDIMS];
 
@@ -42,6 +42,14 @@ void fermion_op(vector *src, vector *dest, int sign) {
     m_ov_G = 0.0;
   else
     m_ov_G = 2.0 * site_mass / G;
+   
+    for(a=0;a<DIMF;a++){
+	for(b=0;b<DIMF;b++){
+         vev[a][b]=0.0;}}
+    vev[0][1]=m_ov_G;
+    vev[2][3]=m_ov_G;
+    vev[1][0]=-m_ov_G;
+    vev[3][2]=-m_ov_G;
 
   // Start gathers for kinetic term
   for (dir = XUP; dir <= TUP; dir++) {
@@ -61,7 +69,7 @@ void fermion_op(vector *src, vector *dest, int sign) {
         tr = s->sigma.e[as_index[a][b]] + m_ov_G;
         for (c = 0; c < DIMF; c++) {
           for (d = c + 1; d < DIMF; d++)
-            tr += perm[a][b][c][d] * (s->sigma.e[as_index[c][d]] + m_ov_G);
+            tr += perm[a][b][c][d] * (s->sigma.e[as_index[c][d]] + vev[c][d]);
         }   // No half since not double-counting
         dest[i].c[a] += tr * src[i].c[b];
         dest[i].c[b] -= tr * src[i].c[a];
