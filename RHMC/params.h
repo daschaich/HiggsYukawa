@@ -26,7 +26,8 @@ typedef struct {
   int propinterval;       // Number of trajectories between measurements
   int startflag;          // What to do for beginning lattice
   int saveflag;           // What to do with lattice at end
-  Real G;                 // Four-fermion coupling
+  Real G; // Four fermion coupling 
+  int STOCHSOURCE;                // Number of stochastic sources 
   Real site_mass;         // On-site SO(4)-breaking mass term
 
   // Inversion parameters

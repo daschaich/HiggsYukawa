@@ -75,19 +75,30 @@ int condensates() {
   register int i;//, ii;
   register site *s;//, *ss;
   int iters, tot_iters = 0, sav = Norder;
-  int a, b, c, d, j;
-  Real size_r, norm = 1.0 / (Real)DIMF, ***prop;
-  double bilin = 0.0, four = 0.0, sus = 0.0, dtime;
+  int a, b, c, d, j, Nsrc = STOCHSOURCE;
+  Real size_r, norm = 1.0 / (Real)Nsrc, ***prop,***prop2;
+  double bilin[DIMF][DIMF],bilin2[DIMF][DIMF];
+  double four = 0.0, sus3 = 0.0, sus1=0.0, sus2=0.0,sus=0.0,dtime;
   vector **psim;
+
+  for(a=0;a<DIMF;a++){
+  for(b=0;b<DIMF;b++){
+  bilin[a][b]=0.0;
+  bilin2[a][b]=0.0;}}
 
   // Allocate and initialize stochastic propagator
   prop = malloc(DIMF * sizeof(***prop));
+  prop2 = malloc(DIMF * sizeof(***prop2));
   for (a = 0; a < DIMF; a++) {
     prop[a] = malloc(DIMF * sizeof(Real*));
+    prop2[a] = malloc(DIMF * sizeof(Real*));
     for (b = 0; b < DIMF; b++) {
       prop[a][b] = malloc(sites_on_node * sizeof(Real));
-      FORALLSITES(i, s)
+      prop2[a][b] = malloc(sites_on_node * sizeof(Real));
+      FORALLSITES(i, s) {
         prop[a][b][i] = 0.0;
+        prop2[a][b][i] = 0.0;
+      }
     }
   }
 
@@ -101,14 +112,14 @@ int condensates() {
   //   D_{ab}^{-1}(x) = (1/N) sum_N psi_a(x) dest_b(x)
   // where dest are random Z2 sources
   // Hit each dest with Mdag to get src_j, invert to get D_{kj}^{-1} dest_j
-  for (j = 0; j < DIMF; j++) {
+  for (j = 0; j < Nsrc; j++) {
     dtime = -dclock();
     vol_src();
     iters = congrad_multi(src, psim, niter, rsqmin, &size_r);
     dtime += dclock();
     tot_iters += iters;
     node0_printf("Inversion %d of %d took %d iters and %.4g seconds\n",
-                 j + 1, DIMF, iters, dtime);
+                 j + 1, Nsrc, iters, dtime);
 
     // Copy psim into f[k][j]
     for (a = 0; a < DIMF; a++) {
@@ -117,13 +128,30 @@ int condensates() {
           prop[a][b][i] += psim[0][i].c[a] * dest[i].c[b];
       }
     }
+
+    dtime = -dclock();
+    vol_src();
+    iters = congrad_multi(src, psim, niter, rsqmin, &size_r);
+    dtime += dclock();
+    tot_iters += iters;
+    node0_printf("2nd Inversion %d of %d took %d iters and %.4g seconds\n",
+                 j+1,Nsrc,iters,dtime);
+
+    for (a = 0; a < DIMF; a++) {
+      for (b = 0; b < DIMF; b++) {
+        FORALLSITES(i, s)
+          prop2[a][b][i] += psim[0][i].c[a] * dest[i].c[b];
+      }
+    }
+
   }
 
   // Normalize stochastic propagator by norm = 1 / DIMF
   for (a = 0; a < DIMF; a++) {
     for (b = 0; b < DIMF; b++) {
-      FORALLSITES(i, s)
+      FORALLSITES(i, s){
         prop[a][b][i] *= norm;
+        prop2[a][b][i] *= norm;}
     }
   }
 
@@ -133,38 +161,61 @@ int condensates() {
     for (b = 0; b < DIMF; b++) {
       if (b == a)
         continue;
-      if (b > a) {
-        FORALLSITES(i, s)
-          bilin += prop[a][b][i];
-      }
-      for (c = 0; c < DIMF; c++) {
-        if (c == b || c == a)
-          continue;
-        for (d = 0; d < DIMF; d++) {
-          if (d == c || d == b || d == a)
-            continue;
-          FORALLSITES(i, s)
-            four += perm[a][b][c][d] * prop[a][b][i] * prop[c][d][i];
+        FORALLSITES(i, s){
+          bilin[a][b] += prop[a][b][i];
+          bilin2[a][b] += prop2[a][b][i];}
+}}
+      for(a = 0; a < DIMF; a++){
+         for(b = 0; b < DIMF; b++){
+           if (a == b) continue;
+//           sus1 += prop[a][a][i]*prop2[b][b][i];
+//           sus2 += prop[a][b][i]*prop2[b][a][i];
+            for (c = 0; c < DIMF; c++) {
+             if (c == b || c == a)
+              continue;
+               for (d = 0; d < DIMF; d++) {
+                 if (d == c || d == b || d == a)
+                  continue;
+                    FORALLSITES(i, s)
+            four += perm[a][b][c][d] * prop[a][b][i] * prop2[c][d][i];
         }
       }
     }
   }
-  g_doublesum(&bilin);
+  for (a = 0; a < DIMF; a++){
+  for (b = 0; b < DIMF; b++){
+  g_doublesum(&bilin[a][b]);
+  g_doublesum(&bilin2[a][b]);}}
+
   g_doublesum(&four);
-  bilin /= (double)volume;
+  for (a = 0; a < DIMF; a++){
+  for (b = 0; b < DIMF; b++){
+  bilin[a][b] /= (double)volume;
+  bilin2[a][b] /= (double)volume;}}
+
+  sus3=0.0;
   four /= (double)volume;
+  for (a = 0; a < DIMF; a++){
+  for (b = 0; b < DIMF; b++){
+  sus3 += bilin[a][b]*bilin2[a][b];}}
+  sus3 *=(double)volume;
+
+//  sus=sus1-sus2-sus3;
+  node0_printf("STOCH BILIN SQUARED %.6g \n",sus3);
 
   // Print condensates and susceptibility
-  node0_printf("STOCH BILIN %.6g %d\n", bilin, tot_iters);
+  node0_printf("STOCH BILIN %.6g \n", 0.5*(bilin[0][1]+bilin2[0][1]));
   node0_printf("STOCH FOUR %.6g %d\n", four, tot_iters);
-
   // Free structure to hold all DIMF propagators
   for (a = 0; a < DIMF; a++) {
-    for (b = 0; b < DIMF; b++)
+    for (b = 0; b < DIMF; b++){
       free(prop[a][b]);
+      free(prop2[a][b]);}
     free(prop[a]);
+    free(prop2[a]);
   }
   free(prop);
+  free(prop2);
 
   // Reset multi-mass CG and clean up
   Norder = sav;
@@ -185,12 +236,16 @@ int correlators(int *pnt) {
   int a, b, c, d, iters, tot_iters = 0, sav = Norder, dir;
   int L[NDIMS] = {nx, ny, nz, nt};
   Real size_r;
-  double bilin = 0.0, four = 0.0, dtime;
+  double bilin[DIMF][DIMF], four = 0.0, dtime;
   double sus_abba = 0.0, sus_aabb = 0.0, sus_abab = 0.0, sus;
   double one_link[NDIMS] = {0.0, 0.0, 0.0, 0.0};
   vector **psim;
   matrix *tm;
   msg_tag *tag[NDIMS];
+
+  for(a=0;a<DIMF;a++){
+  for(b=0;b<DIMF;b++){
+  bilin[a][b]=0.0;}}
 
   // Make sure pnt stays within lattice volume
   for (dir = XUP; dir <= TUP; dir++) {
@@ -236,7 +291,7 @@ int correlators(int *pnt) {
         if (b == a)
           continue;
         if (b > a)
-          bilin += prop[i].e[a][b];
+          bilin[a][b] += prop[i].e[a][b];
         for (c = 0; c < DIMF; c++) {
           if (c == b || c == a)
             continue;
@@ -249,7 +304,9 @@ int correlators(int *pnt) {
       }
     }
   }
-  g_doublesum(&bilin);
+  for(a=0;a<DIMF;a++){
+  for(b=0;b<DIMF;b++){
+  g_doublesum(&bilin[a][b]);}}
   g_doublesum(&four);
 
   // Compute four-fermion susceptibility
@@ -283,7 +340,7 @@ int correlators(int *pnt) {
 
   // Print condensates and susceptibility
   node0_printf("PNT BILIN %d %d %d %d %.6g %d\n",
-               pnt[0], pnt[1], pnt[2], pnt[3], bilin, tot_iters);
+               pnt[0], pnt[1], pnt[2], pnt[3], 0.5*(bilin[0][1]+bilin[2][3]), tot_iters);
   node0_printf("PNT FOUR %d %d %d %d %.6g %d\n",
                pnt[0], pnt[1], pnt[2], pnt[3], four, tot_iters);
   sus = sus_aabb + sus_abba;

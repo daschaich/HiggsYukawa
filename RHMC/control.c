@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
   Real f_eps, s_eps;
   double dtime, s_act, plus_act, minus_act;
 #ifdef CORR
-  int j;
+  int j,i,k,l;
 #endif
 
   // Setup
@@ -67,11 +67,22 @@ int main(int argc, char *argv[]) {
     if ((traj_done % propinterval) == (propinterval - 1)) {
 #ifdef CORR
       // Correlator measurements
+      avm_iters += condensates();
+/*l=0;
+      for(i=0;i<ny;i++){
+	for(j=0;j<nz;j++){
+	  for(k=0;k<nt;k++){
+          pnts[l][0]=0;
+          pnts[l][1]=i;
+          pnts[l][2]=j;
+          pnts[l][3]=k;l++;}}}
+          Nsrc=l;
+      node0_printf("number of sources %d\n",Nsrc);*/
+
       for (j = 0; j < Nsrc; j++) {
-        node0_printf("Source point %d %d %d %d\n",
-                     pnts[j][0], pnts[j][1], pnts[j][2], pnts[j][3]);
+       node0_printf("Source point %d %d %d %d\n",
+       pnts[j][0], pnts[j][1], pnts[j][2], pnts[j][3]);
         avm_iters += correlators(pnts[j]);
-        avm_iters += condensates();
       }
       Nmeas++;
 #endif

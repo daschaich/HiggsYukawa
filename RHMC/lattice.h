@@ -63,6 +63,7 @@ EXTERN int sd_index[DIMF][DIMF];
 // More global parameters
 EXTERN Real rsqmin, rsqprop;
 EXTERN Real G;
+EXTERN int STOCHSOURCE;
 EXTERN Real site_mass;
 EXTERN double sigmasum;
 EXTERN char startfile[MAXFILENAME], savefile[MAXFILENAME];
