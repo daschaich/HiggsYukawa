@@ -79,7 +79,6 @@ int condensates() {
   double bilin[DIMF][DIMF], bilin2[DIMF][DIMF];
   double four = 0.0, sus = 0.0, dtime;
   vector **psim;
-  double bilin[DIMF][DIMF],bilin2[DIMF][DIMF];
  
   for (a = 0; a < DIMF; a++) {
     for (b = 0; b < DIMF; b++) {
@@ -139,21 +138,6 @@ int condensates() {
           prop2[i].e[a][b] += psim[0][i].c[a] * dest[i].c[b];
       }
     }
-
-    dtime = -dclock();
-    vol_src();
-    iters = congrad_multi(src, psim, niter, rsqmin, &size_r);
-    dtime += dclock();
-    tot_iters += iters;
-    node0_printf("2nd inversion %d of %d took %d iters and %.4g seconds\n",
-                 j+1,Nsrc,iters,dtime);
-   
-    for (a = 0; a < DIMF; a++) {
-      for (b = 0; b < DIMF; b++) {
-        FORALLSITES(i, s)
-          prop2[a][b][i] += psim[0][i].c[a] * dest[i].c[b];
-      }
-    }
   }
 
   // Normalize stochastic propagator by norm = 1 / Nstoch
@@ -197,8 +181,8 @@ int condensates() {
   }
   g_doublesum(&four);
   four /= (double)volume;
-  for (a = 0; a < DIMF; a++){
-    for (b = 0; b < DIMF; b++){
+  for (a = 0; a < DIMF; a++) {
+    for (b = 0; b < DIMF; b++) {
       g_doublesum(&bilin[a][b]);
       bilin[a][b] /= (double)volume;
 
@@ -285,7 +269,7 @@ int correlators(int *pnt) {
   // Compute four-fermion condensate
   if (node_number(pnt[0], pnt[1], pnt[2], pnt[3]) == mynode()) {
     i = node_index(pnt[0], pnt[1], pnt[2], pnt[3]);
-    bilin += prop[i].e[0][1];
+    bilin[0][1] += prop[i].e[0][1];
     for (a = 0; a < DIMF; a++) {
       for (b = 0; b < DIMF; b++) {
         if (b == a)
