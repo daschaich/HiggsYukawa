@@ -1,7 +1,6 @@
 // -----------------------------------------------------------------
 // Clear an irrep matrix
 #include "../include/config.h"
-#include "../include/complex.h"
 #include "../include/so4.h"
 
 void clear_as(antisym *m) {

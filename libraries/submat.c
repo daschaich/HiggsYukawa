@@ -2,7 +2,6 @@
 // Subtract two matrices
 // c <-- a - b
 #include "../include/config.h"
-#include "../include/complex.h"
 #include "../include/so4.h"
 
 void sub_as(antisym *a, antisym *b, antisym *c) {

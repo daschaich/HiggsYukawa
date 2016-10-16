@@ -2,7 +2,6 @@
 // Scalar multiplication on matrices
 // b <-- s * a
 #include "../include/config.h"
-#include "../include/complex.h"
 #include "../include/so4.h"
 
 void scalar_mult_as(antisym *a, Real s, antisym *b) {

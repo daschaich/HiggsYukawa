@@ -2,7 +2,6 @@
 // Print the given vector
 #include "../include/config.h"
 #include <stdio.h>
-#include "../include/complex.h"
 #include "../include/so4.h"
 
 void dumpvec(vector *v) {

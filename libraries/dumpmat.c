@@ -2,7 +2,6 @@
 // Print the given matrix
 #include "../include/config.h"
 #include <stdio.h>
-#include "../include/complex.h"
 #include "../include/so4.h"
 
 void dumpas(antisym *m) {

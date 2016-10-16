@@ -2,7 +2,6 @@
 // Add result of scalar multiplication on matrices
 // c <-- a + s * b
 #include "../include/config.h"
-#include "../include/complex.h"
 #include "../include/so4.h"
 
 void scalar_mult_add_as(antisym *a, antisym *b, Real s, antisym *c) {

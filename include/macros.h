@@ -67,11 +67,6 @@ typedef int field_offset;
 //  FORALLSITES(i, s) {
 //    ...
 //  }
-//
-//  int subl;   // Sublattice to loop over
-//  FORSOMESUBLATTICE(i, s, subl) {
-//    ...
-//  }
 
 // See loopend.h for FORSOMEPARITY definition
 

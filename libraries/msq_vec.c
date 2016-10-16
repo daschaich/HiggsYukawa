@@ -1,7 +1,6 @@
 // -----------------------------------------------------------------
 // Squared magnitude of vector
 #include "../include/config.h"
-#include "../include/complex.h"
 #include "../include/so4.h"
 
 Real magsq_vec(vector *a) {
