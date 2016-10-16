@@ -150,15 +150,6 @@ void make_fields() {
 
   size *= sites_on_node;
   node0_printf("Mallocing %.1f MBytes per core for fields\n", size / 1e6);
-#ifdef PFAFF
-  // Total number of matvecs is (volume * DIMF)^2 / 4
-  Nmatvecs = volume * volume * DIMF * DIMF / 4;
-
-  // Total size of matrix is (volume * DIMF) x (sites_on_node * DIMF)
-  size = (double)(volume * DIMF * sites_on_node * DIMF * sizeof(complex));
-  node0_printf("Q has %d columns --> %d matvecs and %.1f MBytes per core...",
-               volume * 16 * DIMF, Nmatvecs, size / 1e6);
-#endif
 }
 // -----------------------------------------------------------------
 
@@ -255,12 +246,6 @@ int readin(int prompt) {
     IF_OK status += get_i(stdin, prompt, "maxIter", &par_buf.maxIter);
 #endif
 
-#ifdef PFAFF
-    // Optional checkpointing for pfaffian computation
-    IF_OK status += get_i(stdin, prompt, "ckpt_load", &par_buf.ckpt_load);
-    IF_OK status += get_i(stdin, prompt, "ckpt_save", &par_buf.ckpt_save);
-#endif
-
     // Find out what kind of starting lattice to use
     IF_OK status += ask_starting_lattice(stdin,  prompt, &par_buf.startflag,
                                          par_buf.startfile);
@@ -309,10 +294,6 @@ int readin(int prompt) {
   Nvec = par_buf.Nvec;
   eig_tol = par_buf.eig_tol;
   maxIter = par_buf.maxIter;
-#endif
-#ifdef PFAFF
-  ckpt_load = par_buf.ckpt_load;
-  ckpt_save = par_buf.ckpt_save;
 #endif
 
   startflag = par_buf.startflag;

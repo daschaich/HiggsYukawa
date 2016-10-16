@@ -50,7 +50,7 @@ void fermion_op(vector *src, vector *dest, int sign) {
   vev[2][3] = m_ov_G;
 
   // Start gathers for kinetic term
-  for (dir = XUP; dir <= TUP; dir++) {
+  FORALLUPDIR(dir) {
     tag[dir] = start_gather_field(src, sizeof(vector), dir,
                                   EVENANDODD, gen_pt[dir]);
     tag[OPP_DIR(dir)] = start_gather_field(src, sizeof(vector), OPP_DIR(dir),
@@ -77,7 +77,7 @@ void fermion_op(vector *src, vector *dest, int sign) {
   }
 
   // Accumulate kinetic term as gathers finish
-  for (dir = XUP; dir <= TUP; dir++) {
+  FORALLUPDIR(dir) {
     wait_gather(tag[dir]);
     wait_gather(tag[OPP_DIR(dir)]);
     FORALLSITES(i, s) {

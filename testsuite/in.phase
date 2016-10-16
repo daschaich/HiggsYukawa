@@ -1,8 +1,8 @@
 prompt 0
-nx  1
-ny 16
-nz 16
-nt 16
+nx 4
+ny 4
+nz 4
+nt 4
 PBC -1
 iseed 41
 
@@ -25,5 +25,5 @@ error_per_site 1e-5
 ckpt_load 0
 ckpt_save 0
 
-reload_serial config.16
+reload_serial config.4444
 forget

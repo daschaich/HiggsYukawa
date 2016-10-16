@@ -1,0 +1,70 @@
+#!/bin/bash
+# This script needs to be run from 4dSYM/testsuite3d/mpi directory
+
+# Customization for the HET cluster at the University of Colorado
+makefile=Make_mpi
+run="/usr/local/mpich2-1.4.1p1/bin/mpirun -np 2"
+
+# Allow user to specify particular target
+if [ $# -gt 0 ]; then
+  target=$1
+
+  # Compile
+  cd ../../RHMC/
+  echo "Compiling so4_$target..."
+  if ! make -f $makefile so4_$target >& /dev/null ; then
+    echo "ERROR: so4_$target compilation failed"
+    make -f $makefile so4_$target
+    exit
+  fi
+
+  # Run
+  cd ../testsuite3d/
+  rm -f mpi/$target.out
+  echo "Running so4_$target..."
+  $run ../RHMC/so4_$target < in.$target > mpi/$target.out
+
+  # Check
+  cd mpi/
+  d="`diff -I'Time' -I'time' -I'seconds' -I'^start' $target.ref $target.out`"
+  if [ -n "$d" ] ; then   # Non-zero string length
+    echo "$target.ref and $target.out differ:"
+    echo "$d"
+  else
+    echo "PASS: so4_$target reproduces reference output"
+  fi
+  exit
+fi
+
+# Otherwise consider all active targets
+# Compile
+cd ../../RHMC/
+for target in hmc meas hmc_meas eig ; do
+  echo "Compiling so4_$target..."
+  if ! make -f $makefile so4_$target >& /dev/null ; then
+    echo "ERROR: so4_$target compilation failed"
+    make -f $makefile so4_$target
+    exit
+  fi
+done
+
+# Run
+cd ../testsuite3d/
+for target in hmc meas hmc_meas eig ; do
+  rm -f mpi/$target.out
+  echo "Running so4_$target..."
+  $run ../RHMC/so4_$target < in.$target > mpi/$target.out
+done
+
+# Check
+cd mpi/
+for target in hmc meas hmc_meas eig ; do
+  d="`diff -I'Time' -I'time' -I'seconds' -I'^start' $target.ref $target.out`"
+  if [ -n "$d" ] ; then   # Non-zero string length
+    echo "$target.ref and $target.out differ:"
+    echo "$d"
+    echo
+  else
+    echo "PASS: so4_$target reproduces reference output"
+  fi
+done

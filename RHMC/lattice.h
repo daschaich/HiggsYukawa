@@ -132,11 +132,5 @@ EXTERN Real eig_tol;          // Tolerance for the eigenvalue computation
 EXTERN int maxIter;           // Maximum iterations
 #endif
 
-#ifdef PFAFF
-// Pfaffian stuff
-EXTERN int Nmatvecs;                // For timing/counting
-EXTERN int ckpt_load, ckpt_save;    // For checkpointing
-#endif
-
 #endif // _LATTICE_H
 // -----------------------------------------------------------------

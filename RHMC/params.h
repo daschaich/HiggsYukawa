@@ -45,11 +45,6 @@ typedef struct {
   int Nvec, maxIter;
   Real eig_tol;
 #endif
-
-#ifdef PFAFF
-  // Pfaffian parameters
-  int ckpt_load, ckpt_save;
-#endif
 } params;
 #endif
 // -----------------------------------------------------------------

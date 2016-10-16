@@ -10,7 +10,6 @@
 #   so4_hmc uses hybrid Monte Carlo algorithm, i.e., phi + accept/reject
 #   so4_meas measures two- and four-fermion correlation functions
 #   so4_eig measures extremal eigenvalues of (squared) fermion operator
-#   so4_pfaff calculates the pfaffian
 #
 # Routines in this directory use RHMC, multiple time scale integration,
 # and Omelyan integrators.  See README.
@@ -108,11 +107,6 @@ so4_eig::
 	"LIBRARIES = ${LIBRARIES} ${PLIB} " \
 	"LAPACK = -llapack -lblas " \
 	"EXTRA_OBJECTS = control_eig.o eig.o "
-
-so4_pfaff::
-	${MAKE} -f ${MAKEFILE} target "MYTARGET= $@" \
-	"DEFINES = ${DEFINES} -DPHI_ALGORITHM -DPFAFF " \
-	"EXTRA_OBJECTS = control_pfaff.o pfaff.o io_pfaff.o "
 
 # The targets below have not been used/tested recently
 so4_phi::

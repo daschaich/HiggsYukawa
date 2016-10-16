@@ -231,7 +231,7 @@ int correlators(int *pnt) {
   }
 
   // Make sure pnt stays within lattice volume
-  for (dir = XUP; dir <= TUP; dir++) {
+  FORALLUPDIR(dir) {
     i = pnt[dir] % L[dir];
     pnt[dir] = i;
   }
@@ -259,7 +259,7 @@ int correlators(int *pnt) {
   }
 
   // Gather prop from -mu for one-link condensates
-  for (dir = XUP; dir <= TUP; dir++) {
+  FORALLUPDIR(dir) {
     if (L[dir] > 1) {
       tag[dir] = start_gather_field(prop, sizeof(matrix), OPP_DIR(dir),
                                     EVENANDODD, gen_pt[dir]);
@@ -305,7 +305,7 @@ int correlators(int *pnt) {
   g_doublesum(&sus_abba);
 
   // Compute one-link condensates
-  for (dir = XUP; dir <= TUP; dir++) {
+  FORALLUPDIR(dir) {
     if (L[dir] <= 1)          // Don't re-compute on-site bilinear
       continue;
     wait_gather(tag[dir]);
