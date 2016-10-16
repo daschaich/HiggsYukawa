@@ -53,6 +53,7 @@ traj_between_meas 1   # How many trajectories to skip between less-frequent meas
 
 G 0.5                 # Four-fermion coupling
 site_mass 0.1         # On-site SO(4)-breaking mass term
+link_mass 0.1         # SO(4)-symmetric shift-symmetry-breaking mass term
 
 max_cg_iterations 500 # Maximum number of CG iterations
 error_per_site 1e-5   # Stopping condition for CG (will be squared)

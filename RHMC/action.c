@@ -26,7 +26,7 @@ double mom_action() {
     sum += (double)(mom[i].e[5] * mom[i].e[5]);
   }
   g_doublesum(&sum);
-  return sum;
+  return 0.5 * sum;
 }
 // -----------------------------------------------------------------
 
@@ -73,8 +73,8 @@ double scalar_action(double *plus_act, double *minus_act) {
 
     // Final factor of 1/2 and add square to plus_act, minus_act
     for (a = 0; a < NAS; a++) {
-      *plus_act += 0.25 * plus.e[a] * plus.e[a];
-      *minus_act += 0.25 * minus.e[a] * minus.e[a];
+      *plus_act += 0.125 * plus.e[a] * plus.e[a];
+      *minus_act += 0.125 * minus.e[a] * minus.e[a];
     }
   }
   g_doublesum(plus_act);

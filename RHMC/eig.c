@@ -315,7 +315,7 @@ void check_Dmat(int Nvec, vector **eigVec) {
   // Print resulting eigenvalues, which should be purely imaginary
   for (ivec = 0; ivec < Nvec; ivec++) {
     node0_printf("D_eig %d %.6g\n", ivec, imag[ivec]);
-    if (fabs(eigs[ivec]) > SQ_TOL)
+    if (fabs(eigs[ivec]) > IMAG_TOL)
       node0_printf("         %.6g real part non-negligible...\n", eigs[ivec]);
   }
 

@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------
 // Gaussian distributed random number
-// Probability distribution exp(-x * x), so <x^2> = 1 / 2
+// Probability distribution exp(-2x * x), so <x^2> = 1
 // This requires a random number generator, myrand(),
 // to return a Real uniformly distributed between zero and one
 // prn_pt is a pointer passed to myrand()
@@ -20,7 +20,7 @@ Real gaussian_rand_no(double_prn *prn_pt) {
       v2 = 2.0 * myrand(prn_pt) - 1.0;
       r = v1 * v1 + v2 * v2;
     } while (r >= 1.0);
-    fac = sqrt(-log((double)r) / (double)r);
+    fac = sqrt(-2.0 * log((double)r) / (double)r);
     gset = v1 * fac;
     iset = 1;
     return v2 * fac;

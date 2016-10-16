@@ -25,7 +25,7 @@ void scalar_field_copy(field_offset src, field_offset dest) {
 void fermion_op(vector *src, vector *dest, int sign) {
   register int i;
   register site *s;
-  int dir, a, b, c, d;
+  int dir, a, b, c, d, par, L[NDIMS] = {nx, ny, nz, nt};
   Real tr, halfG = 0.5 * G, m_ov_G, vev[DIMF][DIMF];
   vector tvec, tvec_dir, tvec_opp;
   msg_tag *tag[2 * NDIMS];
@@ -48,9 +48,14 @@ void fermion_op(vector *src, vector *dest, int sign) {
   }
   vev[0][1] = m_ov_G;
   vev[2][3] = m_ov_G;
+  vev[1][0] = -m_ov_G;
+  vev[3][2] = -m_ov_G;
 
   // Start gathers for kinetic term
   FORALLUPDIR(dir) {
+    if (L[dir] <= 1)              // Will be skipped below
+      continue;
+
     tag[dir] = start_gather_field(src, sizeof(vector), dir,
                                   EVENANDODD, gen_pt[dir]);
     tag[OPP_DIR(dir)] = start_gather_field(src, sizeof(vector), OPP_DIR(dir),
@@ -62,12 +67,19 @@ void fermion_op(vector *src, vector *dest, int sign) {
   // Add SO(4)-breaking 'site mass' term with same structure as sigma
   FORALLSITES(i, s) {
     clearvec(&(dest[i]));
+    if (lattice[i].parity == EVEN)
+      par = 1;
+    else
+      par = -1;
+
     for (a = 0; a < DIMF; a++) {
       for (b = a + 1; b < DIMF; b++) {
-        tr = s->sigma.e[as_index[a][b]] + vev[a][b];
+        tr = s->sigma.e[as_index[a][b]] + par * vev[a][b];
         for (c = 0; c < DIMF; c++) {
-          for (d = c + 1; d < DIMF; d++)
-            tr += perm[a][b][c][d] * (s->sigma.e[as_index[c][d]] + vev[c][d]);
+          for (d = c + 1; d < DIMF; d++) {
+            tr += perm[a][b][c][d] * (s->sigma.e[as_index[c][d]]
+                                      + par * vev[c][d]);
+          }
         }   // No half since not double-counting
         dest[i].c[a] += tr * src[i].c[b];
         dest[i].c[b] -= tr * src[i].c[a];
@@ -78,6 +90,9 @@ void fermion_op(vector *src, vector *dest, int sign) {
 
   // Accumulate kinetic term as gathers finish
   FORALLUPDIR(dir) {
+    if (L[dir] <= 1)
+      continue;
+
     wait_gather(tag[dir]);
     wait_gather(tag[OPP_DIR(dir)]);
     FORALLSITES(i, s) {
@@ -92,6 +107,20 @@ void fermion_op(vector *src, vector *dest, int sign) {
       // Add 0.5 * phase(x)[dir] * [psi(x + dir) - psi(x - dir)] to dest
       sub_vec(&tvec_dir, &tvec_opp, &tvec);
       scalar_mult_add_vec(&(dest[i]), &tvec, 0.5 * s->phase[dir], &(dest[i]));
+
+      // Add link mass operator to dest
+      switch(dir) {
+        case XUP: par = s->x; break;
+        case YUP: par = s->y; break;
+        case ZUP: par = s->z; break;
+        case TUP: par = s->t; break;
+      }
+      tr = 0.5 * link_mass * s->phase[dir];
+      if (par % 2 != 0)
+        tr *= -1;
+
+      add_vec(&tvec_dir, &tvec_opp, &tvec);
+      scalar_mult_add_vec(&(dest[i]), &tvec, tr, &(dest[i]));
     }
     cleanup_gather(tag[dir]);
     cleanup_gather(tag[OPP_DIR(dir)]);

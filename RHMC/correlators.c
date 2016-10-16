@@ -79,7 +79,7 @@ int condensates() {
   double bilin[DIMF][DIMF], bilin2[DIMF][DIMF];
   double four = 0.0, sus = 0.0, dtime;
   vector **psim;
- 
+
   for (a = 0; a < DIMF; a++) {
     for (b = 0; b < DIMF; b++) {
       bilin[a][b] = 0.0;
@@ -156,9 +156,13 @@ int condensates() {
     for (b = 0; b < DIMF; b++) {
       if (b == a)
         continue;
-      FORALLSITES(i, s) {
+      FOREVENSITES(i, s) {
         bilin[a][b] += prop[i].e[a][b];
         bilin2[a][b] += prop2[i].e[a][b];
+      }
+      FORODDSITES(i, s) {
+        bilin[a][b] -= prop[i].e[a][b];
+        bilin2[a][b] -= prop2[i].e[a][b];
       }
     }
   }
@@ -196,7 +200,7 @@ int condensates() {
   node0_printf("STOCH BILIN SQUARED %.6g\n", sus);
 
   // Print condensates and susceptibility
-  node0_printf("STOCH BILIN %.6g\n", 0.5 * (bilin[0][1] + bilin2[0][1]));
+  node0_printf("STOCH BILIN %.6g\n", 0.25 * (bilin[0][1] + bilin[2][3]+ bilin2[2][3]+ bilin2[0][1]));
   node0_printf("STOCH FOUR %.6g %d\n", four, tot_iters);
 
   // Reset multi-mass CG and clean up
@@ -215,20 +219,23 @@ int condensates() {
 int correlators(int *pnt) {
   register int i;
   register site *s;
-  int a, b, c, d, iters, tot_iters = 0, sav = Norder, dir;
+  int a, b, c, d, t, BC, iters, tot_iters = 0, sav = Norder, dir, opp_dir;
   int L[NDIMS] = {nx, ny, nz, nt};
   Real size_r;
   double bilin[DIMF][DIMF], four = 0.0, dtime;
-  double sus_abba = 0.0, sus_aabb = 0.0, sus;
+  double corr[nt], sus_abba = 0.0, sus_aabb = 0.0, sus;
   double one_link[NDIMS] = {0.0, 0.0, 0.0, 0.0};
   vector **psim;
   matrix *tm;
-  msg_tag *tag[NDIMS];
+  msg_tag *tag[2 * NDIMS];
 
   for (a = 0; a < DIMF; a++) {
     for (b = 0; b < DIMF; b++)
       bilin[a][b] = 0.0;
   }
+
+  for (t = 0; t < nt; t++)
+    corr[t] = 0.0;
 
   // Make sure pnt stays within lattice volume
   FORALLUPDIR(dir) {
@@ -258,18 +265,29 @@ int correlators(int *pnt) {
     }
   }
 
-  // Gather prop from -mu for one-link condensates
+  // Gather prop from +/-mu for one-link condensates
   FORALLUPDIR(dir) {
-    if (L[dir] > 1) {
-      tag[dir] = start_gather_field(prop, sizeof(matrix), OPP_DIR(dir),
-                                    EVENANDODD, gen_pt[dir]);
-    }
+    if (L[dir] <= 1)          // Will be skipped below
+      continue;
+
+    opp_dir = OPP_DIR(dir);
+    tag[dir] = start_gather_field(prop, sizeof(matrix), dir,
+                                  EVENANDODD, gen_pt[dir]);
+    tag[opp_dir] = start_gather_field(prop, sizeof(matrix), opp_dir,
+                                      EVENANDODD, gen_pt[opp_dir]);
   }
 
-  // Compute four-fermion condensate
+  // Compute four-fermion condensate while gathers run
   if (node_number(pnt[0], pnt[1], pnt[2], pnt[3]) == mynode()) {
     i = node_index(pnt[0], pnt[1], pnt[2], pnt[3]);
-    bilin[0][1] += prop[i].e[0][1];
+    if (lattice[i].parity == EVEN) {
+      bilin[0][1] += prop[i].e[0][1];
+      bilin[2][3] += prop[i].e[2][3];
+    }
+    else {
+      bilin[0][1] -= prop[i].e[0][1];
+      bilin[2][3] -= prop[i].e[2][3];
+    }
     for (a = 0; a < DIMF; a++) {
       for (b = 0; b < DIMF; b++) {
         if (b == a)
@@ -298,31 +316,56 @@ int correlators(int *pnt) {
       FORALLSITES(i, s) {
         sus_aabb -= prop[i].e[a][a] * prop[i].e[b][b];
         sus_abba += prop[i].e[a][b] * prop[i].e[b][a];
+
+        // Two-point function
+        t = (pnt[3] - (s->t) + nt) % nt;
+        corr[t] += prop[i].e[a][a] * prop[i].e[b][b]
+                 - prop[i].e[a][b] * prop[i].e[b][a];
       }
     }
   }
   g_doublesum(&sus_aabb);
   g_doublesum(&sus_abba);
+  for (t = 0; t < nt; t++)
+    g_doublesum(&(corr[t]));
 
   // Compute one-link condensates
   FORALLUPDIR(dir) {
     if (L[dir] <= 1)          // Don't re-compute on-site bilinear
       continue;
+
+    opp_dir = OPP_DIR(dir);
     wait_gather(tag[dir]);
+    wait_gather(tag[opp_dir]);
     if (node_number(pnt[0], pnt[1], pnt[2], pnt[3]) == mynode()) {
       i = node_index(pnt[0], pnt[1], pnt[2], pnt[3]);
       tm = (matrix *)(gen_pt[dir][i]);
+      BC = 1;
+      if (dir == TUP && pnt[TUP] == nt - 1 && PBC < 0)
+        BC = -1;
+
       for (a = 0; a < DIMF; a++) {
-        for (b = a + 1; b < DIMF; b++){
-         if (pnt[dir] % 2 == 0)
-            one_link[dir] += lattice[i].phase[dir] * tm->e[a][b];
-          else
-            one_link[dir] -= lattice[i].phase[dir] * tm->e[a][b];
+        if (pnt[dir] % 2 == 0)
+          one_link[dir] += BC * lattice[i].phase[dir] * tm->e[a][a];
+        else
+          one_link[dir] -= BC * lattice[i].phase[dir] * tm->e[a][a];
       }
-     }
+
+      tm = (matrix *)(gen_pt[opp_dir][i]);
+      BC = 1;
+      if (dir == TUP && pnt[TUP] == 0 && PBC < 0)
+        BC = -1;
+
+      for (a = 0; a < DIMF; a++) {
+        if (pnt[dir] % 2 == 0)
+          one_link[dir] += BC * lattice[i].phase[dir] * tm->e[a][a];
+        else
+          one_link[dir] -= BC * lattice[i].phase[dir] * tm->e[a][a];
+      }
     }
     g_doublesum(&(one_link[dir]));
     cleanup_gather(tag[dir]);
+    cleanup_gather(tag[opp_dir]);
   }
 
   // Print condensates and susceptibility
@@ -331,6 +374,8 @@ int correlators(int *pnt) {
                0.5 * (bilin[0][1] + bilin[2][3]), tot_iters);
   node0_printf("PNT FOUR %d %d %d %d %.6g %d\n",
                pnt[0], pnt[1], pnt[2], pnt[3], four, tot_iters);
+  for (t = 0; t < nt; t++)
+    node0_printf("CORR %d %lg\n", t, corr[t]);
 
   sus = sus_aabb + sus_abba;
   node0_printf("PNT SUS %d %d %d %d %.6g %.6g %.6g %d\n",

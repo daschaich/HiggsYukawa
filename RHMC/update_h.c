@@ -38,7 +38,7 @@ double fermion_force(Real eps, vector *src, vector **sol) {
   register int i;
   register site *s;
   int n, a, b, c, d, p;
-  Real tr, halfG = 0.5 * G;
+  Real tr;
   double returnit = 0.0;
   antisym tempas;
 
@@ -68,7 +68,7 @@ double fermion_force(Real eps, vector *src, vector **sol) {
           }
         }
       }
-      scalar_mult_add_as(&(force[i]), &tempas, halfG, &(force[i]));
+      scalar_mult_add_as(&(force[i]), &tempas, G, &(force[i]));
     }
   }
 

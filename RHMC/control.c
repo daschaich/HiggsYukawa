@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
   Real f_eps, s_eps;
   double dtime, s_act, plus_act, minus_act;
 #ifdef CORR
-  int j,i,k,l;
+  int j;
 #endif
 
   // Setup

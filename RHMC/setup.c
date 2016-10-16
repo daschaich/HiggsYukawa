@@ -214,6 +214,9 @@ int readin(int prompt) {
     // On-site SO(4)-breaking mass term
     IF_OK status += get_f(stdin, prompt, "site_mass", &par_buf.site_mass);
 
+    // SO(4)-symmetric shift-symmetry-breaking mass term
+    IF_OK status += get_f(stdin, prompt, "link_mass", &par_buf.link_mass);
+
     // Maximum conjugate gradient iterations
     IF_OK status += get_i(stdin, prompt, "max_cg_iterations", &par_buf.niter);
 
@@ -281,6 +284,7 @@ int readin(int prompt) {
     node0_printf("Warning: Setting site_mass = 0 since G = 0\n");
     site_mass = 0.0;
   }
+  link_mass = par_buf.link_mass;
 
 #ifdef CORR
   Nstoch = par_buf.Nstoch;
