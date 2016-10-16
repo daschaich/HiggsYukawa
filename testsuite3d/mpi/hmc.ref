@@ -3,7 +3,7 @@ Microcanonical simulation with refreshing
 Machine = MPI (portable), with 2 nodes
 Hybrid Monte Carlo algorithm
 Phi algorithm
-start: Thu Mar  3 14:52:02 2016
+start: Sun Oct 16 15:57:15 2016
 
 type 0 for no prompts or 1 for prompts
 nx 1
@@ -26,45 +26,46 @@ RHMC Norder 15 for spectral range [1e-7, 1000]
 warms 0
 trajecs 3
 traj_length 1
-nstep 5
-nstep_scalar 10
+nstep 4
+nstep_scalar 4
 traj_between_meas 3
 G 0.5
 site_mass 0.1
+link_mass 0.1
 max_cg_iterations 5000
 error_per_site 1e-05
 reload_serial config.16
 forget
 Restored binary gauge configuration serially from file config.16
-Time stamp Sat Jan 16 21:35:34 2016
-Checksums 74554f6d 56e46f81 OK
-Time to reload gauge configuration = 2.147913e-03
-CHECK SIGMA SUM: -2.1906770202531511e-02
-START 1.5129213 1.5014808 3.0144021
-f_eps 0.2 s_eps 0.01
+Time stamp Sun Oct 16 22:46:28 2016
+Checksums af200b4c 71843d8b OK
+Time to reload gauge configuration = 2.464056e-03
+CHECK SIGMA SUM: 4.7911140837426647e-03
+START 1.5706941 1.4834728 3.054167
+f_eps 0.25 s_eps 0.03125
 WARMUPS COMPLETED
-action: scalar 12346.991 fermion0 8191.1163 mom 12158.941 sum 32697.048
-action: scalar 12196.944 fermion0 8208.1343 mom 12291.978 sum 32697.056
-ACCEPT: delta S = 0.008074 start S = 32697.0483031 end S = 32697.0563772
-MONITOR_FORCE_SCALAR   0.0002706 0.0002713
-MONITOR_FORCE_FERMION0 0.0002766 0.0003416
-GMES 3610 1.5041383 1.4736313 2.9777696
-action: scalar 12196.944 fermion0 8355.5862 mom 12375.986 sum 32928.517
-action: scalar 12263.405 fermion0 8356.8748 mom 12308.226 sum 32928.506
-ACCEPT: delta S = -0.01093 start S = 32928.5167909 end S = 32928.5058645
-MONITOR_FORCE_SCALAR   0.0002695 0.0002702
-MONITOR_FORCE_FERMION0 0.0002739 0.000338
-GMES 3687 1.5117855 1.4822099 2.9939953
-action: scalar 12263.405 fermion0 8026.233 mom 12316.781 sum 32606.419
-action: scalar 12325.142 fermion0 8017.2554 mom 12264.011 sum 32606.408
-ACCEPT: delta S = -0.01045 start S = 32606.4186928 end S = 32606.408245
-MONITOR_FORCE_SCALAR   0.0002707 0.000271
-MONITOR_FORCE_FERMION0 0.0002721 0.0003371
-GMES 3855 1.4861231 1.5229448 3.0090678
+action: scalar 12509.868 fermion0 16382.231 mom 12158.941 sum 41051.04
+action: scalar 12525.962 fermion0 16197.642 mom 12327.334 sum 41050.938
+ACCEPT: delta S = -0.1016 start S = 41051.0399532 end S = 41050.9383817
+MONITOR_FORCE_SCALAR   0.001209 0.00121
+MONITOR_FORCE_FERMION0 0.001162 0.001445
+GMES 573 1.5724483 1.4856478 3.0580961
+action: scalar 12525.962 fermion0 16711.17 mom 12375.986 sum 41613.118
+action: scalar 12458.568 fermion0 16415.857 mom 12738.54 sum 41612.965
+ACCEPT: delta S = -0.1531 start S = 41613.1180423 end S = 41612.9649798
+MONITOR_FORCE_SCALAR   0.001203 0.001207
+MONITOR_FORCE_FERMION0 0.001174 0.001488
+GMES 580 1.5653317 1.4763108 3.0416425
+action: scalar 12458.568 fermion0 16052.464 mom 12316.781 sum 40827.813
+action: scalar 12552.791 fermion0 15811.014 mom 12463.931 sum 40827.736
+ACCEPT: delta S = -0.07661 start S = 40827.8126777 end S = 40827.7360671
+MONITOR_FORCE_SCALAR   0.001206 0.001208
+MONITOR_FORCE_FERMION0 0.001141 0.00144
+GMES 592 1.5390152 1.5256311 3.0646463
 RUNNING COMPLETED
-STOP 1.4861231 1.5229448 3.0090678
-Average CG iters for steps: 3717
+STOP 1.5390152 1.5256311 3.0646463
+Average CG iters for steps: 581.7
 
-Time = 24.35 seconds
-total_iters = 11152
+Time = 1.614 seconds
+total_iters = 1745
 

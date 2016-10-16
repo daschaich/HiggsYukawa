@@ -1,0 +1,71 @@
+Four-fermion SO(4) system
+Microcanonical simulation with refreshing
+Machine = MPI (portable), with 2 nodes
+Hybrid Monte Carlo algorithm
+Phi algorithm
+start: Sun Oct 16 15:56:56 2016
+
+type 0 for no prompts or 1 for prompts
+nx 4
+ny 4
+nz 4
+nt 4
+PBC -1
+iseed 41
+Nroot 1
+Norder 15
+Antiperiodic temporal boundary conditions
+LAYOUT = Hypercubes, options = hyper_prime,
+ON EACH NODE 2 x 4 x 4 x 4
+Mallocing 0.0 MBytes per core for lattice
+Mallocing 0.0 MBytes per core for fields
+Using Nroot = 1
+RHMC Norder 15 for spectral range [1e-7, 1000]
+
+
+warms 0
+trajecs 3
+traj_length 1
+nstep 4
+nstep_scalar 6
+traj_between_meas 3
+G 0.5
+site_mass 0.1
+link_mass 0.1
+max_cg_iterations 5000
+error_per_site 1e-05
+reload_serial config.4444
+forget
+Restored binary gauge configuration serially from file config.4444
+Time stamp Sun Oct 16 22:09:04 2016
+Checksums c44b97c3 79098885 OK
+Time to reload gauge configuration = 1.921892e-03
+CHECK SIGMA SUM: -5.9396211501393736e-02
+START 1.6234805 1.4013454 3.0248259
+f_eps 0.25 s_eps 0.02083
+WARMUPS COMPLETED
+action: scalar 774.35544 fermion0 958.25132 mom 751.48715 sum 2484.0939
+action: scalar 748.74541 fermion0 956.57479 mom 778.77056 sum 2484.0908
+ACCEPT: delta S = -0.003152 start S = 2484.0939144 end S = 2484.09076215
+MONITOR_FORCE_SCALAR   0.003174 0.003199
+MONITOR_FORCE_FERMION0 0.003844 0.004784
+GMES 364 1.5370847 1.3877021 2.9247868
+action: scalar 748.74541 fermion0 979.55455 mom 785.1222 sum 2513.4222
+action: scalar 781.70459 fermion0 975.57338 mom 756.13873 sum 2513.4167
+ACCEPT: delta S = -0.005456 start S = 2513.42216616 end S = 2513.41670996
+MONITOR_FORCE_SCALAR   0.003175 0.003212
+MONITOR_FORCE_FERMION0 0.003881 0.004828
+GMES 373 1.619427 1.4341065 3.0535336
+action: scalar 781.70459 fermion0 1077.5989 mom 769.02497 sum 2628.3285
+action: scalar 785.03764 fermion0 1053.705 mom 789.58236 sum 2628.325
+ACCEPT: delta S = -0.003484 start S = 2628.32848269 end S = 2628.32499891
+MONITOR_FORCE_SCALAR   0.003222 0.003224
+MONITOR_FORCE_FERMION0 0.004177 0.005386
+GMES 333 1.4630827 1.6034706 3.0665533
+RUNNING COMPLETED
+STOP 1.4630827 1.6034706 3.0665533
+Average CG iters for steps: 356.7
+
+Time = 0.08019 seconds
+total_iters = 1070
+
