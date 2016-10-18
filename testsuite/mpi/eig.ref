@@ -2,7 +2,7 @@ Four-fermion SO(4) system
 Microcanonical simulation with refreshing
 Machine = MPI (portable), with 2 nodes
 Phi algorithm
-start: Sun Oct 16 15:56:57 2016
+start: Tue Oct 18 07:41:08 2016
 
 type 0 for no prompts or 1 for prompts
 nx 4
@@ -27,7 +27,7 @@ nstep 4
 nstep_scalar 6
 traj_between_meas 3
 G 0.5
-site_mass 0.1
+site_mass -0.1
 link_mass 0.1
 max_cg_iterations 5000
 error_per_site 1e-05
@@ -39,10 +39,10 @@ forget
 Restored binary gauge configuration serially from file config.4444
 Time stamp Sun Oct 16 22:09:04 2016
 Checksums c44b97c3 79098885 OK
-Time to reload gauge configuration = 2.164125e-03
+Time to reload gauge configuration = 3.087997e-03
 CHECK SIGMA SUM: -5.9396211501393736e-02
 START 1.6234805 1.4013454 3.0248259
-Converged after 981 iterations in 0.1551 seconds
+Converged after 981 iterations in 0.1224 seconds
 EIGENVALUE 0 0.16407068 2.5748532e-15
 EIGENVALUE 1 0.16407068 2.2674838e-15
 EIGENVALUE 2 0.16407068 4.2041224e-15
@@ -68,7 +68,7 @@ D_eig 8 0.45136
 D_eig 9 -0.45136
 D_eig 10 0.45136
 D_eig 11 -0.45136
-Converged after 369 iterations in 0.04803 seconds
+Converged after 369 iterations in 0.04675 seconds
 BIGEIGVAL  0 6.5525491 7.8060132e-16
 BIGEIGVAL  1 6.5525491 3.3944225e-15
 BIGEIGVAL  2 6.5525491 3.8380651e-15
@@ -83,5 +83,5 @@ BIGEIGVAL  10 5.9447532 4.8372657e-17
 BIGEIGVAL  11 5.9447532 2.547218e-15
 RUNNING COMPLETED
 
-Time = 0.2061 seconds
+Time = 0.1723 seconds
 total_iters = 1350
