@@ -67,9 +67,9 @@ void fermion_op(vector *src, vector *dest, int sign) {
   // Add SO(4)-breaking 'site mass' term with same structure as sigma
   FORALLSITES(i, s) {
     clearvec(&(dest[i]));
-    if (lattice[i].parity == EVEN)
+    if (stagger == -1 || lattice[i].parity == EVEN)
       par = 1;
-    else
+    else              // Both stagger == 1 and lattice[i].parity == ODD
       par = -1;
 
     for (a = 0; a < DIMF; a++) {

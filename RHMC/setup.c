@@ -280,11 +280,18 @@ int readin(int prompt) {
 
   G = par_buf.G;
   site_mass = par_buf.site_mass;
+  link_mass = par_buf.link_mass;
   if (G == 0.0 && site_mass != 0.0) {
     node0_printf("Warning: Setting site_mass = 0 since G = 0\n");
     site_mass = 0.0;
   }
-  link_mass = par_buf.link_mass;
+  // Interpret negative site_mass as coefficient of staggered term
+  if (site_mass < 0) {
+    stagger = 1;
+    site_mass *= -1;    // Need it positive, after all!
+  }
+  else
+    stagger = -1;
 
 #ifdef CORR
   Nstoch = par_buf.Nstoch;

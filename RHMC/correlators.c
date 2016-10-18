@@ -280,11 +280,11 @@ int correlators(int *pnt) {
   // Compute four-fermion condensate while gathers run
   if (node_number(pnt[0], pnt[1], pnt[2], pnt[3]) == mynode()) {
     i = node_index(pnt[0], pnt[1], pnt[2], pnt[3]);
-    if (lattice[i].parity == EVEN) {
+    if (stagger == -1 || lattice[i].parity == EVEN) {
       bilin[0][1] += prop[i].e[0][1];
       bilin[2][3] += prop[i].e[2][3];
     }
-    else {
+    else {            // Both stagger == 1 and lattice[i].parity == ODD
       bilin[0][1] -= prop[i].e[0][1];
       bilin[2][3] -= prop[i].e[2][3];
     }

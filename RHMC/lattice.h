@@ -64,6 +64,7 @@ EXTERN int sd_index[DIMF][DIMF];
 EXTERN Real rsqmin, rsqprop;
 EXTERN Real G;
 EXTERN Real site_mass, link_mass;
+EXTERN int stagger;       // Whether or not to use staggered site bilinear
 EXTERN double sigmasum;
 EXTERN char startfile[MAXFILENAME], savefile[MAXFILENAME];
 EXTERN int startflag;     // Beginning lattice: CONTINUE, RELOAD, FRESH

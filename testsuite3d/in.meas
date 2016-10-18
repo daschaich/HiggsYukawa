@@ -17,7 +17,7 @@ nstep_scalar 4
 traj_between_meas 3
 
 G 0.5
-site_mass 0.1
+site_mass -0.1
 link_mass 0.1
 
 max_cg_iterations 5000
