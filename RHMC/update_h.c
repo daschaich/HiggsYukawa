@@ -10,12 +10,11 @@
 double scalar_force(Real eps) {
   register int i;
   register site *s;
-  Real tr = -1.0 * eps;   // To subtract
   double returnit = 0.0;
 
   // Just subtract sigma from the momenta and compute average force
   FORALLSITES(i, s) {
-    scalar_mult_add_as(&(mom[i]), &(s->sigma), tr, &(mom[i]));
+    scalar_mult_dif_as(&(s->sigma), eps, &(mom[i]));
     returnit += magsq_as(&(s->sigma));
   }
   g_doublesum(&returnit);
@@ -68,14 +67,14 @@ double fermion_force(Real eps, vector *src, vector **sol) {
           }
         }
       }
-      scalar_mult_add_as(&(force[i]), &tempas, G, &(force[i]));
+      scalar_mult_sum_as(&tempas, G, &(force[i]));
     }
   }
 
   // Update the momenta from the fermion force
   // Note opposite sign compared to gauge force...
   FORALLSITES(i, s) {
-    scalar_mult_add_as(&(mom[i]), &(force[i]), eps, &(mom[i]));
+    scalar_mult_sum_as(&(force[i]), eps, &(mom[i]));
     returnit += magsq_as(&(force[i]));
   }
   g_doublesum(&returnit);

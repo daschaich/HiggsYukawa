@@ -72,6 +72,7 @@ Real dot(vector *a, vector *b);
 void scalar_mult_vec(vector *src, Real scalar, vector *dest);
 
 // In file s_m_a_vec.c
+void scalar_mult_sum_vec(vector *b, Real scalar, vector *dest);
 void scalar_mult_add_vec(vector *a, vector *b, Real scalar, vector *dest);
 // -----------------------------------------------------------------
 
@@ -108,6 +109,8 @@ void scalar_mult_as(antisym *src, Real scalar, antisym *dest);
 void scalar_mult_sd(selfdual *src, Real scalar, selfdual *dest);
 
 // In file s_m_a_mat.c
+void scalar_mult_sum_as(antisym *b, Real scalar, antisym *c);
+void scalar_mult_dif_as(antisym *b, Real scalar, antisym *c);
 void scalar_mult_add_as(antisym *a, antisym *b, Real scalar, antisym *c);
 void scalar_mult_add_sd(selfdual *a, selfdual *b, Real scalar, selfdual *c);
 // -----------------------------------------------------------------

@@ -1,8 +1,34 @@
 // -----------------------------------------------------------------
-// Add result of scalar multiplication on matrices
+// Add or subtract result of scalar multiplication on matrices
+// c <-- c + s * b
+// c <-- c - s * b
 // c <-- a + s * b
 #include "../include/config.h"
 #include "../include/so4.h"
+
+void scalar_mult_sum_as(antisym *b, Real s, antisym *c) {
+#if (DIMF != 4)
+  #error "Assuming DIMF=4!"
+#endif
+  c->e[0] += s * b->e[0];
+  c->e[1] += s * b->e[1];
+  c->e[2] += s * b->e[2];
+  c->e[3] += s * b->e[3];
+  c->e[4] += s * b->e[4];
+  c->e[5] += s * b->e[5];
+}
+
+void scalar_mult_dif_as(antisym *b, Real s, antisym *c) {
+#if (DIMF != 4)
+  #error "Assuming DIMF=4!"
+#endif
+  c->e[0] -= s * b->e[0];
+  c->e[1] -= s * b->e[1];
+  c->e[2] -= s * b->e[2];
+  c->e[3] -= s * b->e[3];
+  c->e[4] -= s * b->e[4];
+  c->e[5] -= s * b->e[5];
+}
 
 void scalar_mult_add_as(antisym *a, antisym *b, Real s, antisym *c) {
 #if (DIMF != 4)
