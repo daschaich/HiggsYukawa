@@ -38,6 +38,7 @@ void fermion_op(vector *src, vector *dest, int sign) {
 
   // Ignore site_mass if G = 0 to avoid dividing by zero
   // Could be made more robust, but unlikely to matter
+  // We never use vev[1][0] = -vev[0][1] or vev[3][2] = -vev[2][3]
   if (G == 0.0)
     m_ov_G = 0.0;
   else
@@ -48,8 +49,6 @@ void fermion_op(vector *src, vector *dest, int sign) {
   }
   vev[0][1] = m_ov_G;
   vev[2][3] = m_ov_G;
-  vev[1][0] = -m_ov_G;
-  vev[3][2] = -m_ov_G;
 
   // Start gathers for kinetic term
   FORALLUPDIR(dir) {
