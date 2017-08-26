@@ -1,6 +1,7 @@
 // -----------------------------------------------------------------
-// Gaussian distributed random number
-// Probability distribution exp(-2x * x), so <x^2> = 1
+// Gaussian distributed random numbers
+// Generate two at once through polar Box--Muller transform
+// Probability distribution exp(-x * x / 2), so <x^2> = 1
 // This requires a random number generator, myrand(),
 // to return a Real uniformly distributed between zero and one
 // prn_pt is a pointer passed to myrand()
