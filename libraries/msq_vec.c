@@ -6,7 +6,7 @@
 Real magsq_vec(vector *a) {
   register Real sum = a->c[0] * a->c[0];
 #if (DIMF == 4)
-  // May be marginally faster than loop
+  // Manually unroll loop
   sum += a->c[1] * a->c[1];
   sum += a->c[2] * a->c[2];
   sum += a->c[3] * a->c[3];

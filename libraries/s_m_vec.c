@@ -6,7 +6,7 @@
 
 void scalar_mult_vec(vector *a, Real s, vector *c) {
 #if (DIMF == 4)
-  // May be marginally faster than loop
+  // Manually unroll loop
   c->c[0] = s * a->c[0];
   c->c[1] = s * a->c[1];
   c->c[2] = s * a->c[2];

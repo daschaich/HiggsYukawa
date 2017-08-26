@@ -6,7 +6,7 @@
 
 void dumpvec(vector *v) {
 #if (DIMF == 4)
-  // May be marginally faster than loop
+  // Manually unroll loop
   printf("%.4g  %.4g  %.4g  %.4g\n",
          v->c[0], v->c[1], v->c[2], v->c[3]);
 #else  // DIMF != 4

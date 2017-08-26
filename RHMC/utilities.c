@@ -105,7 +105,7 @@ void fermion_op(vector *src, vector *dest, int sign) {
 
       // Add 0.5 * phase(x)[dir] * [psi(x + dir) - psi(x - dir)] to dest
       sub_vec(&tvec_dir, &tvec_opp, &tvec);
-      scalar_mult_add_vec(&(dest[i]), &tvec, 0.5 * s->phase[dir], &(dest[i]));
+      scalar_mult_sum_vec(&tvec, 0.5 * s->phase[dir], &(dest[i]));
 
       // Add link mass operator to dest
       switch(dir) {

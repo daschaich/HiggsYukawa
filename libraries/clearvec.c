@@ -5,7 +5,7 @@
 
 void clearvec(vector *v) {
 #if (DIMF == 4)
-  // May be marginally faster than loop
+  // Manually unroll loop
   v->c[0] = 0.0;
   v->c[1] = 0.0;
   v->c[2] = 0.0;
