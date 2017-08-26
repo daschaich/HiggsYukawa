@@ -1,8 +1,19 @@
 // -----------------------------------------------------------------
 // Subtract two vectors
+// c <-- c - b
 // c <-- a - b
 #include "../include/config.h"
 #include "../include/so4.h"
+
+void dif_vec(vector *b, vector *c) {
+#if (DIMF != 4)
+  #error "Assuming DIMF=4!"
+#endif
+  c->c[0] -= b->c[0];
+  c->c[1] -= b->c[1];
+  c->c[2] -= b->c[2];
+  c->c[3] -= b->c[3];
+}
 
 void sub_vec(vector *a, vector *b, vector *c) {
 #if (DIMF != 4)

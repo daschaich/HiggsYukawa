@@ -60,6 +60,7 @@ void dumpvec(vector *v);
 void add_vec(vector *a, vector *b, vector *c);
 
 // In file subvec.c
+void dif_vec(vector *b, vector *c);
 void sub_vec(vector *a, vector *b, vector *c);
 
 // In file msq_vec.c

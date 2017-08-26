@@ -84,7 +84,7 @@ int congrad_multi(vector *src, vector **psim,
     iteration++;
     total_iters++;
     FORALLSITES(i, s)
-      scalar_mult_add_vec(&(mpm[i]), &(pm0[i]), shift[0], &(mpm[i]));
+      scalar_mult_sum_vec(&(pm0[i]), shift[0], &(mpm[i]));
 
     // beta_i[0] = -(r, r) / (pm, Mpm)
     cd = 0;
@@ -118,18 +118,17 @@ int congrad_multi(vector *src, vector **psim,
     }
 
     FORALLSITES(i, s) {
-      scalar_mult_add_vec(&(psim[0][i]), &(pm0[i]), floatvar, &(psim[0][i]));
+      scalar_mult_sum_vec(&(pm0[i]), floatvar, &(psim[0][i]));
       for (j = 1; j < Norder; j++) {
         if (converged[j] == 0)
-          scalar_mult_add_vec(&(psim[j][i]), &(pm[j][i]), floatvarj[j],
-                              &(psim[j][i]));
+          scalar_mult_sum_vec(&(pm[j][i]), floatvarj[j], &(psim[j][i]));
       }
     }
 
     // r = r + beta[0] * mp
     floatvar = (Real)beta_i[0];
     FORALLSITES(i, s)
-      scalar_mult_add_vec(&(rm[i]), &(mpm[i]), floatvar, &(rm[i]));
+      scalar_mult_sum_vec(&(mpm[i]), floatvar, &(rm[i]));
 
     // alpha_ip1[j]
     rsqnew = 0;
@@ -156,12 +155,12 @@ int congrad_multi(vector *src, vector **psim,
       floatvark[j] = (Real)alpha[j];
     }
     FORALLSITES(i, s) {
-      scalar_mult_vec(&(rm[i]),floatvar, &(mpm[i]));
-      scalar_mult_add_vec(&(mpm[i]), &(pm0[i]), floatvar2, &(pm0[i]));
+      scalar_mult_vec(&(pm0[i]), floatvar2, &(pm0[i]));
+      scalar_mult_sum_vec(&(rm[i]), floatvar, &(pm0[i]));
       for (j = 1; j < Norder; j++) {
         if (converged[j] == 0) {
-          scalar_mult_vec(&(rm[i]), floatvarj[j], &(mpm[i]));
-          scalar_mult_add_vec(&(mpm[i]), &(pm[j][i]),floatvark[j], &(pm[j][i]));
+          scalar_mult_vec(&(pm[j][i]), floatvark[j], &(pm[j][i]));
+          scalar_mult_sum_vec(&(rm[i]), floatvarj[j], &(pm[j][i]));
         }
       }
     }
@@ -215,8 +214,8 @@ int congrad_multi(vector *src, vector **psim,
     DSq(psim[j], mpm);              // mpm = (D^2 + fmass^2).psim[j]
     source_norm = 0;                // Re-using for convenience
     FORALLSITES(i, s) {             // Add shift.psi and subtract src
-      scalar_mult_add_vec(&(mpm[i]), &(psim[j][i]), shift[j],  &(mpm[i]));
-      scalar_mult_add_vec(&(mpm[i]), &(src[i]), -1.0, &(mpm[i]));
+      scalar_mult_sum_vec(&(psim[j][i]), shift[j],  &(mpm[i]));
+      dif_vec(&(src[i]), &(mpm[i]));
       source_norm += (double)magsq_vec(&(mpm[i]));
     }
     g_doublesum(&source_norm);
