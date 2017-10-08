@@ -80,11 +80,11 @@ int initial_set() {
 
   Norder = par_buf.Norder;
   amp = malloc(Norder * sizeof(amp));
+  amp2 = malloc(Norder * sizeof(amp2));
   amp4 = malloc(Norder * sizeof(amp4));
-  amp8 = malloc(Norder * sizeof(amp8));
   shift = malloc(Norder * sizeof(shift));
+  shift2 = malloc(Norder * sizeof(shift2));
   shift4 = malloc(Norder * sizeof(shift4));
-  shift8 = malloc(Norder * sizeof(shift8));
 
   this_node = mynode();
   number_of_nodes = numnodes();

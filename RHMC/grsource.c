@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------
-// Construct a gaussian random vector R, return src = (Ddag.D)^{1 / 8} R
+// Construct a gaussian random vector R, return src = (Ddag.D)^{1 / 4} R
 // Need to invert despite the positive power, since it is fractional
 #include "so4_includes.h"
 
@@ -67,20 +67,24 @@ int grsource(vector *src) {
 //  }
 #endif
 
-  // We now compute (Mdag M)^{1 / 8}.src
+  // We now compute (Mdag M)^{1 / 4}.src
   for (i = 0; i < Norder; i++)
-    shift[i] = shift8[i];
+    shift[i] = shift4[i];
 
   avs_iters = congrad_multi(src, psim, niter, rsqmin, &size_r);
 #ifdef DEBUG_CHECK
   node0_printf("Iters for source %d\n", avs_iters);
 #endif
-  // Reconstruct (Mdag M)^{1 / 8}.src from multi-mass CG solution psim
+  // Reconstruct (Mdag M)^{1 / 4}.src from multi-mass CG solution psim
   FORALLSITES(i, s) {
-    scalar_mult_vec(&(src[i]), ampdeg8, &(src[i]));
+    scalar_mult_vec(&(src[i]), ampdeg4, &(src[i]));
     for (j = 0; j < Norder; j++)
-      scalar_mult_sum_vec(&(psim[j][i]), amp8[j], &(src[i]));
+      scalar_mult_sum_vec(&(psim[j][i]), amp4[j], &(src[i]));
   }
+
+  // Correct normalization for real pseudofermions (factor of 1/sqrt(2))
+  FORALLSITES(i, s)
+    scalar_mult_vec(&(src[i]), 0.70710678118, &(src[i]));
 
   for (i = 0; i < Norder; i++)
     free(psim[i]);

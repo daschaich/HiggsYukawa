@@ -59,14 +59,14 @@ int main(int argc, char *argv[]){
   ranmom();
 
   // Set up the fermion variables
-  // Compute g and src = (Mdag M)^(1 / 8) g
+  // Compute g and src = (Mdag M)^(1 / 4) g
   for (n = 0; n < Nroot; n++)
     s_iters += grsource(src[n]);
 
   // Do a CG to get psim,
-  // rational approximation to (Mdag M)^(-1 / 4) src = (Mdag M)^(-1 / 8) g
+  // rational approximation to (Mdag M)^(-1 / 2) src = (Mdag M)^(-1 / 4) g
   for (j = 0; j < Norder; j++)
-    shift[j] = shift4[j];
+    shift[j] = shift2[j];
 
   // congrad_multi initializes psim
   for (n = 0; n < Nroot; n++)

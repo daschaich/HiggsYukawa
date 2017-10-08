@@ -82,8 +82,8 @@ EXTERN int this_node;           // Node number of this node
 // Stuff for multi-mass CG and RHMC
 EXTERN int nsteps[2];           // Fermion and scalar steps
 EXTERN Real ampdeg, *amp, *shift;
+EXTERN Real ampdeg2, *amp2, *shift2;
 EXTERN Real ampdeg4, *amp4, *shift4;
-EXTERN Real ampdeg8, *amp8, *shift8;
 EXTERN int Nroot, Norder;
 EXTERN Real snorm, *fnorm, max_sf, *max_ff;
 

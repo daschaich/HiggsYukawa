@@ -105,10 +105,10 @@ double fermion_action(vector *src, vector **sol) {
 #endif
 
   FORALLSITES(i, s) {
-    sum += ampdeg4 * (double)magsq_vec(&(src[i]));
+    sum += ampdeg2 * (double)magsq_vec(&(src[i]));
     for (j = 0; j < Norder; j++) {
       tr = dot(&(src[i]), &(sol[j][i]));   // src^dag.sol[j]
-      sum += (double)(amp4[j] * tr);
+      sum += (double)(amp2[j] * tr);
     }
   }
   g_doublesum(&sum);

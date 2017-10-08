@@ -81,7 +81,7 @@ int update_step(double *fnorm, double *snorm, vector **src, vector ***psim) {
       max_sf = tr;
 
     for (n = 0; n < Nroot; n++) {
-      // Do conjugate gradient to get (Mdag M)^(-1 / 4) chi
+      // Do conjugate gradient to get (Mdag M)^(-1 / 2) chi
       iters += congrad_multi(src[n], psim[n], niter, rsqmin, &final_rsq);
       tr = fermion_force(eps, src[n], psim[n]);
       fnorm[n] += tr;
@@ -119,14 +119,14 @@ int update() {
   ranmom();
 
   // Set up the fermion variables
-  // Compute g and src = (Mdag M)^(1 / 8) g
+  // Compute g and src = (Mdag M)^(1 / 4) g
   for (n = 0; n < Nroot; n++)
     iters += grsource(src[n]);
 
   // Do a CG to get psim,
-  // rational approximation to (Mdag M)^(-1 / 4) src = (Mdag M)^(-1 / 8) g
+  // rational approximation to (Mdag M)^(-1 / 2) src = (Mdag M)^(-1 / 4) g
   for (j = 0; j < Norder; j++)
-    shift[j] = shift4[j];
+    shift[j] = shift2[j];
 #ifdef UPDATE_DEBUG
   node0_printf("Calling CG in update_leapfrog -- original action\n");
 #endif
@@ -153,7 +153,7 @@ int update() {
 
   // Find ending action
   // Since update_step ended on a gauge update,
-  // need to do conjugate gradient to get (Mdag M)^(-1 / 4) chi
+  // need to do conjugate gradient to get (Mdag M)^(-1 / 2) chi
 #ifdef UPDATE_DEBUG
   node0_printf("Calling CG in update_leapfrog -- new action\n");
 #endif

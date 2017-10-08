@@ -105,7 +105,7 @@ int update_step(double *fnorm, double *snorm, vector **src, vector ***psim) {
 
     // Fermion update
     for (n = 0; n < Nroot; n++) {
-      // Do conjugate gradient to get (Mdag M)^(-1 / 4) chi
+      // Do conjugate gradient to get (Mdag M)^(-1 / 2) chi
       iters += congrad_multi(src[n], psim[n], niter, rsqmin, &final_rsq);
       tr = fermion_force(f_eps * LAMBDA_MID, src[n], psim[n]);
       fnorm[n] += tr;
@@ -121,7 +121,7 @@ int update_step(double *fnorm, double *snorm, vector **src, vector ***psim) {
 
     // Fermion update
     for (n = 0; n < Nroot; n++) {
-      // Do conjugate gradient to get (Mdag M)^(-1 / 4) chi
+      // Do conjugate gradient to get (Mdag M)^(-1 / 2) chi
       iters += congrad_multi(src[n], psim[n], niter, rsqmin, &final_rsq);
 
       if (i_multi0 < nsteps[0])
@@ -158,14 +158,14 @@ int update() {
   ranmom();
 
   // Set up the fermion variables
-  // Compute g and src = (Mdag M)^(1 / 8) g
+  // Compute g and src = (Mdag M)^(1 / 4) g
   for (n = 0; n < Nroot; n++)
     iters += grsource(src[n]);
 
   // Do a CG to get psim,
-  // rational approximation to (Mdag M)^(-1 / 4) src = (Mdag M)^(-1 / 8) g
+  // rational approximation to (Mdag M)^(-1 / 2) src = (Mdag M)^(-1 / 4) g
   for (i = 0; i < Norder; i++)
-    shift[i] = shift4[i];
+    shift[i] = shift2[i];
 #ifdef UPDATE_DEBUG
   node0_printf("Calling CG in update_o -- original action\n");
 #endif
@@ -191,7 +191,7 @@ int update() {
   iters += update_step(fnorm, &snorm, src, psim);
 
   // Find ending action
-  // Reuse data from update_step, don't need CG to get (Mdag M)^(-1) chi
+  // Reuse data from update_step, don't need CG to get (Mdag M)^(-1 / 2) chi
   // If the final step were a gauge update, CG would be necessary
   endaction = action(src, psim);
   change = endaction - startaction;

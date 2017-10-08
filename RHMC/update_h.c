@@ -49,8 +49,8 @@ double fermion_force(Real eps, vector *src, vector **sol) {
   for (n = 0; n < Norder; n++) {
     fermion_op(sol[n], tempvec, PLUS);
     FORALLSITES(i, s) {
-      // Makes sense to multiply here by amp4[n]...
-      scalar_mult_vec(&(tempvec[i]), amp4[n], &(tempvec[i]));
+      // Makes sense to multiply here by amp2[n]...
+      scalar_mult_vec(&(tempvec[i]), amp2[n], &(tempvec[i]));
 
       clear_as(&tempas);
       for (a = 0; a < DIMF; a++) {
