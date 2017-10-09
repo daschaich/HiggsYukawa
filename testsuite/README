@@ -2,8 +2,8 @@ This directory provides a suite of tests for the parallel code to simulate a fou
 
 Reference input and output files are provided for the following compilation targets (which are described in ../RHMC/README):
 so4_hmc
-susy_meas
-susy_hmc_meas
+so4_meas
+so4_hmc_meas
 so4_eig
 
 The scalar configurations loaded by each test are also provided.

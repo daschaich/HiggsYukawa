@@ -4,9 +4,13 @@
 *.out
 *.sw[op]
 .lastmake*
+gmon.out
 localmake
-serial
-so4_eig*
+serial*
 so4_hmc*
-so4_meas*
-so4_phase*
+so4_meas
+so4_eig
+so4_phase
+poly
+error.dat
+PRIMME

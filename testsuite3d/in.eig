@@ -7,13 +7,13 @@ PBC -1
 iseed 41
 
 Nroot 1
-Norder 15
+Norder 17
 
 warms 0
 trajecs 3
 traj_length 1
 nstep 4
-nstep_scalar 4
+nstep_scalar 5
 traj_between_meas 3
 
 G 0.5

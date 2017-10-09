@@ -2,7 +2,7 @@ Four-fermion SO(4) system
 Microcanonical simulation with refreshing
 Machine = MPI (portable), with 2 nodes
 Phi algorithm
-start: Tue Oct 18 07:41:07 2016
+start: Mon Oct  9 07:03:59 2017
 
 type 0 for no prompts or 1 for prompts
 nx 4
@@ -12,7 +12,7 @@ nt 4
 PBC -1
 iseed 41
 Nroot 1
-Norder 15
+Norder 17
 Antiperiodic temporal boundary conditions
 LAYOUT = Hypercubes, options = hyper_prime,
 ON EACH NODE 2 x 4 x 4 x 4
@@ -24,8 +24,8 @@ warms 0
 trajecs 3
 traj_length 1
 nstep 4
-nstep_scalar 6
-traj_between_meas 3
+nstep_scalar 5
+traj_between_meas 2
 G 0.5
 site_mass -0.1
 link_mass 0.1
@@ -52,256 +52,256 @@ pnt 2 2 2 2
 reload_serial config.4444
 forget
 Restored binary gauge configuration serially from file config.4444
-Time stamp Sun Oct 16 22:09:04 2016
-Checksums c44b97c3 79098885 OK
-Time to reload gauge configuration = 2.432108e-03
-CHECK SIGMA SUM: -5.9396211501393736e-02
-START 1.6234805 1.4013454 3.0248259
-Inversion 1-1 of 16 took 33 iters and 0.002146 seconds
-Inversion 1-2 of 16 took 33 iters and 0.002058 seconds
-Inversion 2-1 of 16 took 32 iters and 0.001998 seconds
-Inversion 2-2 of 16 took 33 iters and 0.001846 seconds
-Inversion 3-1 of 16 took 33 iters and 0.001637 seconds
-Inversion 3-2 of 16 took 33 iters and 0.001679 seconds
-Inversion 4-1 of 16 took 33 iters and 0.00164 seconds
-Inversion 4-2 of 16 took 33 iters and 0.001642 seconds
-Inversion 5-1 of 16 took 33 iters and 0.001638 seconds
-Inversion 5-2 of 16 took 33 iters and 0.001647 seconds
-Inversion 6-1 of 16 took 32 iters and 0.001595 seconds
-Inversion 6-2 of 16 took 32 iters and 0.001589 seconds
-Inversion 7-1 of 16 took 33 iters and 0.001638 seconds
-Inversion 7-2 of 16 took 33 iters and 0.00164 seconds
-Inversion 8-1 of 16 took 33 iters and 0.001642 seconds
-Inversion 8-2 of 16 took 32 iters and 0.001603 seconds
-Inversion 9-1 of 16 took 33 iters and 0.001639 seconds
-Inversion 9-2 of 16 took 33 iters and 0.001637 seconds
-Inversion 10-1 of 16 took 32 iters and 0.001595 seconds
-Inversion 10-2 of 16 took 33 iters and 0.001645 seconds
-Inversion 11-1 of 16 took 32 iters and 0.001588 seconds
-Inversion 11-2 of 16 took 32 iters and 0.001599 seconds
-Inversion 12-1 of 16 took 33 iters and 0.001637 seconds
-Inversion 12-2 of 16 took 33 iters and 0.001652 seconds
-Inversion 13-1 of 16 took 32 iters and 0.001592 seconds
-Inversion 13-2 of 16 took 32 iters and 0.001588 seconds
-Inversion 14-1 of 16 took 33 iters and 0.001642 seconds
-Inversion 14-2 of 16 took 33 iters and 0.001643 seconds
-Inversion 15-1 of 16 took 32 iters and 0.001593 seconds
-Inversion 15-2 of 16 took 32 iters and 0.001595 seconds
-Inversion 16-1 of 16 took 33 iters and 0.00164 seconds
-Inversion 16-2 of 16 took 33 iters and 0.001642 seconds
-STOCH BILIN SQUARED 30.6025
-STOCH BILIN -0.170283
-STOCH FOUR 0.362243 1045
+Time stamp Mon Oct  9 00:35:39 2017
+Checksums c3c3ff52 bcbadf93 OK
+Time to reload gauge configuration = 1.967907e-03
+CHECK SIGMA SUM: -5.6558204992143146e-02
+START 1.6031766 1.4013454 3.004522
+Inversion 1-1 of 16 took 32 iters and 0.002443 seconds
+Inversion 1-2 of 16 took 32 iters and 0.001604 seconds
+Inversion 2-1 of 16 took 32 iters and 0.001609 seconds
+Inversion 2-2 of 16 took 32 iters and 0.001589 seconds
+Inversion 3-1 of 16 took 33 iters and 0.001649 seconds
+Inversion 3-2 of 16 took 32 iters and 0.001602 seconds
+Inversion 4-1 of 16 took 32 iters and 0.00161 seconds
+Inversion 4-2 of 16 took 32 iters and 0.001605 seconds
+Inversion 5-1 of 16 took 32 iters and 0.001604 seconds
+Inversion 5-2 of 16 took 33 iters and 0.001645 seconds
+Inversion 6-1 of 16 took 32 iters and 0.001585 seconds
+Inversion 6-2 of 16 took 32 iters and 0.001609 seconds
+Inversion 7-1 of 16 took 33 iters and 0.001644 seconds
+Inversion 7-2 of 16 took 33 iters and 0.001656 seconds
+Inversion 8-1 of 16 took 32 iters and 0.001602 seconds
+Inversion 8-2 of 16 took 32 iters and 0.001576 seconds
+Inversion 9-1 of 16 took 32 iters and 0.00161 seconds
+Inversion 9-2 of 16 took 32 iters and 0.001597 seconds
+Inversion 10-1 of 16 took 32 iters and 0.001588 seconds
+Inversion 10-2 of 16 took 33 iters and 0.001653 seconds
+Inversion 11-1 of 16 took 32 iters and 0.001575 seconds
+Inversion 11-2 of 16 took 32 iters and 0.001608 seconds
+Inversion 12-1 of 16 took 33 iters and 0.001648 seconds
+Inversion 12-2 of 16 took 32 iters and 0.001614 seconds
+Inversion 13-1 of 16 took 32 iters and 0.001602 seconds
+Inversion 13-2 of 16 took 32 iters and 0.001603 seconds
+Inversion 14-1 of 16 took 32 iters and 0.001606 seconds
+Inversion 14-2 of 16 took 32 iters and 0.001597 seconds
+Inversion 15-1 of 16 took 32 iters and 0.001601 seconds
+Inversion 15-2 of 16 took 32 iters and 0.0016 seconds
+Inversion 16-1 of 16 took 32 iters and 0.001598 seconds
+Inversion 16-2 of 16 took 32 iters and 0.001612 seconds
+STOCH BILIN SQUARED 30.6345
+STOCH BILIN -0.170334
+STOCH FOUR 0.360975 1030
 Source point 0 0 0 0
-Inversion 1 of 4 took 32 iters and 0.001653 seconds
-Inversion 2 of 4 took 32 iters and 0.001601 seconds
-Inversion 3 of 4 took 32 iters and 0.001581 seconds
-Inversion 4 of 4 took 32 iters and 0.00159 seconds
-PNT BILIN 0 0 0 0 -0.202427 128
-PNT FOUR 0 0 0 0 0.478829 128
-CORR 0 4.39974
-CORR 1 1.18247
-CORR 2 0.0744414
-CORR 3 2.34207
-PNT SUS 0 0 0 0 -9.4661 1.46737 -7.99873 128
-PNT ONELINK 0 0 0 0 0.426179 0.526794 0.386822 0.394127 128
+Inversion 1 of 4 took 32 iters and 0.001602 seconds
+Inversion 2 of 4 took 32 iters and 0.001609 seconds
+Inversion 3 of 4 took 32 iters and 0.001624 seconds
+Inversion 4 of 4 took 32 iters and 0.001596 seconds
+PNT BILIN 0 0 0 0 -0.201886 128
+PNT FOUR 0 0 0 0 0.474363 128
+CORR 0 4.38371
+CORR 1 1.17723
+CORR 2 0.0729148
+CORR 3 2.33326
+PNT SUS 0 0 0 0 -9.4443 1.47718 -7.96712 128
+PNT ONELINK 0 0 0 0 0.42101 0.524416 0.387973 0.394322 128
 Source point 0 0 0 2
-Inversion 1 of 4 took 31 iters and 0.001515 seconds
-Inversion 2 of 4 took 31 iters and 0.00157 seconds
-Inversion 3 of 4 took 31 iters and 0.001541 seconds
-Inversion 4 of 4 took 31 iters and 0.001547 seconds
-PNT BILIN 0 0 0 2 -0.193784 124
-PNT FOUR 0 0 0 2 0.439577 124
-CORR 0 3.41625
-CORR 1 1.09275
-CORR 2 0.0576658
-CORR 3 1.31757
-PNT SUS 0 0 0 2 -6.96921 1.08498 -5.88423 124
-PNT ONELINK 0 0 0 2 0.501624 0.441364 0.323468 0.0528835 124
+Inversion 1 of 4 took 31 iters and 0.001559 seconds
+Inversion 2 of 4 took 31 iters and 0.001561 seconds
+Inversion 3 of 4 took 31 iters and 0.001555 seconds
+Inversion 4 of 4 took 31 iters and 0.001555 seconds
+PNT BILIN 0 0 0 2 -0.193526 124
+PNT FOUR 0 0 0 2 0.438945 124
+CORR 0 3.40978
+CORR 1 1.0916
+CORR 2 0.0564528
+CORR 3 1.31918
+PNT SUS 0 0 0 2 -6.96936 1.09234 -5.87702 124
+PNT ONELINK 0 0 0 2 0.496148 0.443055 0.324139 0.05481 124
 Source point 0 0 2 0
-Inversion 1 of 4 took 31 iters and 0.001558 seconds
-Inversion 2 of 4 took 31 iters and 0.001553 seconds
-Inversion 3 of 4 took 31 iters and 0.001544 seconds
-Inversion 4 of 4 took 31 iters and 0.001544 seconds
-PNT BILIN 0 0 2 0 -0.148953 124
-PNT FOUR 0 0 2 0 0.190366 124
-CORR 0 3.32853
-CORR 1 1.20453
-CORR 2 0.0419084
-CORR 3 2.00049
-PNT SUS 0 0 2 0 -7.96148 1.38602 -6.57545 124
-PNT ONELINK 0 0 2 0 0.454149 0.474382 0.310808 0.264486 124
+Inversion 1 of 4 took 31 iters and 0.001567 seconds
+Inversion 2 of 4 took 31 iters and 0.001558 seconds
+Inversion 3 of 4 took 31 iters and 0.001555 seconds
+Inversion 4 of 4 took 31 iters and 0.00155 seconds
+PNT BILIN 0 0 2 0 -0.150149 124
+PNT FOUR 0 0 2 0 0.192805 124
+CORR 0 3.31852
+CORR 1 1.19912
+CORR 2 0.0404388
+CORR 3 1.98629
+PNT SUS 0 0 2 0 -7.93675 1.39238 -6.54437 124
+PNT ONELINK 0 0 2 0 0.452176 0.47176 0.306151 0.264155 124
 Source point 0 0 2 2
-Inversion 1 of 4 took 32 iters and 0.001606 seconds
-Inversion 2 of 4 took 32 iters and 0.001592 seconds
-Inversion 3 of 4 took 32 iters and 0.001605 seconds
-Inversion 4 of 4 took 32 iters and 0.001612 seconds
-PNT BILIN 0 0 2 2 -0.226576 128
-PNT FOUR 0 0 2 2 0.567531 128
-CORR 0 4.77663
-CORR 1 1.82636
-CORR 2 0.0409914
-CORR 3 2.94696
-PNT SUS 0 0 2 2 -11.3997 1.80873 -9.59094 128
-PNT ONELINK 0 0 2 2 0.487191 0.127483 0.177032 0.390485 128
+Inversion 1 of 4 took 32 iters and 0.001628 seconds
+Inversion 2 of 4 took 32 iters and 0.001601 seconds
+Inversion 3 of 4 took 32 iters and 0.001606 seconds
+Inversion 4 of 4 took 32 iters and 0.001597 seconds
+PNT BILIN 0 0 2 2 -0.227576 128
+PNT FOUR 0 0 2 2 0.568306 128
+CORR 0 4.77539
+CORR 1 1.81123
+CORR 2 0.0396936
+CORR 3 2.93144
+PNT SUS 0 0 2 2 -11.3708 1.813 -9.55776 128
+PNT ONELINK 0 0 2 2 0.486162 0.131269 0.176062 0.390416 128
 Source point 0 2 0 0
-Inversion 1 of 4 took 32 iters and 0.001597 seconds
-Inversion 2 of 4 took 32 iters and 0.001594 seconds
-Inversion 3 of 4 took 32 iters and 0.00158 seconds
-Inversion 4 of 4 took 32 iters and 0.001587 seconds
-PNT BILIN 0 2 0 0 -0.0778433 128
-PNT FOUR 0 2 0 0 0.215971 128
-CORR 0 4.02734
-CORR 1 1.29303
-CORR 2 0.0788517
-CORR 3 2.26266
-PNT SUS 0 2 0 0 -9.20259 1.54071 -7.66188 128
-PNT ONELINK 0 2 0 0 0.372776 0.345056 0.464855 0.309268 128
+Inversion 1 of 4 took 31 iters and 0.001567 seconds
+Inversion 2 of 4 took 31 iters and 0.001595 seconds
+Inversion 3 of 4 took 31 iters and 0.001567 seconds
+Inversion 4 of 4 took 31 iters and 0.001539 seconds
+PNT BILIN 0 2 0 0 -0.078466 124
+PNT FOUR 0 2 0 0 0.214055 124
+CORR 0 4.03562
+CORR 1 1.29428
+CORR 2 0.0777697
+CORR 3 2.26119
+PNT SUS 0 2 0 0 -9.2209 1.55204 -7.66886 124
+PNT ONELINK 0 2 0 0 0.372287 0.343698 0.46874 0.309964 124
 Source point 0 2 0 2
-Inversion 1 of 4 took 32 iters and 0.001574 seconds
-Inversion 2 of 4 took 32 iters and 0.001594 seconds
-Inversion 3 of 4 took 32 iters and 0.001575 seconds
-Inversion 4 of 4 took 32 iters and 0.001564 seconds
-PNT BILIN 0 2 0 2 -0.124345 128
-PNT FOUR 0 2 0 2 0.140514 128
-CORR 0 4.42984
-CORR 1 1.43348
-CORR 2 0.0898054
-CORR 3 2.25012
-PNT SUS 0 2 0 2 -10.0509 1.84761 -8.20324 128
-PNT ONELINK 0 2 0 2 0.476299 0.215356 0.520477 0.364266 128
+Inversion 1 of 4 took 31 iters and 0.001569 seconds
+Inversion 2 of 4 took 31 iters and 0.001557 seconds
+Inversion 3 of 4 took 31 iters and 0.001556 seconds
+Inversion 4 of 4 took 31 iters and 0.001547 seconds
+PNT BILIN 0 2 0 2 -0.125658 124
+PNT FOUR 0 2 0 2 0.142988 124
+CORR 0 4.41959
+CORR 1 1.43089
+CORR 2 0.0884271
+CORR 3 2.24334
+PNT SUS 0 2 0 2 -10.0315 1.84924 -8.18225 124
+PNT ONELINK 0 2 0 2 0.473209 0.215695 0.518554 0.362059 124
 Source point 0 2 2 0
-Inversion 1 of 4 took 31 iters and 0.001521 seconds
-Inversion 2 of 4 took 31 iters and 0.001604 seconds
-Inversion 3 of 4 took 31 iters and 0.001549 seconds
-Inversion 4 of 4 took 31 iters and 0.001522 seconds
-PNT BILIN 0 2 2 0 -0.239869 124
-PNT FOUR 0 2 2 0 0.475603 124
-CORR 0 3.32045
-CORR 1 1.22063
-CORR 2 0.0595856
-CORR 3 1.98628
-PNT SUS 0 2 2 0 -7.62944 1.0425 -6.58694 124
-PNT ONELINK 0 2 2 0 0.23687 0.120697 0.269858 0.233479 124
+Inversion 1 of 4 took 31 iters and 0.001533 seconds
+Inversion 2 of 4 took 31 iters and 0.001531 seconds
+Inversion 3 of 4 took 31 iters and 0.001575 seconds
+Inversion 4 of 4 took 31 iters and 0.00155 seconds
+PNT BILIN 0 2 2 0 -0.239798 124
+PNT FOUR 0 2 2 0 0.474716 124
+CORR 0 3.31724
+CORR 1 1.21659
+CORR 2 0.058401
+CORR 3 1.97657
+PNT SUS 0 2 2 0 -7.61675 1.04794 -6.5688 124
+PNT ONELINK 0 2 2 0 0.236369 0.121148 0.268067 0.233179 124
 Source point 0 2 2 2
-Inversion 1 of 4 took 31 iters and 0.001518 seconds
-Inversion 2 of 4 took 31 iters and 0.001591 seconds
-Inversion 3 of 4 took 31 iters and 0.001549 seconds
-Inversion 4 of 4 took 31 iters and 0.001497 seconds
-PNT BILIN 0 2 2 2 -0.229947 124
-PNT FOUR 0 2 2 2 0.511796 124
-CORR 0 3.40058
-CORR 1 1.24155
-CORR 2 0.0433961
-CORR 3 1.78837
-PNT SUS 0 2 2 2 -7.79515 1.32125 -6.4739 124
-PNT ONELINK 0 2 2 2 0.372468 0.468496 0.246546 0.194324 124
+Inversion 1 of 4 took 30 iters and 0.001486 seconds
+Inversion 2 of 4 took 30 iters and 0.001503 seconds
+Inversion 3 of 4 took 30 iters and 0.001514 seconds
+Inversion 4 of 4 took 30 iters and 0.001511 seconds
+PNT BILIN 0 2 2 2 -0.230859 120
+PNT FOUR 0 2 2 2 0.513723 120
+CORR 0 3.40249
+CORR 1 1.23894
+CORR 2 0.0427157
+CORR 3 1.7828
+PNT SUS 0 2 2 2 -7.78827 1.32132 -6.46695 120
+PNT ONELINK 0 2 2 2 0.370976 0.46799 0.247634 0.19339 120
 Source point 2 0 0 0
-Inversion 1 of 4 took 33 iters and 0.001631 seconds
-Inversion 2 of 4 took 33 iters and 0.001628 seconds
-Inversion 3 of 4 took 33 iters and 0.001643 seconds
-Inversion 4 of 4 took 33 iters and 0.001622 seconds
-PNT BILIN 2 0 0 0 -0.183047 132
-PNT FOUR 2 0 0 0 0.701687 132
-CORR 0 5.30044
-CORR 1 1.65878
-CORR 2 0.122443
-CORR 3 3.29055
-PNT SUS 2 0 0 0 -12.2907 1.91849 -10.3722 132
-PNT ONELINK 2 0 0 0 0.500935 0.199649 0.499515 0.38555 132
+Inversion 1 of 4 took 32 iters and 0.001615 seconds
+Inversion 2 of 4 took 32 iters and 0.001606 seconds
+Inversion 3 of 4 took 32 iters and 0.001597 seconds
+Inversion 4 of 4 took 32 iters and 0.00162 seconds
+PNT BILIN 2 0 0 0 -0.180854 128
+PNT FOUR 2 0 0 0 0.685331 128
+CORR 0 5.25058
+CORR 1 1.64212
+CORR 2 0.119271
+CORR 3 3.26054
+PNT SUS 2 0 0 0 -12.1933 1.92078 -10.2725 128
+PNT ONELINK 2 0 0 0 0.501353 0.199875 0.496885 0.386951 128
 Source point 2 0 0 2
-Inversion 1 of 4 took 33 iters and 0.001632 seconds
-Inversion 2 of 4 took 33 iters and 0.001642 seconds
+Inversion 1 of 4 took 33 iters and 0.001666 seconds
+Inversion 2 of 4 took 33 iters and 0.001658 seconds
 Inversion 3 of 4 took 33 iters and 0.001629 seconds
-Inversion 4 of 4 took 33 iters and 0.001595 seconds
-PNT BILIN 2 0 0 2 -0.142205 132
-PNT FOUR 2 0 0 2 0.45474 132
-CORR 0 3.83557
-CORR 1 1.60951
-CORR 2 0.105073
-CORR 3 1.67653
-PNT SUS 2 0 0 2 -7.94656 0.719874 -7.22669 132
-PNT ONELINK 2 0 0 2 0.417919 0.438632 0.434528 -0.000274228 132
+Inversion 4 of 4 took 33 iters and 0.001652 seconds
+PNT BILIN 2 0 0 2 -0.141532 132
+PNT FOUR 2 0 0 2 0.44991 132
+CORR 0 3.82128
+CORR 1 1.59977
+CORR 2 0.102238
+CORR 3 1.67246
+PNT SUS 2 0 0 2 -7.94233 0.74658 -7.19575 132
+PNT ONELINK 2 0 0 2 0.417587 0.434699 0.434924 0.00242108 132
 Source point 2 0 2 0
-Inversion 1 of 4 took 32 iters and 0.001658 seconds
-Inversion 2 of 4 took 32 iters and 0.001602 seconds
-Inversion 3 of 4 took 32 iters and 0.001543 seconds
-Inversion 4 of 4 took 32 iters and 0.001541 seconds
-PNT BILIN 2 0 2 0 -0.220812 128
-PNT FOUR 2 0 2 0 0.452663 128
-CORR 0 4.41119
-CORR 1 1.08336
-CORR 2 0.0359472
-CORR 3 2.01082
-PNT SUS 2 0 2 0 -8.85538 1.31407 -7.54131 128
-PNT ONELINK 2 0 2 0 0.262718 0.688258 0.370764 0.343318 128
+Inversion 1 of 4 took 31 iters and 0.001574 seconds
+Inversion 2 of 4 took 31 iters and 0.001603 seconds
+Inversion 3 of 4 took 31 iters and 0.001564 seconds
+Inversion 4 of 4 took 31 iters and 0.001518 seconds
+PNT BILIN 2 0 2 0 -0.220626 124
+PNT FOUR 2 0 2 0 0.45094 124
+CORR 0 4.39536
+CORR 1 1.08216
+CORR 2 0.0347028
+CORR 3 1.99855
+PNT SUS 2 0 2 0 -8.83168 1.32091 -7.51076 124
+PNT ONELINK 2 0 2 0 0.261714 0.683471 0.369553 0.339201 124
 Source point 2 0 2 2
-Inversion 1 of 4 took 32 iters and 0.001525 seconds
-Inversion 2 of 4 took 32 iters and 0.001639 seconds
-Inversion 3 of 4 took 32 iters and 0.001598 seconds
-Inversion 4 of 4 took 32 iters and 0.001548 seconds
-PNT BILIN 2 0 2 2 -0.272178 128
-PNT FOUR 2 0 2 2 0.63517 128
-CORR 0 3.51815
-CORR 1 1.16459
-CORR 2 0.0487563
-CORR 3 1.5694
-PNT SUS 2 0 2 2 -7.02529 0.724396 -6.30089 128
-PNT ONELINK 2 0 2 2 0.2671 0.343581 0.197001 0.115798 128
+Inversion 1 of 4 took 32 iters and 0.001604 seconds
+Inversion 2 of 4 took 32 iters and 0.00161 seconds
+Inversion 3 of 4 took 32 iters and 0.001603 seconds
+Inversion 4 of 4 took 32 iters and 0.0016 seconds
+PNT BILIN 2 0 2 2 -0.271048 128
+PNT FOUR 2 0 2 2 0.630065 128
+CORR 0 3.51496
+CORR 1 1.16062
+CORR 2 0.0471546
+CORR 3 1.56699
+PNT SUS 2 0 2 2 -7.02688 0.737154 -6.28972 128
+PNT ONELINK 2 0 2 2 0.266323 0.346021 0.19707 0.117393 128
 Source point 2 2 0 0
-Inversion 1 of 4 took 33 iters and 0.001606 seconds
-Inversion 2 of 4 took 33 iters and 0.001621 seconds
-Inversion 3 of 4 took 33 iters and 0.001641 seconds
-Inversion 4 of 4 took 33 iters and 0.001641 seconds
-PNT BILIN 2 2 0 0 -0.238114 132
-PNT FOUR 2 2 0 0 0.491246 132
-CORR 0 4.73618
-CORR 1 1.29542
-CORR 2 0.244785
-CORR 3 2.86493
-PNT SUS 2 2 0 0 -10.6007 1.45941 -9.14133 132
-PNT ONELINK 2 2 0 0 0.416329 0.705802 0.0419979 0.371974 132
+Inversion 1 of 4 took 32 iters and 0.00158 seconds
+Inversion 2 of 4 took 32 iters and 0.001614 seconds
+Inversion 3 of 4 took 32 iters and 0.001586 seconds
+Inversion 4 of 4 took 32 iters and 0.001581 seconds
+PNT BILIN 2 2 0 0 -0.237117 128
+PNT FOUR 2 2 0 0 0.487211 128
+CORR 0 4.70958
+CORR 1 1.29023
+CORR 2 0.240478
+CORR 3 2.85042
+PNT SUS 2 2 0 0 -10.5565 1.46578 -9.09071 128
+PNT ONELINK 2 2 0 0 0.415153 0.700549 0.0421744 0.373595 128
 Source point 2 2 0 2
-Inversion 1 of 4 took 33 iters and 0.001582 seconds
-Inversion 2 of 4 took 33 iters and 0.001593 seconds
-Inversion 3 of 4 took 33 iters and 0.001587 seconds
-Inversion 4 of 4 took 33 iters and 0.001631 seconds
-PNT BILIN 2 2 0 2 -0.224651 132
-PNT FOUR 2 2 0 2 0.435699 132
-CORR 0 4.85259
-CORR 1 1.74955
-CORR 2 0.247474
-CORR 3 2.17504
-PNT SUS 2 2 0 2 -10.2392 1.21457 -9.02465 132
-PNT ONELINK 2 2 0 2 0.424347 0.318322 0.202982 0.190989 132
+Inversion 1 of 4 took 33 iters and 0.001634 seconds
+Inversion 2 of 4 took 33 iters and 0.001633 seconds
+Inversion 3 of 4 took 33 iters and 0.001634 seconds
+Inversion 4 of 4 took 33 iters and 0.00164 seconds
+PNT BILIN 2 2 0 2 -0.223541 132
+PNT FOUR 2 2 0 2 0.430299 132
+CORR 0 4.8262
+CORR 1 1.74166
+CORR 2 0.242941
+CORR 3 2.16059
+PNT SUS 2 2 0 2 -10.2029 1.23151 -8.97139 132
+PNT ONELINK 2 2 0 2 0.423029 0.318909 0.204243 0.188192 132
 Source point 2 2 2 0
-Inversion 1 of 4 took 32 iters and 0.001566 seconds
-Inversion 2 of 4 took 32 iters and 0.001588 seconds
-Inversion 3 of 4 took 32 iters and 0.001569 seconds
-Inversion 4 of 4 took 32 iters and 0.00154 seconds
-PNT BILIN 2 2 2 0 -0.214886 128
-PNT FOUR 2 2 2 0 0.407429 128
-CORR 0 4.58686
-CORR 1 1.6628
-CORR 2 0.112653
-CORR 3 2.41706
-PNT SUS 2 2 2 0 -10.4607 1.68133 -8.77937 128
-PNT ONELINK 2 2 2 0 0.548 0.130023 0.505271 0.244575 128
+Inversion 1 of 4 took 32 iters and 0.00158 seconds
+Inversion 2 of 4 took 32 iters and 0.001589 seconds
+Inversion 3 of 4 took 32 iters and 0.001583 seconds
+Inversion 4 of 4 took 32 iters and 0.001581 seconds
+PNT BILIN 2 2 2 0 -0.214713 128
+PNT FOUR 2 2 2 0 0.406369 128
+CORR 0 4.58107
+CORR 1 1.66151
+CORR 2 0.110237
+CORR 3 2.39977
+PNT SUS 2 2 2 0 -10.4395 1.68693 -8.75259 128
+PNT ONELINK 2 2 2 0 0.545226 0.133122 0.50386 0.239826 128
 Source point 2 2 2 2
-Inversion 1 of 4 took 32 iters and 0.001599 seconds
-Inversion 2 of 4 took 32 iters and 0.001578 seconds
-Inversion 3 of 4 took 32 iters and 0.001589 seconds
-Inversion 4 of 4 took 32 iters and 0.00156 seconds
-PNT BILIN 2 2 2 2 -0.177763 128
-PNT FOUR 2 2 2 2 0.327385 128
-CORR 0 3.23886
-CORR 1 1.18406
-CORR 2 0.0875518
-CORR 3 2.153
-PNT SUS 2 2 2 2 -7.98059 1.31712 -6.66347 128
-PNT ONELINK 2 2 2 2 0.228774 0.229 0.168491 0.355686 128
+Inversion 1 of 4 took 31 iters and 0.001537 seconds
+Inversion 2 of 4 took 31 iters and 0.001536 seconds
+Inversion 3 of 4 took 31 iters and 0.001546 seconds
+Inversion 4 of 4 took 31 iters and 0.001549 seconds
+PNT BILIN 2 2 2 2 -0.17774 124
+PNT FOUR 2 2 2 2 0.325988 124
+CORR 0 3.23795
+CORR 1 1.18179
+CORR 2 0.0858037
+CORR 3 2.14599
+PNT SUS 2 2 2 2 -7.97353 1.32199 -6.65154 124
+PNT ONELINK 2 2 2 2 0.229789 0.228219 0.168933 0.354781 124
 RUNNING COMPLETED
-CG iters for measurements: 3093
-total_iters = 3093
+CG iters for measurements: 3050
+total_iters = 3050
 
-Time = 0.1566 seconds
+Time = 0.1551 seconds
