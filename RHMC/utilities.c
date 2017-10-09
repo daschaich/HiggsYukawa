@@ -119,7 +119,7 @@ void fermion_op(vector *src, vector *dest, int sign) {
         tr *= -1;
 
       add_vec(&tvec_dir, &tvec_opp, &tvec);
-      scalar_mult_add_vec(&(dest[i]), &tvec, tr, &(dest[i]));
+      scalar_mult_sum_vec(&tvec, tr, &(dest[i]));
     }
     cleanup_gather(tag[dir]);
     cleanup_gather(tag[OPP_DIR(dir)]);
