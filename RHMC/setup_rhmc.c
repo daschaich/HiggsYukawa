@@ -307,11 +307,11 @@ void setup_rhmc() {
   switch(Norder) {
     case 19:
       node0_printf("[1e-10, 250]\n");
-      setup_rhmc17();
+      setup_rhmc19();
       break;
     case 18:
       node0_printf("[1e-9, 500]\n");
-      setup_rhmc17();
+      setup_rhmc18();
       break;
     case 17:
       node0_printf("[1e-8, 500]\n");
