@@ -1,4 +1,4 @@
-This directory provides a suite of tests for the parallel code to simulate a four-dimensional four-fermion system with global SO(4) symmetry.
+This directory provides a suite of tests for the parallel code to simulate a four-dimensional Higgs--Yukawa system with global SO(4) symmetry.
 
 Reference input and output files are provided for the following compilation targets (which are described in ../RHMC/README):
 so4_hmc

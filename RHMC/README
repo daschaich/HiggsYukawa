@@ -1,10 +1,10 @@
 # ------------------------------------------------------------------
-Four-fermion systems with global SO(4) symmetry
+Higgs--Yukawa systems with global SO(4) symmetry
 
 # Actively maintained targets:
 so4_hmc for evolution with accept/reject step
 so4_meas for correlator and susceptibility measurements
-susy_hmc_meas for evolution along with measurements
+so4_hmc_meas for evolution along with measurements
 so4_eig for eigenvalue measurements on saved configurations
 
 # Additional targets, not actively maintained or regularly tested

@@ -1,4 +1,4 @@
-This directory contains parallel code for RHMC simulations of a four-fermion system with global SO(4) symmetry, including related measurements.
+This directory contains parallel code for RHMC simulations of a Higgs--Yukawa system with global SO(4) symmetry, including related measurements.
 
 See RHMC/README for the main README.
 
